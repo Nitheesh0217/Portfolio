@@ -351,10 +351,10 @@ struct WelcomeScene: View {
     }
 
     // MARK: - Helper
+    // TODO: wire this to @Environment(\.openURL) in the real app
+    // (renaming required — env var also called openURL).
     private func openURL(_ string: String) {
-        guard let url = URL(string: string) else { return }
-        // visionOS: use openURL environment value in real app
-        // @Environment(\.openURL) private var openURL
+        guard URL(string: string) != nil else { return }
     }
 }
 

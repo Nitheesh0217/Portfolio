@@ -83,7 +83,7 @@ struct TerminalScene: View {
         case "contact":
             lines.append(.output(PortfolioContent.email))
         case "projects":
-            for p in MockData.projects { lines.append(.output("• \(p.name) — \(p.tagline)")) }
+            for p in Project.all { lines.append(.output("• \(p.name) — \(p.tagline)")) }
         case "clear":
             lines = [.system("nitheesh-os v2.0 — type 'help' for commands")]
         default:

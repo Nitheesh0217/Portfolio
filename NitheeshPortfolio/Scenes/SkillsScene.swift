@@ -12,26 +12,24 @@ struct SkillsScene: View {
     var body: some View {
         VStack(spacing: 0) {
             SpatialNavBar(title: "Skills", subtitle: "Grouped by category") {
-                AnyView(
-                    Button {
-                        Task {
-                            if portfolio.isImmersiveSpaceOpen {
-                                await dismissImmersive()
-                                portfolio.isImmersiveSpaceOpen = false
-                            } else {
-                                _ = await openImmersive(id: "skills-immersive")
-                                portfolio.isImmersiveSpaceOpen = true
-                            }
+                Button {
+                    Task {
+                        if portfolio.isImmersiveSpaceOpen {
+                            await dismissImmersive()
+                            portfolio.isImmersiveSpaceOpen = false
+                        } else {
+                            _ = await openImmersive(id: "skills-immersive")
+                            portfolio.isImmersiveSpaceOpen = true
                         }
-                    } label: {
-                        Label(portfolio.isImmersiveSpaceOpen ? "Exit Immersive" : "Enter Immersive",
-                              systemImage: "sparkles")
-                            .padding(.horizontal, Spacing.md)
-                            .padding(.vertical, Spacing.xs)
-                            .background(AppTheme.Accent.primary.opacity(0.2), in: Capsule())
                     }
-                    .hoverEffect(.lift)
-                )
+                } label: {
+                    Label(portfolio.isImmersiveSpaceOpen ? "Exit Immersive" : "Enter Immersive",
+                          systemImage: "sparkles")
+                        .padding(.horizontal, Spacing.md)
+                        .padding(.vertical, Spacing.xs)
+                        .background(AppTheme.Accent.primary.opacity(0.2), in: Capsule())
+                }
+                .hoverEffect(.lift)
             }
 
             ScrollView {
