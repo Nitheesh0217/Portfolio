@@ -18,10 +18,41 @@ interface AssistantRequest {
   history: ChatMessage[];
 }
 
+interface ProjectRow {
+  title?:              string;
+  subtitle?:           string;
+  description?:        string;
+  category?:           string;
+  stack?:              string[] | null;
+  roi_label?:          string;
+  roi_value?:          string;
+  roi_context?:        string;
+  problem_statement?:  string;
+  approach?:           string;
+  learnings?:          string[] | null;
+  testimonial_quote?:  string;
+  testimonial_author?: string;
+}
+
+interface CertificateRow {
+  title?:     string;
+  issuer?:    string;
+  category?:  string;
+  roi_proof?: string;
+}
+
+interface MetricRow {
+  label?:         string;
+  value?:         string | number;
+  unit?:          string;
+  display_value?: string;
+  context?:       string;
+}
+
 function buildContext(data: {
-  projects:     Record<string, unknown>[];
-  certificates: Record<string, unknown>[];
-  metrics:      Record<string, unknown>[];
+  projects:     ProjectRow[];
+  certificates: CertificateRow[];
+  metrics:      MetricRow[];
 }): string {
   const lines: string[] = [
     '═══════════════════════════════════════',
@@ -33,28 +64,31 @@ function buildContext(data: {
 
   lines.push(`PROJECTS (${data.projects.length} shipped):`);
   for (const p of data.projects) {
-    lines.push(`\n[${p.category}] ${p.title}`);
-    if (p.subtitle)          lines.push(`  Subtitle: ${p.subtitle}`);
-    if (p.description)       lines.push(`  What: ${p.description}`);
-    if ((p.stack as string[] | null)?.length)     lines.push(`  Stack: ${(p.stack as string[]).join(', ')}`);
+    lines.push(`\n[${p.category ?? 'uncategorized'}] ${p.title ?? 'Untitled'}`);
+    if (p.subtitle)            lines.push(`  Subtitle: ${p.subtitle}`);
+    if (p.description)         lines.push(`  What: ${p.description}`);
+    if (p.stack && p.stack.length > 0)
+      lines.push(`  Stack: ${p.stack.join(', ')}`);
     if (p.roi_value && p.roi_label)
       lines.push(`  Impact: ${p.roi_value} — ${p.roi_label}${p.roi_context ? ` (${p.roi_context})` : ''}`);
-    if (p.problem_statement) lines.push(`  Problem: ${p.problem_statement}`);
-    if (p.approach)          lines.push(`  Approach: ${p.approach}`);
+    if (p.problem_statement)   lines.push(`  Problem: ${p.problem_statement}`);
+    if (p.approach)            lines.push(`  Approach: ${p.approach}`);
     if (p.testimonial_quote)
-      lines.push(`  Vouch: "${p.testimonial_quote}" — ${p.testimonial_author}`);
-    if ((p.learnings as string[] | null)?.length)
-      lines.push(`  Learnings: ${(p.learnings as string[]).slice(0, 2).join(' | ')}`);
+      lines.push(`  Vouch: "${p.testimonial_quote}" — ${p.testimonial_author ?? ''}`);
+    if (p.learnings && p.learnings.length > 0)
+      lines.push(`  Learnings: ${p.learnings.slice(0, 2).join(' | ')}`);
   }
 
   lines.push('\n\nCERTIFICATIONS:');
   for (const c of data.certificates) {
-    lines.push(`  • ${c.title} — ${c.issuer} [${c.category}]${c.roi_proof ? ` → ${c.roi_proof}` : ''}`);
+    lines.push(`  • ${c.title ?? ''} — ${c.issuer ?? ''} [${c.category ?? ''}]${c.roi_proof ? ` → ${c.roi_proof}` : ''}`);
   }
 
   lines.push('\n\nHEADLINE METRICS:');
   for (const m of data.metrics) {
-    lines.push(`  • ${m.display_value ?? m.value}${m.unit !== 'count' ? m.unit : ''} ${m.label}${m.context ? ` (${m.context})` : ''}`);
+    const value = m.display_value ?? m.value ?? '';
+    const unit  = m.unit && m.unit !== 'count' ? m.unit : '';
+    lines.push(`  • ${value}${unit} ${m.label ?? ''}${m.context ? ` (${m.context})` : ''}`);
   }
 
   lines.push('\n═══════════════════════════════════════');
@@ -107,9 +141,9 @@ export async function POST(req: Request) {
     ]);
 
     contextBlock = buildContext({
-      projects:     projects     as Record<string, unknown>[],
-      certificates: certificates as Record<string, unknown>[],
-      metrics:      metrics      as Record<string, unknown>[],
+      projects:     projects     as ProjectRow[],
+      certificates: certificates as CertificateRow[],
+      metrics:      metrics      as MetricRow[],
     });
   } catch (err) {
     console.error('[api/assistant] DB fetch failed — proceeding without context:', err);

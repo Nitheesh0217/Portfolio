@@ -13,10 +13,11 @@ import {
 import {
   Terminal, FolderOpen, Award, BarChart2,
   Mail, Bot, LayoutDashboard, Search, Clock, Zap,
+  type LucideIcon,
 } from 'lucide-react';
 import type { WindowId, WindowRecord } from '@/types/windows';
 
-const DOCK_ICONS: Record<WindowId, React.FC<{ className?: string }>> = {
+const DOCK_ICONS: Record<WindowId, LucideIcon> = {
   welcome:      LayoutDashboard,
   terminal:     Terminal,
   projects:     FolderOpen,
