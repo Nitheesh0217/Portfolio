@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/abhir/Claude/Projects/**)",
+      "Bash(npm run *)"
+    ]
+  }
+}

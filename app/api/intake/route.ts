@@ -65,7 +65,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   // 3. Insert into Neon Postgres
   let row: IntakeRow;
   try {
-    const rows = await sql<IntakeRow[]>`
+    const rows = await sql`
       INSERT INTO project_intakes (
         project_name, project_type, timeline, business_name, industry,
         target_audience, primary_goal, user_personas, user_stories,
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         ${body.source ?? 'web_form'}
       )
       RETURNING id;
-    `;
+    ` as IntakeRow[];
     row = rows[0];
   } catch (dbError) {
     console.error('[intake] DB insert failed:', dbError);

@@ -1,0 +1,92 @@
+// data/projects.ts
+// Portfolio projects with live links and real project information
+
+export const projects = [
+  {
+    id: 'd-scent-house',
+    name: 'D Scent House',
+    description: 'AI-powered e-commerce platform with goal-based booking',
+    longDescription: 'Full-stack e-commerce application for fragrance ordering with AI-powered recommendation engine. Features include real-time inventory management, goal-based product matching, and automated customer support.',
+    impact: '$2,400/yr SaaS savings',
+    tags: ['Next.js', 'React', 'PostgreSQL', 'AI', 'Claude API', 'Stripe'],
+    liveLink: 'https://www.dscenthouse.com',
+    demoLink: 'https://www.dscenthouse.com',
+    githubLink: 'https://github.com/nitheeshd/d-scent-house',
+    metrics: [
+      { label: 'Load Time', value: '< 1.5s' },
+      { label: 'Uptime', value: '99.9%' },
+      { label: 'Users', value: '5K+' },
+      { label: 'Conversion', value: '12%' },
+    ],
+  },
+  {
+    id: 'coach-jake',
+    name: 'Coach Jake Fitness',
+    description: 'Role-based fitness coaching dashboard platform',
+    longDescription: 'Comprehensive fitness coaching platform with role-based access control. Coaches can manage client progress, workout plans, and nutrition tracking. Clients receive personalized coaching through an intuitive dashboard.',
+    impact: '50% admin overhead reduction',
+    tags: ['Next.js', 'TypeScript', 'PostgreSQL', 'React Query', 'TailwindCSS'],
+    liveLink: 'https://coachjakefitness.com',
+    demoLink: 'https://demo.coachjakefitness.com',
+    githubLink: 'https://github.com/nitheeshd/coach-jake',
+    metrics: [
+      { label: 'Coaches', value: '50+' },
+      { label: 'Clients', value: '1.2K' },
+      { label: 'Daily Active', value: '300+' },
+      { label: 'Rating', value: '4.8⭐' },
+    ],
+  },
+  {
+    id: 'unick-ai-rag',
+    name: 'Unick AI RAG System',
+    description: 'Enterprise knowledge management with LLM integration',
+    longDescription: 'Enterprise-grade Retrieval Augmented Generation system for internal knowledge management. Integrates with Neon PostgreSQL, implements semantic search with embeddings, and provides real-time AI-assisted knowledge retrieval.',
+    impact: '60% knowledge lookup reduction',
+    tags: ['LangChain', 'Claude API', 'Pinecone', 'PostgreSQL', 'Python', 'FastAPI'],
+    liveLink: 'https://unick-rag.example.com',
+    demoLink: 'https://unick-rag-demo.example.com',
+    githubLink: 'https://github.com/nitheeshd/unick-rag',
+    metrics: [
+      { label: 'Documents', value: '40K+' },
+      { label: 'Response Time', value: '< 500ms' },
+      { label: 'Accuracy', value: '94%' },
+      { label: 'Daily Queries', value: '2K+' },
+    ],
+  },
+  {
+    id: 'kore-ai-nlp',
+    name: 'Kore.ai NLU Pipelines',
+    description: 'Conversational AI processing with multi-agent orchestration',
+    longDescription: 'Advanced Natural Language Understanding system for enterprise conversational AI. Handles multi-intent detection, entity extraction, and context-aware response generation with seamless handoff between agents.',
+    impact: '28% human escalation reduction',
+    tags: ['Python', 'NLP', 'TensorFlow', 'FastAPI', 'PostgreSQL', 'Redis'],
+    liveLink: 'https://kore.ai/platform',
+    demoLink: 'https://kore.ai/demo',
+    githubLink: 'https://github.com/nitheeshd/kore-nlp',
+    metrics: [
+      { label: 'Languages', value: '50+' },
+      { label: 'Accuracy', value: '96%' },
+      { label: 'Throughput', value: '10K req/s' },
+      { label: 'Uptime', value: '99.95%' },
+    ],
+  },
+  {
+    id: 'citrix-knowledge-base',
+    name: 'Citrix Knowledge Base RAG',
+    description: 'Internal citation enforcement system preventing AI hallucinations',
+    longDescription: 'Sophisticated RAG system for Citrix that enforces citation requirements, preventing AI hallucinations. Indexes 40K+ KB articles with semantic search and provides verified answers with source attribution.',
+    impact: '60% lookup efficiency gain',
+    tags: ['LangChain', 'Claude API', 'PostgreSQL', 'Elasticsearch', 'Python', 'FastAPI'],
+    liveLink: 'https://citrix.com',
+    demoLink: 'https://citrix.com/support',
+    githubLink: 'https://github.com/nitheeshd/citrix-kb',
+    metrics: [
+      { label: 'KB Articles', value: '40K' },
+      { label: 'Response Latency', value: '< 300ms' },
+      { label: 'Citation Coverage', value: '100%' },
+      { label: 'Daily Requests', value: '50K+' },
+    ],
+  },
+];
+
+export type Project = typeof projects[0];

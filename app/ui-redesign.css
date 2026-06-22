@@ -1,0 +1,515 @@
+/* ============================================================================
+   PRO SOFTWARE AI ENGINEER PORTFOLIO — UI REDESIGN
+   ============================================================================
+   Professional, bold, impressive design for showcasing elite engineering skills
+   ============================================================================ */
+
+:root {
+  /* ─── TYPOGRAPHY — BOLD & READABLE ─── */
+  --text-h1: 2.8rem;
+  --text-h2: 2rem;
+  --text-h3: 1.5rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-tiny: 0.75rem;
+
+  /* ─── SPACING — GENEROUS ─── */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* ─── COLORS — PROFESSIONAL + VIBRANT ─── */
+  --primary: #6366f1;
+  --secondary: #ec4899;
+  --accent: #10b981;
+  --dark-bg: #0a0a14;
+  --card-bg: rgba(20, 20, 35, 0.8);
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+
+  /* ─── SHADOWS — DEPTH ─── */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(99, 102, 241, 0.2);
+
+  /* ─── BORDERS ─── */
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+}
+
+/* ============================================================================
+   GLOBAL SCALING & SIZING
+   ============================================================================ */
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: var(--text-body);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================================
+   WINDOW STYLING — PROFESSIONAL & BOLD
+   ============================================================================ */
+
+.system-window {
+  background: linear-gradient(135deg,
+    rgba(20, 20, 35, 0.85) 0%,
+    rgba(30, 30, 50, 0.85) 100%);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  min-width: 320px;
+  overflow: hidden;
+}
+
+.system-window:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================================================
+   TITLE BAR — PREMIUM FEEL
+   ============================================================================ */
+
+.title-bar {
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(90deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(236, 72, 153, 0.05) 100%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  user-select: none;
+  font-weight: 600;
+  font-size: var(--text-h3);
+  letter-spacing: 0.5px;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+.title-bar h3 {
+  margin: 0;
+  font-size: var(--text-h3);
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   CONTENT AREA — READABLE & SPACIOUS
+   ============================================================================ */
+
+.window-content {
+  padding: var(--space-xl);
+  font-size: var(--text-body);
+  line-height: 1.8;
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+}
+
+.window-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 3px;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================================================
+   TEXT HIERARCHY — BOLD & CLEAR
+   ============================================================================ */
+
+h1 {
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin: 0 0 var(--space-md) 0;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  margin: var(--space-lg) 0 var(--space-md) 0;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  margin: var(--space-md) 0 var(--space-sm) 0;
+  color: var(--text-secondary);
+}
+
+p {
+  font-size: var(--text-body);
+  margin: var(--space-md) 0;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* ============================================================================
+   BUTTONS — PREMIUM & INTERACTIVE
+   ============================================================================ */
+
+button {
+  font-size: var(--text-body);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+button:hover:before {
+  left: 100%;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Primary Button */
+button.primary {
+  background: linear-gradient(135deg, var(--primary), #818cf8);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+button.primary:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Secondary Button */
+button.secondary {
+  background: linear-gradient(135deg, var(--secondary), #f472b6);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+button.secondary:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Accent Button */
+button.accent {
+  background: linear-gradient(135deg, var(--accent), #34d399);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+button.accent:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* ============================================================================
+   MENU BAR — PROFESSIONAL HEADER
+   ============================================================================ */
+
+.menu-bar {
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(90deg,
+    rgba(20, 20, 35, 0.95),
+    rgba(30, 30, 50, 0.95));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: var(--text-h3);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.menu-bar h1 {
+  margin: 0;
+  font-size: var(--text-h2);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================================
+   DOCK — MODERN & ACCESSIBLE
+   ============================================================================ */
+
+.dock {
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(90deg,
+    rgba(20, 20, 35, 0.9),
+    rgba(30, 30, 50, 0.9));
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(99, 102, 241, 0.2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.dock-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.dock-icon:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(236, 72, 153, 0.2));
+  border-color: rgba(99, 102, 241, 0.5);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.dock-icon.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================================================
+   METRICS & STATS — IMPRESSIVE SHOWCASE
+   ============================================================================ */
+
+.metric-card {
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.1),
+    rgba(236, 72, 153, 0.05));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--border-radius);
+  padding: var(--space-lg);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.metric-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
+}
+
+.metric-label {
+  font-size: var(--text-small);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: var(--space-sm) 0 0 0;
+}
+
+/* ============================================================================
+   SKILL TAGS — MODERN & CLEAN
+   ============================================================================ */
+
+.skill-tag {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--space-xs);
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.15),
+    rgba(16, 185, 129, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 20px;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.skill-tag:hover {
+  border-color: rgba(99, 102, 241, 0.6);
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.25),
+    rgba(16, 185, 129, 0.2));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================================
+   INPUT & FORMS — PROFESSIONAL
+   ============================================================================ */
+
+input, textarea {
+  font-size: var(--text-body);
+  padding: var(--space-md);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: rgba(20, 20, 35, 0.6);
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(20, 20, 35, 0.8);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================================================================
+   RESPONSIVE — MOBILE FIRST
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  :root {
+    --text-h1: 2rem;
+    --text-h2: 1.5rem;
+    --text-h3: 1.25rem;
+    --text-body: 0.95rem;
+  }
+
+  .system-window {
+    min-width: 280px;
+  }
+
+  .window-content {
+    padding: var(--space-lg);
+  }
+
+  .dock-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .menu-bar h1 {
+    font-size: var(--text-h3);
+  }
+}
+
+/* ============================================================================
+   ANIMATIONS — SMOOTH & ELEGANT
+   ============================================================================ */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.system-window {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* ============================================================================
+   ACCESSIBILITY — INCLUSIVE DESIGN
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --dark-bg: #f5f5f7;
+    --card-bg: rgba(240, 240, 245, 0.8);
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #8a8a8a;
+  }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  * {
+    box-shadow: none;
+    text-shadow: none;
+  }
+
+  button, .dock {
+    display: none;
+  }
+}

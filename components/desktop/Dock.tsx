@@ -2,7 +2,7 @@
 import { memo } from 'react';
 import {
   Terminal, FolderOpen, Award, BarChart2,
-  Mail, Bot, LayoutDashboard,
+  Mail, Bot, LayoutDashboard, Search, Clock, Zap,
 } from 'lucide-react';
 import type { WindowId, WindowRecord } from '@/types/windows';
 
@@ -14,6 +14,9 @@ const DOCK_ICONS: Record<WindowId, React.FC<{ className?: string }>> = {
   metrics:      BarChart2,
   contact:      Mail,
   assistant:    Bot,
+  search:       Search,
+  timeline:     Clock,
+  skills:       Zap,
 };
 
 const DOCK_LABELS: Record<WindowId, string> = {
@@ -24,6 +27,9 @@ const DOCK_LABELS: Record<WindowId, string> = {
   metrics:      'Metrics',
   contact:      'Contact',
   assistant:    'AI Sidekick',
+  search:       'Search',
+  timeline:     'Timeline',
+  skills:       'Skills',
 };
 
 export interface DockProps {

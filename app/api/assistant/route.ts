@@ -36,7 +36,7 @@ function buildContext(data: {
     lines.push(`\n[${p.category}] ${p.title}`);
     if (p.subtitle)          lines.push(`  Subtitle: ${p.subtitle}`);
     if (p.description)       lines.push(`  What: ${p.description}`);
-    if (p.stack?.length)     lines.push(`  Stack: ${(p.stack as string[]).join(', ')}`);
+    if ((p.stack as string[] | null)?.length)     lines.push(`  Stack: ${(p.stack as string[]).join(', ')}`);
     if (p.roi_value && p.roi_label)
       lines.push(`  Impact: ${p.roi_value} — ${p.roi_label}${p.roi_context ? ` (${p.roi_context})` : ''}`);
     if (p.problem_statement) lines.push(`  Problem: ${p.problem_statement}`);
@@ -136,7 +136,8 @@ export async function POST(req: Request) {
           messages:   [...safeHistory, { role: 'user', content: message }],
         });
 
-        for await (const text of messageStream.textStream) {
+        const msgStream = messageStream as unknown as { textStream: AsyncIterable<string> };
+        for await (const text of msgStream.textStream) {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
         }
 

@@ -15,7 +15,7 @@ interface IntakeRow {
 export const dynamic = 'force-dynamic'; // Always fetch fresh data
 
 export default async function IntakesDashboard() {
-  const intakes = await sql<IntakeRow[]>`
+  const intakes = (await sql`
     SELECT
       id,
       created_at,
@@ -28,7 +28,7 @@ export default async function IntakesDashboard() {
     FROM project_intakes
     ORDER BY created_at DESC
     LIMIT 50;
-  `;
+  `) as IntakeRow[];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">

@@ -41,8 +41,8 @@ export const TitleBar = memo(function TitleBar({
       </div>
 
       {/* Title */}
-      <p className="flex-1 text-center text-[11px] font-semibold tracking-wide truncate"
-        style={{ color: isFocused ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.30)' }}>
+      <p className="flex-1 text-center text-[13px] font-bold tracking-wider truncate"
+        style={{ color: isFocused ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)' }}>
         {title}
       </p>
 

@@ -8,16 +8,16 @@ const SPRING           = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 const TRANSITION_IN    = `opacity 0.22s ease, transform 0.42s ${SPRING}`;
 const TRANSITION_OUT   = 'opacity 0.18s ease-in, transform 0.18s ease-in';
 
-const ELEVATION_INACTIVE = 'bg-black/40 backdrop-blur-md border border-white/[0.06]';
-const ELEVATION_FOCUSED  = 'bg-black/50 backdrop-blur-2xl border border-violet-500/[0.18]';
+const ELEVATION_INACTIVE = 'bg-black/70 backdrop-blur-2xl border border-white/[0.15]';
+const ELEVATION_FOCUSED  = 'bg-black/75 backdrop-blur-2xl border border-violet-500/[0.4]';
 
 const SHADOW_FOCUSED = [
-  '0 0 0 1px rgba(139, 92, 246, 0.22)',
-  '0 0 50px -8px rgba(139, 92, 246, 0.16)',
-  '0 32px 64px -12px rgba(0, 0, 0, 0.80)',
+  '0 0 0 1px rgba(139, 92, 246, 0.28)',
+  '0 0 60px -6px rgba(139, 92, 246, 0.22)',
+  '0 32px 64px -12px rgba(0, 0, 0, 0.88)',
 ].join(', ');
 
-const SHADOW_INACTIVE        = '0 10px 30px -8px rgba(0, 0, 0, 0.55)';
+const SHADOW_INACTIVE        = '0 10px 40px -8px rgba(0, 0, 0, 0.72)';
 const SHADOW_TRANSITION_IN   = `box-shadow 0.38s ${SPRING}`;
 const SHADOW_TRANSITION_OUT  = 'box-shadow 0.18s ease-in';
 
@@ -68,6 +68,7 @@ export const SystemWindow = memo(function SystemWindow({
         style={{
           boxShadow:  win.isFocused ? SHADOW_FOCUSED : SHADOW_INACTIVE,
           transition: win.isFocused ? SHADOW_TRANSITION_IN : SHADOW_TRANSITION_OUT,
+          animation:  win.isFocused ? 'windowPulse 3.5s ease-in-out infinite' : 'none',
         }}
       >
         <TitleBar

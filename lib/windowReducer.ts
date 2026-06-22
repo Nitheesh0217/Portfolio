@@ -11,75 +11,80 @@ export const MENUBAR_HEIGHT = 28;
 type WindowDef = Omit<WindowRecord, 'isOpen' | 'isMinimized' | 'isFocused' | 'isMounted'>;
 
 const WINDOW_DEFAULTS: Record<WindowId, WindowDef> = {
+  // ── Left column (x≈40–180) ──────────────────────────────
   welcome: {
     id:       'welcome',
     title:    '👋 Welcome',
     zIndex:   Z_BASE + 6,
-    position: { x: 80, y: MENUBAR_HEIGHT + 32 },
-    size:     { w: 'auto', h: 'auto' },
-  },
-  terminal: {
-    id:       'terminal',
-    title:    '⬛ Terminal',
-    zIndex:   Z_BASE + 5,
-    position: { x: 480, y: MENUBAR_HEIGHT + 32 },
+    position: { x: 40, y: MENUBAR_HEIGHT + 24 },
     size:     { w: 'auto', h: 'auto' },
   },
   projects: {
     id:       'projects',
     title:    '📁 Projects',
     zIndex:   Z_BASE + 4,
-    position: { x: 160, y: MENUBAR_HEIGHT + 120 },
+    position: { x: 40, y: MENUBAR_HEIGHT + 24 },
     size:     { w: 'auto', h: 'auto' },
   },
-  certificates: {
-    id:       'certificates',
-    title:    '🏅 Credentials',
+  skills: {
+    id:       'skills',
+    title:    '💻 Skills',
     zIndex:   Z_BASE + 3,
-    position: { x: 240, y: MENUBAR_HEIGHT + 160 },
-    size:     { w: 'auto', h: 'auto' },
+    position: { x: 60, y: MENUBAR_HEIGHT + 100 },
+    size:     { w: 520, h: 'auto' },
   },
-  metrics: {
-    id:       'metrics',
-    title:    '📊 Metrics',
-    zIndex:   Z_BASE + 2,
-    position: { x: 320, y: MENUBAR_HEIGHT + 80 },
-    size:     { w: 380, h: 'auto' },
-  },
-  contact: {
-    id:       'contact',
-    title:    '✉️ Contact',
-    zIndex:   Z_BASE + 1,
-    position: { x: 560, y: MENUBAR_HEIGHT + 200 },
-    size:     { w: 300, h: 'auto' },
-  },
-  assistant: {
-    id:       'assistant',
-    title:    '🤖 AI Sidekick',
-    zIndex:   Z_BASE + 0,
-    position: { x: 700, y: MENUBAR_HEIGHT + 48 },
+
+  // ── Center column (x≈440–600) ────────────────────────────
+  terminal: {
+    id:       'terminal',
+    title:    '⬛ Terminal',
+    zIndex:   Z_BASE + 5,
+    position: { x: 440, y: MENUBAR_HEIGHT + 24 },
     size:     { w: 'auto', h: 'auto' },
   },
   search: {
     id:       'search',
     title:    '🔍 Search',
     zIndex:   Z_BASE + 5,
-    position: { x: 100, y: MENUBAR_HEIGHT + 80 },
+    position: { x: 440, y: MENUBAR_HEIGHT + 24 },
     size:     { w: 500, h: 'auto' },
   },
   timeline: {
     id:       'timeline',
     title:    '📅 Timeline',
     zIndex:   Z_BASE + 4,
-    position: { x: 300, y: MENUBAR_HEIGHT + 100 },
+    position: { x: 420, y: MENUBAR_HEIGHT + 160 },
     size:     { w: 500, h: 'auto' },
   },
-  skills: {
-    id:       'skills',
-    title:    '💻 Skills',
+  contact: {
+    id:       'contact',
+    title:    '✉️ Contact',
+    zIndex:   Z_BASE + 1,
+    position: { x: 460, y: MENUBAR_HEIGHT + 360 },
+    size:     { w: 300, h: 'auto' },
+  },
+
+  // ── Right column (x≈880–960) ─────────────────────────────
+  assistant: {
+    id:       'assistant',
+    title:    '🤖 AI Sidekick',
+    zIndex:   Z_BASE + 7,
+    position: { x: 880, y: MENUBAR_HEIGHT + 24 },
+    size:     { w: 'auto', h: 'auto' },
+  },
+  certificates: {
+    id:       'certificates',
+    title:    '🏅 Credentials',
     zIndex:   Z_BASE + 3,
-    position: { x: 200, y: MENUBAR_HEIGHT + 200 },
-    size:     { w: 520, h: 'auto' },
+    position: { x: 880, y: MENUBAR_HEIGHT + 24 },
+    size:     { w: 'auto', h: 'auto' },
+  },
+  metrics: {
+    id:       'metrics',
+    title:    '📊 Metrics',
+    zIndex:   Z_BASE + 2,
+    position: { x: 900, y: MENUBAR_HEIGHT + 200 },
+    size:     { w: 380, h: 'auto' },
   },
 };
 
