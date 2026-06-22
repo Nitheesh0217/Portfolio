@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Production
+.env.local
+.env.local.backup
+.env.*.local
+.env.production
+
+# Misc
+.DS_Store
+*.pem
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Cache
+*.cache
+.eslintcache
+
+# Vercel
+.vercel
+
+# Railway
+.railway
+
+# Docker
+docker-compose.override.yml
