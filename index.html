@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitheesh Donepudi | Full Stack Developer</title>
+    <link href="./index_files/tailwind.min.css" rel="stylesheet">
+    <link href="./index_files/css2" rel="stylesheet">
+    <link rel="stylesheet" href="./index_files/all.min.css">
+    <link rel="stylesheet" href="./index_files/aos.css">
+    <style>
+        :root {
+            --mint-light: #c5f7e9;
+            --teal-medium: #66d3c7;
+            --teal-dark: #3ab8b8;
+            --accent: #2a9d8f;
+            --text-dark: #333333;
+            --text-medium: #555555;
+            --text-light: #777777;
+            --glass-bg: rgba(255,255,255,0.25);
+            --glass-blur: blur(16px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--mint-light), var(--teal-dark)), url('./index_files/ben-kolde-bs2Ba7t69mM-unsplash.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+
+        .bg-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+
+        .bg-bubble-1 {
+            width: 400px;
+            height: 400px;
+            top: 5%;
+            left: -150px;
+        }
+
+        .bg-bubble-2 {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            right: -100px;
+        }
+
+        .bg-bubble-3 {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            left: 15%;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.10);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            backdrop-filter: var(--glass-blur);
+            background-color: rgba(255,255,255,0.5);
+            z-index: 1000;
+            transition: all 0.3s ease, background-color 0.5s;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+        }
+
+        .header.scrolled {
+            background-color: rgba(255,255,255,0.85);
+            padding: 0.75rem 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .section-title {
+            position: relative;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            height: 3px;
+            width: 50px;
+            background-color: var(--accent);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--teal-medium), var(--accent), #43e97b, #38f9d7);
+            background-size: 200% 200%;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease, background-position 0.5s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(42,157,143,0.2);
+        }
+
+        .btn:hover {
+            background-position: right center;
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 8px 24px rgba(42,157,143,0.3);
+        }
+
+        .skill-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            border-radius: 4px;
+            background-color: var(--accent);
+            width: 0;
+            transition: width 1s ease;
+        }
+
+        .project-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .project-image {
+            height: 200px;
+            background-color: var(--teal-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .contact-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fafafa;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: var(--teal-medium);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-date {
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                gap: 0;
+                flex-direction: column;
+                background-color: white;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+                padding: 2rem 0;
+            }
+
+            .nav-item {
+                margin: 16px 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+        }
+
+        /* Additional styles for animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill icons */
+        .skill-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-right: 1rem;
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        /* Profile image style */
+        .profile-image {
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 5px solid white;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: white;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        /* Floating social bar */
+        .social-bar {
+            position: fixed;
+            top: 50%;
+            left: 24px;
+            transform: translateY(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .social-bar a {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+        }
+
+        .social-bar a:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            right: 32px;
+            bottom: 32px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 3000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Typewriter effect for subtitle */
+        .typewriter {
+            display: inline-block;
+            border-right: 2px solid var(--accent);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 2.5s steps(30, end), blink-caret 0.75s step-end infinite;
+            max-width: 100%;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent); }
+        }
+    </style>
+</head>
+<body data-aos-easing="ease" data-aos-duration="800" data-aos-delay="0">
+    <!-- Background Bubbles -->
+    <div class="bg-bubble bg-bubble-1"></div>
+    <div class="bg-bubble bg-bubble-2"></div>
+    <div class="bg-bubble bg-bubble-3"></div>
+
+    <!-- Floating Social Bar -->
+    <div class="social-bar">
+        <a href="https://www.linkedin.com/in/nitheeshd" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="text-2xl font-bold">ND.</a>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="flex nav-menu">
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#skills" class="nav-link">Skills</a></li>
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#experience" class="nav-link">Experience</a></li>
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#education" class="nav-link">Education</a></li>
+                <li class="nav-item"><a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-20" id="hero">
+        <div class="container mx-auto px-4 relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-mint-light/60 to-teal-dark/80 pointer-events-none rounded-2xl z-0"></div>
+            <div class="flex flex-col md:flex-row items-center relative z-10">
+                <div class="md:w-1/2 mb-10 md:mb-0 aos-init aos-animate" data-aos="fade-right">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">Nitheesh Donepudi</h1>
+                    <h2 class="text-xl md:text-2xl text-white bg-accent inline-block px-4 py-2 rounded-lg mb-6 typewriter">Full Stack Developer | AI Enthusiast</h2>
+                    <p class="text-lg mb-8 max-w-lg">As an ambitious Software Engineering graduate with a specialization in AI healthcare solutions, I create innovative systems that revolutionize patient care through intelligent automation.</p>
+                    <a href="#contact" class="btn"><i class="fas fa-paper-plane"></i>Get In Touch</a>
+                </div>
+                <div class="md:w-1/2 flex justify-center aos-init aos-animate" data-aos="fade-left">
+                    <!-- PROFILE PICTURE CODE LOCATION -->
+                    <img src="./index_files/4.jpg" alt="Nitheesh Donepudi" class="profile-image w-64 h-64 md:w-80 md:h-80 object-cover shadow-2xl">
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-20" id="about">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">About Me</h2>
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-2/3 pr-0 md:pr-8">
+                        <p class="mb-4">As an ambitious Software Engineering graduate with a specialization in AI healthcare solutions, I am proficient in Python, JavaScript/TypeScript and radiology-focused AI initiatives. My skills include software engineering, healthcare optimizations, patient care advancements, and innovative system deployments.</p>
+                        <p class="mb-6">I am passionate about leveraging my experience in data management and AI-driven workflows to revolutionize healthcare through intelligent automation.</p>
+                        <div class="flex flex-wrap gap-4 mt-6">
+                            <div class="flex items-center">
+                                <div class="mr-2 text-accent"><i class="fas fa-envelope"></i></div>
+                                <span>ndonepudi2023@fau.edu</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="mr-2 text-accent"><i class="fas fa-phone"></i></div>
+                                <span>813.391.2482</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="mr-2 text-accent"><i class="fas fa-map-marker-alt"></i></div>
+                                <span>Boca Raton, FL</span>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="btn">Download Resume</a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/3 mt-8 md:mt-0">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="font-semibold mb-4 text-lg">Personal Info</h3>
+                            <div class="mb-3">
+                                <h4 class="text-sm text-gray-500">Specialization</h4>
+                                <p>AI Healthcare Solutions</p>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="text-sm text-gray-500">Languages</h4>
+                                <p>English, Hindi, Telugu</p>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="text-sm text-gray-500">Nationality</h4>
+                                <p>Indian</p>
+                            </div>
+                            <div class="flex mt-6 space-x-4">
+                                <a href="https://www.linkedin.com/in/nitheeshd" target="_blank" class="text-accent hover:text-teal-dark text-xl">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="https://github.com/" target="_blank" class="text-accent hover:text-teal-dark text-xl">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" target="_blank" class="text-accent hover:text-teal-dark text-xl">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="py-20" id="skills">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">Skills</h2>
+                
+                <div class="mb-10">
+                    <h3 class="text-xl font-semibold mb-6">Programming Languages &amp; Frameworks</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fab fa-python"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">Python</span>
+                                        <span>90%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="90%" style="width: 90%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fab fa-js"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">JavaScript/TypeScript</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="85%" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">SQL</span>
+                                        <span>80%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="80%" style="width: 80%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fab fa-react"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">React</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="85%" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fab fa-node-js"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">Node.js/Express</span>
+                                        <span>80%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="80%" style="width: 80%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center mb-2">
+                                <div class="skill-icon"><i class="fab fa-java"></i></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-medium">Java</span>
+                                        <span>75%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-width="75%" style="width: 75%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-10">
+                    <h3 class="text-xl font-semibold mb-6">AI/ML &amp; Data Science</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-brain text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">TensorFlow</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-fire text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">PyTorch</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-robot text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">scikit-learn</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-comment-alt text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">NLP</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-random text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Generative AI</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-project-diagram text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Deep Learning</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-gamepad text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Reinforcement Learning</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-eye text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Computer Vision</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-6">Databases &amp; Cloud</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-database text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">PostgreSQL</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-database text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">MySQL</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fab fa-microsoft text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Azure</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fab fa-docker text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Docker</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-dharmachakra text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">Kubernetes</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <i class="fas fa-code-branch text-accent text-2xl mb-2"></i>
+                            <p class="font-medium">CI/CD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="py-20" id="experience">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">Experience</h2>
+                <div class="timeline">
+                    <div class="timeline-item aos-init" data-aos="fade-up" data-aos-delay="100">
+                        <div class="timeline-date">Jul 2022 - Jun 2023</div>
+                        <h3 class="timeline-title">Software Development Engineer</h3>
+                        <h4 class="font-medium mb-2">Birlasoft</h4>
+                        <ul class="ml-6 mb-4 list-disc text-gray-700">
+                            <li class="mb-2">Architected and led full-stack development, driving 30% system performance improvement by optimizing database queries, implementing advanced caching strategies, and refactoring microservices for scalability.</li>
+                            <li class="mb-2">Designed and maintained highly scalable Java Spring Boot microservices, reducing API response latency by 40% and ensuring seamless data integration across distributed systems.</li>
+                            <li class="mb-2">Developed and automated CI/CD pipelines, cutting deployment time by 50%, reducing rollback failures, and ensuring zero-downtime releases, aligning with AI-driven DevOps workflows.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item aos-init" data-aos="fade-up" data-aos-delay="200">
+                        <div class="timeline-date">Apr 2022 - Jun 2022</div>
+                        <h3 class="timeline-title">Associate Software Engineer Intern</h3>
+                        <h4 class="font-medium mb-2">Cybage Software</h4>
+                        <ul class="ml-6 mb-4 list-disc text-gray-700">
+                            <li class="mb-2">Developed and optimized mission-critical backend microservices using Java, Spring Boot, and PostgreSQL, enhancing data consistency, query efficiency, and fault tolerance.</li>
+                            <li class="mb-2">Boosted API efficiency by 35%, reducing average response times from 200ms to 130ms, leading to faster AI-powered healthcare data processing.</li>
+                            <li class="mb-2">Led the integration of microservices with front-end systems, improving user experience and application responsiveness by 20%, crucial for real-time workflows.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item aos-init" data-aos="fade-up" data-aos-delay="300">
+                        <div class="timeline-date">Nov 2021 - Feb 2022</div>
+                        <h3 class="timeline-title">Web Development Intern</h3>
+                        <h4 class="font-medium mb-2">ProSoft Technology Group Inc.</h4>
+                        <ul class="ml-6 mb-4 list-disc text-gray-700">
+                            <li class="mb-2">Designed and optimized highly interactive, SEO-enhanced web applications using React and JavaScript, improving page load times by 25% and significantly reducing bounce rates.</li>
+                            <li class="mb-2">Developed and integrated high-performance RESTful APIs, enhancing real-time data flow, leading to an 18% increase in web traffic.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="py-20" id="projects">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="project-card aos-init" data-aos="fade-up" data-aos-delay="100">
+                        <div class="project-image">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">AI's Study Buddy &amp; Career Guidance Bot</h3>
+                            <p class="text-gray-700 mb-4">An adaptive AI-driven system designed to scale for healthcare applications, showcasing the potential of intelligent automation to enhance radiology workflows and streamline clinical decision-making.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Python</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Discord.py</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">FastAPI</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">OpenAI</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">MongoDB</span>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="text-accent hover:text-teal-dark font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card aos-init" data-aos="fade-up" data-aos-delay="200">
+                        <div class="project-image">
+                            <i class="fas fa-lungs"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Lung Cancer Predictive Model</h3>
+                            <p class="text-gray-700 mb-4">An AI-powered predictive platform that enhances early lung cancer detection by integrating structured and unstructured data for high-precision risk stratification.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">TypeScript</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">React</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">FastAPI</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">TensorFlow</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Hugging Face</span>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="text-accent hover:text-teal-dark font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card aos-init" data-aos="fade-up" data-aos-delay="300">
+                        <div class="project-image">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">AI-Driven Report Generation System</h3>
+                            <p class="text-gray-700 mb-4">An AI-driven report generation system utilizing advanced prompt engineering and NLP models to interpret unstructured user input and generate structured, data-driven reports.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Python</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">NLP</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Healthcare</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Prompt Engineering</span>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="text-accent hover:text-teal-dark font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card aos-init" data-aos="fade-up" data-aos-delay="400">
+                        <div class="project-image">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Personalized Healthcare Insights Model</h3>
+                            <p class="text-gray-700 mb-4">An AI model for personalized healthcare insights, leveraging patient health data, machine learning algorithms, and decision-support frameworks to analyze medical histories.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Machine Learning</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Healthcare</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Data Analytics</span>
+                                <span class="px-3 py-1 bg-teal-50 text-accent text-sm rounded-full">Python</span>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <a href="https://page.genspark.site/page/toolu_011Z12RB9JijHAZhhzd6EXWE/nitheesh_mint_teal_portfolio.html#" class="text-accent hover:text-teal-dark font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="py-20" id="education">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">Education</h2>
+                <div class="mb-10">
+                    <div class="flex flex-col md:flex-row items-start">
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            <img src="./index_files/react-original.svg" alt="University Logo" class="w-24 h-24 object-contain">
+                        </div>
+                        <div class="md:w-3/4">
+                            <h3 class="text-xl font-semibold">Master in Computer Science</h3>
+                            <h4 class="text-lg mb-2">Florida Atlantic University</h4>
+                            <p class="text-gray-600 mb-4">May 2025 (Expected) | Boca Raton, FL</p>
+                            <p class="mb-2"><span class="font-medium">GPA:</span> 3.6/4.0</p>
+                            <div class="mt-4">
+                                <h4 class="font-medium mb-2">Relevant Coursework</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Generative AI</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Deep Learning</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Software Engineering</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Data Mining</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Machine Learning</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Neural Networks</span>
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Data Science</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Certifications</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-certificate text-accent text-lg mr-2"></i>
+                                <h4 class="font-medium">Advanced Prompt Engineering</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">LinkedIn Learning</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-certificate text-accent text-lg mr-2"></i>
+                                <h4 class="font-medium">Large Language Model Optimization</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">Coursera</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-certificate text-accent text-lg mr-2"></i>
+                                <h4 class="font-medium">Scalable AI Systems</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">Coursera</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20" id="contact">
+        <div class="container mx-auto px-4">
+            <div class="card aos-init" data-aos="fade-up">
+                <h2 class="section-title text-3xl">Contact Me</h2>
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/2 mb-10 md:mb-0 pr-0 md:pr-8">
+                        <p class="mb-6">I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision. Feel free to reach out!</p>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="mr-4 w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center text-accent">
+                                <i class="fas fa-envelope text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Email</h4>
+                                <p class="text-gray-600">ndonepudi2023@fau.edu</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="mr-4 w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center text-accent">
+                                <i class="fas fa-phone text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Phone</h4>
+                                <p class="text-gray-600">813.391.2482</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="mr-4 w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center text-accent">
+                                <i class="fas fa-map-marker-alt text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Location</h4>
+                                <p class="text-gray-600">Boca Raton, FL</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2">
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 mb-2">Name</label>
+                                <input type="text" id="name" class="contact-input" placeholder="Your Name">
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" class="contact-input" placeholder="Your Email">
+                            </div>
+                            <div class="mb-4">
+                                <label for="subject" class="block text-gray-700 mb-2">Subject</label>
+                                <input type="text" id="subject" class="contact-input" placeholder="Subject">
+                            </div>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 mb-2">Message</label>
+                                <textarea id="message" rows="5" class="contact-input" placeholder="Your Message"></textarea>
+                            </div>
+                            <button type="submit" class="btn w-full">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-6 text-center text-gray-600 bg-white">
+        <div class="container mx-auto px-4">
+            <p>© 2025 Nitheesh Donepudi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./index_files/aos.js.download"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Skill bars animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            
+            skillBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Fade in elements on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeIn = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeIn);
+        window.addEventListener('load', fadeIn);
+    </script>
+
+</body></html>

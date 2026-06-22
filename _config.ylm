@@ -1,0 +1,44 @@
+
+# GitHub Pages Configuration File
+
+# Site Information
+title: "Nitheesh Donepudi - Portfolio"
+description: "Software Engineer | AI Developer | Data Analyst - Showcasing projects, skills, and experience."
+author: "Nitheesh Donepudi"
+email: "nitheeshdonepudi.17@gmail.com"
+baseurl: "nitheeshdonepudi.17@gmail.com"
+url: "https://Nitheesh0217.github.io" # Update with your GitHub Pages URL
+
+# Theme Configuration (Jekyll Theme)
+theme: jekyll-theme-cayman
+
+# Navigation Links (Add as needed)
+header_pages:
+  - index.md
+  - projects.md
+  - contact.md
+
+# SEO & Social Media
+twitter_username: your_twitter_handle
+github_username: yourusername
+linkedin_username: your-linkedin-profile
+
+# Plugins (Enable Additional Features)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+
+# Markdown Settings
+markdown: kramdown
+highlighter: rouge
+
+# Google Analytics (Optional)
+google_analytics: "UA-XXXXXX-X" # Replace with your Analytics ID
+
+# Exclude Unnecessary Files from Build
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
