@@ -3,19 +3,25 @@
 
 import SwiftUI
 
-struct SpatialNavBar<Trailing: View>: View {
+struct SpatialNavBar: View {
     let title: String
     var subtitle: String?
-    let trailing: Trailing
+    let trailing: AnyView
 
-    init(
+    init<Trailing: View>(
         title: String,
         subtitle: String? = nil,
         @ViewBuilder trailing: () -> Trailing
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.trailing = trailing()
+        self.trailing = AnyView(trailing())
+    }
+
+    init(title: String, subtitle: String? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+        self.trailing = AnyView(EmptyView())
     }
 
     var body: some View {
@@ -31,12 +37,5 @@ struct SpatialNavBar<Trailing: View>: View {
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, Spacing.md)
-    }
-}
-
-// Convenience init for callers that don't need a trailing view.
-extension SpatialNavBar where Trailing == EmptyView {
-    init(title: String, subtitle: String? = nil) {
-        self.init(title: title, subtitle: subtitle) { EmptyView() }
     }
 }

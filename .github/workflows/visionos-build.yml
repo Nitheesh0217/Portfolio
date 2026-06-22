@@ -108,7 +108,7 @@ jobs:
                                      print(next(t['identifier'] for t in d if 'Vision' in t['name']))")
           RUNTIME=$(xcrun simctl list -j runtimes \
                    | python3 -c "import sys,json; r=json.load(sys.stdin)['runtimes']; \
-                                 print(next(x['identifier'] for x in r if 'xrOS' in x['identifier'] and x['isAvailable']))")
+                                 print(next(x['identifier'] for x in r if ('vision' in x['identifier'].lower() or 'xros' in x['identifier'].lower()) and x['isAvailable']))")
           UDID=$(xcrun simctl create "Vision-CI" "$DEVICE_TYPE" "$RUNTIME")
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$UDID"
