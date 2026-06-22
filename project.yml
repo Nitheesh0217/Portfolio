@@ -1,0 +1,49 @@
+# project.yml — XcodeGen spec
+# Run on macOS: `xcodegen generate`
+# The .github/workflows pipeline does this automatically on push.
+
+name: NitheeshPortfolio
+
+options:
+  bundleIdPrefix: dev.nitheesh
+  createIntermediateGroups: true
+  deploymentTarget:
+    visionOS: "2.0"
+  developmentLanguage: en
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    ENABLE_PREVIEWS: "YES"
+    SUPPORTED_PLATFORMS: xros xrsimulator
+    SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: "NO"
+
+targets:
+  NitheeshPortfolio:
+    type: application
+    platform: visionOS
+    deploymentTarget: "2.0"
+    sources:
+      - path: NitheeshPortfolio
+        excludes:
+          - "**/.DS_Store"
+    info:
+      path: NitheeshPortfolio/Info.plist
+      properties:
+        CFBundleDisplayName: Nitheesh Portfolio
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations: {}
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.nitheesh.NitheeshPortfolio
+        TARGETED_DEVICE_FAMILY: "7"            # 7 = visionOS
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 Nitheesh Donepudi"
+        GENERATE_INFOPLIST_FILE: "NO"
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGN_STYLE: Manual

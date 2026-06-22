@@ -8,16 +8,22 @@ const SPRING           = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 const TRANSITION_IN    = `opacity 0.22s ease, transform 0.42s ${SPRING}`;
 const TRANSITION_OUT   = 'opacity 0.18s ease-in, transform 0.18s ease-in';
 
-const ELEVATION_INACTIVE = 'bg-black/70 backdrop-blur-2xl border border-white/[0.15]';
-const ELEVATION_FOCUSED  = 'bg-black/75 backdrop-blur-2xl border border-violet-500/[0.4]';
+// visionOS Glassmorphism
+const ELEVATION_INACTIVE = 'bg-white/[0.04] backdrop-blur-3xl border border-white/[0.12] saturate-150';
+const ELEVATION_FOCUSED  = 'bg-white/[0.08] backdrop-blur-3xl border border-white/[0.22] saturate-150';
 
 const SHADOW_FOCUSED = [
-  '0 0 0 1px rgba(139, 92, 246, 0.28)',
-  '0 0 60px -6px rgba(139, 92, 246, 0.22)',
-  '0 32px 64px -12px rgba(0, 0, 0, 0.88)',
+  'inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
+  '0 0 0 1px rgba(255, 255, 255, 0.08)',
+  '0 8px 32px -4px rgba(139, 92, 246, 0.25)',
+  '0 24px 80px -12px rgba(0, 0, 0, 0.75)',
+  '0 48px 120px -24px rgba(0, 0, 0, 0.55)',
 ].join(', ');
 
-const SHADOW_INACTIVE        = '0 10px 40px -8px rgba(0, 0, 0, 0.72)';
+const SHADOW_INACTIVE = [
+  'inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+  '0 16px 48px -12px rgba(0, 0, 0, 0.6)',
+].join(', ');
 const SHADOW_TRANSITION_IN   = `box-shadow 0.38s ${SPRING}`;
 const SHADOW_TRANSITION_OUT  = 'box-shadow 0.18s ease-in';
 
@@ -64,7 +70,7 @@ export const SystemWindow = memo(function SystemWindow({
       className="select-none"
     >
       <div
-        className={`rounded-xl overflow-hidden transition-[backdrop-filter,border-color] duration-300 ${win.isFocused ? ELEVATION_FOCUSED : ELEVATION_INACTIVE}`}
+        className={`rounded-3xl overflow-hidden transition-[backdrop-filter,border-color,background-color] duration-300 ${win.isFocused ? ELEVATION_FOCUSED : ELEVATION_INACTIVE}`}
         style={{
           boxShadow:  win.isFocused ? SHADOW_FOCUSED : SHADOW_INACTIVE,
           transition: win.isFocused ? SHADOW_TRANSITION_IN : SHADOW_TRANSITION_OUT,

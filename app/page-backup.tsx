@@ -7,7 +7,6 @@ import {
   useReducer, useRef, useCallback, useEffect,
   useMemo, memo, useState,
 } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import { BarChart2, Mail } from 'lucide-react';
 
 import { WindowId, WindowRecord, WINDOW_IDS } from '@/types/windows';
@@ -19,11 +18,9 @@ import {
   MENUBAR_HEIGHT,
 } from '@/lib/windowReducer';
 import { SystemWindow }        from '@/components/desktop/SystemWindow';
+import { MenuBar }             from '@/components/desktop/MenuBar';
 import { Dock }                from '@/components/desktop/Dock';
 import { BackgroundImage }     from '@/components/desktop/BackgroundImage';
-import { SplashScreen }        from '@/components/desktop/SplashScreen';
-import { VisionBrowserBar }    from '@/components/desktop/VisionBrowserBar';
-import { LeftIconRail }        from '@/components/desktop/LeftIconRail';
 import { WelcomeWindow }       from '@/components/windows/WelcomeWindow';
 import { ProjectsWindow }      from '@/components/windows/ProjectsWindow';
 import { TerminalWindow }      from '@/components/windows/TerminalWindow';
@@ -219,7 +216,6 @@ function getDockAction(win: WindowRecord, id: WindowId, nextZ: number) {
 // DesktopCanvas
 // ─────────────────────────────────────────────────────────────────────────────
 export default function DesktopCanvas() {
-  const [splashDone, setSplashDone] = useState(false);
   const [windows, dispatch] = useReducer(windowReducer, INITIAL_WINDOW_STATE);
   const zCounter = useRef(Z_BASE + 2);
   const [portfolio, setPortfolio] = useState<PortfolioState>(PORTFOLIO_INITIAL);
@@ -313,17 +309,9 @@ export default function DesktopCanvas() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden" style={{ background: '#000000' }}>
-      {/* ── Cinematic opening splash ── */}
-      <AnimatePresence mode="wait">
-        {!splashDone && (
-          <SplashScreen key="splash" onEnter={() => setSplashDone(true)} />
-        )}
-      </AnimatePresence>
-
       <BackgroundImage />
       <DesktopBackground />
-      <VisionBrowserBar />
-      <LeftIconRail windows={windows} onToggle={toggleWindow} />
+      <MenuBar onOpenAll={openAll} onCloseAll={closeAll} />
 
       {WINDOW_IDS.map((id) => {
         const win = windows[id];

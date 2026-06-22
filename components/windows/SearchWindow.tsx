@@ -3,15 +3,15 @@
 'use client';
 
 import { memo, useState, useMemo } from 'react';
-import { Search, X, Badge, Code2, Award } from 'lucide-react';
+import { Search, X, Tag, Code2, Award } from 'lucide-react';
 import type { ProjectSummary, Certificate, Metric } from '@/types/portfolio';
 import { searchAll } from '@/lib/searchPortfolio';
 
 const ICON_MAP = {
   project: <Code2 className="w-4 h-4" />,
   certificate: <Award className="w-4 h-4" />,
-  skill: <Badge className="w-4 h-4" />,
-  metric: <Badge className="w-4 h-4" />,
+  skill: <Tag className="w-4 h-4" />,
+  metric: <Tag className="w-4 h-4" />,
 };
 
 function ResultBadge({ type }: { type: string }) {

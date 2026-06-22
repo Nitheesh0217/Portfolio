@@ -1,6 +1,7 @@
 // components/windows/WelcomeWindow.tsx
+'use client';
+
 import { memo, useState } from 'react';
-import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 export interface WelcomeWindowProps {
@@ -8,19 +9,30 @@ export interface WelcomeWindowProps {
 }
 
 export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices }: WelcomeWindowProps) {
+  const [avatarError, setAvatarError] = useState(false);
+
   return (
     <div className="p-7 w-[420px] flex flex-col gap-6">
       {/* Avatar + name */}
       <div className="flex items-start gap-4">
         <div className="shrink-0 w-16 h-16 rounded-2xl overflow-hidden shadow-lg shadow-violet-900/50 ring-2 ring-violet-500/30">
-          <Image
-            src="/avatar.jpg"
-            alt="Nitheesh Donepudi"
-            width={64}
-            height={64}
-            className="w-full h-full object-cover object-top"
-            priority
-          />
+          {!avatarError ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/avatar.jpg"
+              alt="Nitheesh Donepudi"
+              className="w-full h-full object-cover object-top"
+              onError={() => setAvatarError(true)}
+            />
+          ) : (
+            /* Gradient initials fallback */
+            <div
+              className="w-full h-full flex items-center justify-center font-extrabold text-white text-[22px]"
+              style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)', letterSpacing: '-0.03em' }}
+            >
+              ND
+            </div>
+          )}
         </div>
         <div className="flex-1">
           <h1 className="text-[24px] font-extrabold text-white leading-tight">

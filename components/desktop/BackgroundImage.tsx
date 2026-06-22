@@ -1,5 +1,5 @@
 // components/desktop/BackgroundImage.tsx
-// Minimal static background — Ken Burns slow zoom + ambient orbs
+// visionOS Deep Space Canvas - glassmorphic ambient backdrop
 'use client';
 
 import { memo } from 'react';
@@ -7,88 +7,89 @@ import { memo } from 'react';
 export const BackgroundImage = memo(function BackgroundImage() {
   return (
     <>
-      {/* ── Layer 0: Photo with Ken Burns slow zoom ── */}
-      <div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ zIndex: 0 }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: '-8%',
-            backgroundImage: 'url(/flag-background.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'brightness(0.5) saturate(1.3)',
-            animation: 'kenBurns 28s ease-in-out infinite alternate',
-          }}
-        />
-      </div>
-
-      {/* ── Layer 1: Deep base gradient ── */}
+      {/* ── Layer 0: Deep space base ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(135deg, #07071a 0%, #0c0c28 50%, #070714 100%)',
+          background: 'radial-gradient(ellipse at 50% 50%, #0a0a1f 0%, #050510 60%, #03030a 100%)',
+          zIndex: 0,
+        }}
+      />
+
+      {/* ── Layer 1: Violet ambient orb — top-left ── */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: 900, height: 900,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(139,92,246,0.04) 40%, transparent 70%)',
+          top: '-15%', left: '-10%',
+          filter: 'blur(80px)',
           zIndex: 1,
-          opacity: 0.72,
+          animation: 'orbFloat1 18s ease-in-out infinite alternate',
         }}
       />
 
-      {/* ── Layer 2: Violet ambient orb — top-left, slow float ── */}
+      {/* ── Layer 2: Blue ambient orb — bottom-right ── */}
       <div
         className="absolute pointer-events-none"
         style={{
-          width: 680, height: 680,
+          width: 800, height: 800,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%)',
-          top: '-8%', left: '-4%',
-          filter: 'blur(60px)',
-          zIndex: 2,
-          animation: 'orbFloat1 14s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.03) 40%, transparent 70%)',
+          bottom: '-15%', right: '-10%',
+          filter: 'blur(90px)',
+          zIndex: 1,
+          animation: 'orbFloat2 22s ease-in-out infinite alternate',
         }}
       />
 
-      {/* ── Layer 2b: Blue ambient orb — bottom-right ── */}
+      {/* ── Layer 3: Cyan accent orb — center ── */}
       <div
         className="absolute pointer-events-none"
         style={{
-          width: 560, height: 560,
+          width: 600, height: 600,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.11) 0%, transparent 70%)',
-          bottom: '-4%', right: '-4%',
-          filter: 'blur(70px)',
-          zIndex: 2,
-          animation: 'orbFloat2 18s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 60%)',
+          top: '40%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          filter: 'blur(100px)',
+          zIndex: 1,
+          animation: 'orbFloat1 26s ease-in-out infinite alternate-reverse',
         }}
       />
 
-      {/* ── Layer 3: Readability overlay ── */}
+      {/* ── Layer 4: Fuchsia spark — top-right ── */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          width: 500, height: 500,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(217,70,239,0.12) 0%, transparent 60%)',
+          top: '10%', right: '15%',
+          filter: 'blur(80px)',
+          zIndex: 1,
+          animation: 'orbFloat2 20s ease-in-out infinite alternate',
+        }}
+      />
+
+      {/* ── Layer 5: Fine dot grid ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.48) 100%)',
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          opacity: 0.5,
+          zIndex: 2,
+        }}
+      />
+
+      {/* ── Layer 6: Edge vignette for depth ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.65) 100%)',
           zIndex: 3,
-        }}
-      />
-
-      {/* ── Layer 4: Dot grid — static, minimal ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(139,92,246,0.16) 1px, transparent 1px)',
-          backgroundSize: '36px 36px',
-          opacity: 0.4,
-          zIndex: 4,
-        }}
-      />
-
-      {/* ── Layer 5: Edge vignette ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,0.52) 100%)',
-          zIndex: 5,
         }}
       />
     </>
