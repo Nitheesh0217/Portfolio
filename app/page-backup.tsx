@@ -121,7 +121,7 @@ const MetricsWindow = memo(function MetricsWindow({
       <div className="flex flex-col items-center justify-center h-64 gap-2 p-6">
         <BarChart2 className="w-8 h-8 text-white/10" />
         <p className="text-xs text-white/25 font-mono">
-          No metrics yet. Insert rows into the metrics table (period = 'all-time').
+          No metrics yet. Insert rows into the metrics table (period = &apos;all-time&apos;).
         </p>
       </div>
     );
