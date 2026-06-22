@@ -1,0 +1,57 @@
+# SwiftLint configuration for NitheeshPortfolio visionOS app
+# Docs: https://realm.github.io/SwiftLint/
+
+included:
+  - NitheeshPortfolio
+
+excluded:
+  - NitheeshPortfolio/NitheeshPortfolio.xcodeproj
+  - Pods
+  - .build
+
+# ── Rules
+disabled_rules:
+  - trailing_whitespace      # auto-fixed by Xcode
+  - todo                     # TODOs are expected during dev
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - force_unwrapping
+  - implicit_return
+  - closure_spacing
+
+# ── Limits
+line_length:
+  warning: 140
+  error: 200
+
+file_length:
+  warning: 400
+  error: 600
+
+function_body_length:
+  warning: 60
+  error: 100
+
+type_body_length:
+  warning: 300
+  error: 500
+
+# ── Naming
+identifier_name:
+  min_length: 2
+  max_length: 50
+  excluded:
+    - id
+    - p
+    - x
+    - y
+    - z
+
+type_name:
+  min_length: 3
+  max_length: 50
+
+reporter: "xcode"

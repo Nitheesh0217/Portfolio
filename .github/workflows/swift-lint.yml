@@ -1,0 +1,30 @@
+name: 🔍 Swift Lint
+
+on:
+  push:
+    paths:
+      - '**.swift'
+  pull_request:
+    paths:
+      - '**.swift'
+
+jobs:
+  swiftlint:
+    name: SwiftLint
+    runs-on: macos-15
+    timeout-minutes: 10
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🔧 Install SwiftLint
+        run: brew install swiftlint
+
+      - name: 🔍 Run SwiftLint
+        run: |
+          if [ -f ".swiftlint.yml" ]; then
+            swiftlint lint --config .swiftlint.yml
+          else
+            swiftlint lint
+          fi

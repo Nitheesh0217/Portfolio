@@ -1,0 +1,34 @@
+name: 🔎 PR Quality Check
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-check:
+    name: PR Checklist
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 📝 Check PR has description
+        run: |
+          if [ -z "${{ github.event.pull_request.body }}" ]; then
+            echo "⚠️  PR has no description. Please add context for reviewers."
+            exit 1
+          fi
+          echo "✅ PR description present."
+
+      - name: 🏷️ Check branch naming
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ "$BRANCH" =~ ^(feature|fix|refactor|chore|docs)/[a-z0-9-]+$ ]]; then
+            echo "✅ Branch name '$BRANCH' follows convention."
+          else
+            echo "⚠️  Branch name '$BRANCH' should follow: feature/my-feature, fix/bug-name, etc."
+            exit 1
+          fi
