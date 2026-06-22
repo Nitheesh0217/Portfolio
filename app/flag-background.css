@@ -1,0 +1,102 @@
+/* Flag Background - Optimized for Spatial UI */
+
+/* Windows with stronger glassmorphism over background image */
+.system-window {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Menu bar with stronger glass effect */
+.menu-bar {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Dock with strong glass effect */
+.dock {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Title bar stronger contrast */
+.title-bar {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Text colors - white for readability over flag */
+.text-white\\/60 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.text-white\\/40 {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.text-white\\/30 {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* Buttons with better contrast */
+button {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Input fields with stronger background */
+input,
+textarea,
+select {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Ensure text is readable */
+h1, h2, h3, h4, h5, h6, p, span {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Borders more visible */
+.border-white\\/\[0\.06\] {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.border-white\\/\[0\.08\] {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Background elements more subtle */
+.bg-white\\/\[0\.02\] {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.bg-white\\/\[0\.05\] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.bg-white\\/\[0\.06\] {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
