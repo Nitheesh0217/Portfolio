@@ -1,31 +1,48 @@
 // components/desktop/SystemWindow.tsx
+// visionOS-accurate window: heavy frosted glass, huge corner radius,
+// no boxy chrome — floats over passthrough.
 import { memo, useCallback } from 'react';
 import type { WindowRecord } from '@/types/windows';
 import { useDraggable }       from '@/hooks/useDraggable';
 import { TitleBar }           from './TitleBar';
 
-const SPRING           = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
-const TRANSITION_IN    = `opacity 0.22s ease, transform 0.42s ${SPRING}`;
-const TRANSITION_OUT   = 'opacity 0.18s ease-in, transform 0.18s ease-in';
+const SPRING         = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+const TRANSITION_IN  = `opacity 0.22s ease, transform 0.42s ${SPRING}`;
+const TRANSITION_OUT = 'opacity 0.18s ease-in, transform 0.18s ease-in';
 
-// visionOS Glassmorphism
-const ELEVATION_INACTIVE = 'bg-white/[0.04] backdrop-blur-3xl border border-white/[0.12] saturate-150';
-const ELEVATION_FOCUSED  = 'bg-white/[0.08] backdrop-blur-3xl border border-white/[0.22] saturate-150';
+// visionOS panels are LIGHT frosted glass over dark passthrough.
+// The tint is barely-there white — the blur+saturation does the heavy lifting.
+const GLASS_INACTIVE = {
+  background: 'rgba(255, 255, 255, 0.06)',
+  backdropFilter: 'blur(50px) saturate(180%)',
+  WebkitBackdropFilter: 'blur(50px) saturate(180%)',
+  border: '1px solid rgba(255, 255, 255, 0.10)',
+};
 
+const GLASS_FOCUSED = {
+  background: 'rgba(255, 255, 255, 0.10)',
+  backdropFilter: 'blur(60px) saturate(200%)',
+  WebkitBackdropFilter: 'blur(60px) saturate(200%)',
+  border: '1px solid rgba(255, 255, 255, 0.22)',
+};
+
+// Layered shadow stack — soft, diffused, like real depth in space
 const SHADOW_FOCUSED = [
-  'inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
-  '0 0 0 1px rgba(255, 255, 255, 0.08)',
-  '0 8px 32px -4px rgba(139, 92, 246, 0.25)',
-  '0 24px 80px -12px rgba(0, 0, 0, 0.75)',
-  '0 48px 120px -24px rgba(0, 0, 0, 0.55)',
+  'inset 0 1px 0 rgba(255, 255, 255, 0.25)',   // top edge highlight
+  'inset 0 0 0 1px rgba(255, 255, 255, 0.05)', // inner glow
+  '0 2px 8px rgba(0, 0, 0, 0.10)',
+  '0 24px 64px rgba(0, 0, 0, 0.40)',
+  '0 48px 120px rgba(0, 0, 0, 0.30)',
 ].join(', ');
 
 const SHADOW_INACTIVE = [
-  'inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
-  '0 16px 48px -12px rgba(0, 0, 0, 0.6)',
+  'inset 0 1px 0 rgba(255, 255, 255, 0.12)',
+  '0 16px 48px rgba(0, 0, 0, 0.35)',
+  '0 32px 80px rgba(0, 0, 0, 0.20)',
 ].join(', ');
-const SHADOW_TRANSITION_IN   = `box-shadow 0.38s ${SPRING}`;
-const SHADOW_TRANSITION_OUT  = 'box-shadow 0.18s ease-in';
+
+const SHADOW_TRANSITION_IN  = `box-shadow 0.38s ${SPRING}, background-color 0.3s ease`;
+const SHADOW_TRANSITION_OUT = 'box-shadow 0.18s ease-in, background-color 0.3s ease';
 
 export interface SystemWindowProps {
   win:        WindowRecord;
@@ -47,6 +64,7 @@ export const SystemWindow = memo(function SystemWindow({
   const handleMinimize = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onMinimize(); }, [onMinimize]);
 
   const isFocusedAndVisible = win.isFocused && isVisible;
+  const glass = win.isFocused ? GLASS_FOCUSED : GLASS_INACTIVE;
 
   return (
     <div
@@ -61,7 +79,7 @@ export const SystemWindow = memo(function SystemWindow({
         width:      win.size.w === 'auto' ? undefined : win.size.w,
         zIndex:     win.zIndex,
         willChange: 'transform, opacity',
-        transform:  `translate(${win.position.x}px, ${win.position.y}px) scale(${isFocusedAndVisible ? 1.004 : 1})`,
+        transform:  `translate(${win.position.x}px, ${win.position.y}px) scale(${isFocusedAndVisible ? 1.005 : 1})`,
         opacity:       isVisible ? 1 : 0,
         pointerEvents: isVisible ? 'auto' : 'none',
         transition:    isVisible ? TRANSITION_IN : TRANSITION_OUT,
@@ -70,11 +88,12 @@ export const SystemWindow = memo(function SystemWindow({
       className="select-none"
     >
       <div
-        className={`rounded-3xl overflow-hidden transition-[backdrop-filter,border-color,background-color] duration-300 ${win.isFocused ? ELEVATION_FOCUSED : ELEVATION_INACTIVE}`}
+        className="overflow-hidden"
         style={{
+          ...glass,
+          borderRadius: '36px',          // visionOS-large radius
           boxShadow:  win.isFocused ? SHADOW_FOCUSED : SHADOW_INACTIVE,
           transition: win.isFocused ? SHADOW_TRANSITION_IN : SHADOW_TRANSITION_OUT,
-          animation:  win.isFocused ? 'windowPulse 3.5s ease-in-out infinite' : 'none',
         }}
       >
         <TitleBar

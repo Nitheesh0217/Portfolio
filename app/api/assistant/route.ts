@@ -162,6 +162,14 @@ export async function POST(req: Request) {
 
   const stream = new ReadableStream({
     async start(controller) {
+      let closed = false;
+      const sendError = (msg: string) => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
+        } catch { /* already closed */ }
+      };
+
       try {
         const messageStream = client.messages.stream({
           model:      'claude-haiku-4-5-20251001',
@@ -170,17 +178,22 @@ export async function POST(req: Request) {
           messages:   [...safeHistory, { role: 'user', content: message }],
         });
 
+        // Defensive: attach error listener so SDK doesn't bubble unhandledRejection.
+        (messageStream as unknown as { on: (e: string, cb: (err: Error) => void) => void })
+          .on('error', (err) => sendError(err.message ?? 'Anthropic stream error'));
+
         const msgStream = messageStream as unknown as { textStream: AsyncIterable<string> };
         for await (const text of msgStream.textStream) {
+          if (closed) break;
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
         }
 
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        if (!closed) controller.enqueue(encoder.encode('data: [DONE]\n\n'));
       } catch (err) {
-        const msg = (err as Error).message ?? 'Anthropic stream error';
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
+        sendError((err as Error).message ?? 'Anthropic stream error');
       } finally {
-        controller.close();
+        closed = true;
+        try { controller.close(); } catch { /* already closed */ }
       }
     },
   });

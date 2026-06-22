@@ -1,69 +1,53 @@
 // components/desktop/MenuBar.tsx
-import { memo, useState } from 'react';
-import { Command }        from 'lucide-react';
+// visionOS doesn't have a Mac-style menu bar. Replaced with a floating
+// status pill in the top-right — the actual visionOS pattern.
+import { memo, useEffect, useState } from 'react';
 
 export interface MenuBarProps {
   onOpenAll:  () => void;
   onCloseAll: () => void;
 }
 
-export const MenuBar = memo(function MenuBar({ onOpenAll, onCloseAll }: MenuBarProps) {
-  const [time] = useState(() =>
-    new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
-  );
+export const MenuBar = memo(function MenuBar({ onOpenAll: _onOpenAll, onCloseAll: _onCloseAll }: MenuBarProps) {
+  const [time, setTime] = useState('');
+
+  useEffect(() => {
+    const update = () => setTime(
+      new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+    );
+    update();
+    const id = setInterval(update, 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between px-4 h-7 select-none"
+      className="fixed top-6 right-6 z-[9999] flex items-center gap-3 px-4 py-2 select-none"
       style={{
-        background:    'rgba(8,8,18,0.80)',
-        backdropFilter:'blur(20px)',
-        borderBottom:  '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(255,255,255,0.10)',
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+        border: '1px solid rgba(255,255,255,0.15)',
+        borderRadius: '9999px',
+        boxShadow: [
+          'inset 0 1px 0 rgba(255,255,255,0.20)',
+          '0 8px 24px rgba(0,0,0,0.30)',
+        ].join(', '),
       }}
     >
-      {/* Left — brand */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5 text-white/90">
-          <Command className="w-3 h-3" />
-          <span className="text-[11px] font-bold tracking-wide">DWS OS</span>
-        </div>
-
-        <div className="flex items-center gap-0.5">
-          {[
-            { label: 'File',  items: [{ label: 'Open All Windows', action: onOpenAll }, { label: 'Close All', action: onCloseAll }] },
-            { label: 'View',  items: [] },
-            { label: 'Help',  items: [] },
-          ].map(({ label, items }) => (
-            <div key={label} className="relative group">
-              <button className="px-2 py-0.5 text-[11px] text-white/50 hover:text-white/90 hover:bg-white/[0.08] rounded transition-colors">
-                {label}
-              </button>
-              {items.length > 0 && (
-                <div className="absolute top-full left-0 mt-0.5 py-1 rounded-lg border border-white/[0.10] bg-black/80 backdrop-blur-xl hidden group-focus-within:block shadow-2xl min-w-[180px]">
-                  {items.map(({ label: itemLabel, action }) => (
-                    <button
-                      key={itemLabel}
-                      onClick={action}
-                      className="w-full text-left px-4 py-1.5 text-[11px] text-white/65 hover:text-white hover:bg-white/[0.08] transition-colors"
-                    >
-                      {itemLabel}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right — clock + status */}
-      <div className="flex items-center gap-3">
-        <span className="text-[10px] font-mono text-white/30 tabular-nums">{time}</span>
-        <span className="text-[9px] font-mono text-emerald-400/60 flex items-center gap-1">
-          <span className="w-1 h-1 rounded-full bg-emerald-400/60 animate-pulse inline-block" />
-          Live
+      {/* Live indicator */}
+      <span className="flex items-center gap-1.5">
+        <span className="relative inline-flex">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
         </span>
-      </div>
+        <span className="text-[11px] font-semibold tracking-wide text-emerald-300">LIVE</span>
+      </span>
+
+      <span className="w-px h-3 bg-white/15" />
+
+      {/* Clock */}
+      <span className="text-[12px] font-medium tabular-nums text-white/85">{time}</span>
     </div>
   );
 });

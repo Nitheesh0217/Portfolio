@@ -1,6 +1,8 @@
 // components/desktop/TitleBar.tsx
+// visionOS-style: minimal, transparent. Just a drag handle + close pill.
+// No traffic-light row (that's macOS chrome, not visionOS).
 import { memo } from 'react';
-import { X, Minus } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export interface TitleBarProps {
   title:       string;
@@ -11,43 +13,51 @@ export interface TitleBarProps {
 }
 
 export const TitleBar = memo(function TitleBar({
-  title, isFocused, onMouseDown, onClose, onMinimize,
+  title, isFocused, onMouseDown, onClose,
 }: TitleBarProps) {
   return (
     <div
       onMouseDown={onMouseDown}
-      className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.05] cursor-grab active:cursor-grabbing select-none"
-      style={{ background: isFocused ? 'rgba(139,92,246,0.04)' : 'transparent' }}
+      className="relative flex items-center justify-between gap-3 px-6 py-3 cursor-grab active:cursor-grabbing select-none"
     >
-      {/* Traffic lights */}
-      <div className="flex items-center gap-1.5 shrink-0">
-        <button
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={onClose}
-          aria-label="Close window"
-          className="group w-3 h-3 rounded-full bg-red-500/70 hover:bg-red-400 border border-red-400/40 transition-colors flex items-center justify-center"
-        >
-          <X className="w-1.5 h-1.5 text-red-900/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </button>
-        <button
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={onMinimize}
-          aria-label="Minimize window"
-          className="group w-3 h-3 rounded-full bg-yellow-500/70 hover:bg-yellow-400 border border-yellow-400/40 transition-colors flex items-center justify-center"
-        >
-          <Minus className="w-1.5 h-1.5 text-yellow-900/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </button>
-        <div className="w-3 h-3 rounded-full bg-white/10 border border-white/5" />
+      {/* Drag-hint pill — visionOS shows a small handle indicator */}
+      <div className="absolute left-1/2 top-1.5 -translate-x-1/2">
+        <div
+          className="h-1 rounded-full transition-all"
+          style={{
+            width: isFocused ? 44 : 32,
+            background: isFocused ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.22)',
+          }}
+        />
       </div>
 
-      {/* Title */}
-      <p className="flex-1 text-center text-[13px] font-bold tracking-wider truncate"
-        style={{ color: isFocused ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)' }}>
+      {/* Title — subtle, doesn't compete with content */}
+      <p
+        className="text-[15px] font-semibold tracking-tight truncate pt-2"
+        style={{
+          color: isFocused ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)',
+          textShadow: isFocused ? '0 1px 2px rgba(0,0,0,0.20)' : 'none',
+        }}
+      >
         {title}
       </p>
 
-      {/* Spacer mirrors traffic lights width */}
-      <div className="w-[42px] shrink-0" />
+      {/* Single circular close button — visionOS style */}
+      <button
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={onClose}
+        aria-label="Close window"
+        className="group flex items-center justify-center w-7 h-7 rounded-full transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255,255,255,0.10)',
+          border: '1px solid rgba(255,255,255,0.15)',
+        }}
+      >
+        <X
+          className="w-3.5 h-3.5 text-white/70 group-hover:text-white transition-colors"
+          strokeWidth={2.5}
+        />
+      </button>
     </div>
   );
 });

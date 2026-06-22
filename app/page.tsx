@@ -7,7 +7,6 @@ import {
   useReducer, useRef, useCallback, useEffect,
   useMemo, memo, useState,
 } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import { BarChart2, Mail } from 'lucide-react';
 
 import { WindowId, WindowRecord, WINDOW_IDS } from '@/types/windows';
@@ -19,11 +18,9 @@ import {
   MENUBAR_HEIGHT,
 } from '@/lib/windowReducer';
 import { SystemWindow }        from '@/components/desktop/SystemWindow';
+import { MenuBar }             from '@/components/desktop/MenuBar';
 import { Dock }                from '@/components/desktop/Dock';
 import { BackgroundImage }     from '@/components/desktop/BackgroundImage';
-import { SplashScreen }        from '@/components/desktop/SplashScreen';
-import { VisionBrowserBar }    from '@/components/desktop/VisionBrowserBar';
-import { LeftIconRail }        from '@/components/desktop/LeftIconRail';
 import { WelcomeWindow }       from '@/components/windows/WelcomeWindow';
 import { ProjectsWindow }      from '@/components/windows/ProjectsWindow';
 import { TerminalWindow }      from '@/components/windows/TerminalWindow';
@@ -56,39 +53,11 @@ const PORTFOLIO_INITIAL: PortfolioState = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DesktopBackground — memo with zero props, renders ONCE
+// DesktopBackground — quiet, visionOS keeps the environment minimal so the
+// glass panels are the focus. All the ambient light comes from BackgroundImage.
 // ─────────────────────────────────────────────────────────────────────────────
 const DesktopBackground = memo(function DesktopBackground() {
-  return (
-    <>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: [
-            'radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.12) 0%, transparent 60%)',
-            'radial-gradient(ellipse at 80% 20%, rgba(217,70,239,0.08) 0%, transparent 50%)',
-            'radial-gradient(ellipse at 60% 80%, rgba(59,130,246,0.05) 0%, transparent 40%)',
-          ].join(', '),
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(139,92,246,0.20) 1px, transparent 1px)',
-          backgroundSize:  '32px 32px',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%)',
-        }}
-      />
-    </>
-  );
+  return null;
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -219,7 +188,6 @@ function getDockAction(win: WindowRecord, id: WindowId, nextZ: number) {
 // DesktopCanvas
 // ─────────────────────────────────────────────────────────────────────────────
 export default function DesktopCanvas() {
-  const [splashDone, setSplashDone] = useState(false);
   const [windows, dispatch] = useReducer(windowReducer, INITIAL_WINDOW_STATE);
   const zCounter = useRef(Z_BASE + 2);
   const [portfolio, setPortfolio] = useState<PortfolioState>(PORTFOLIO_INITIAL);
@@ -274,92 +242,103 @@ export default function DesktopCanvas() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleWindow = useCallback((id: WindowId) => {
-    dispatch(getDockAction(windows[id], id, ++zCounter.current));
-  }, [windows]);
+  // Single-window mode: only one panel shown at a time, centered.
+  // Dock clicks just change which panel is showing.
+  const [currentId, setCurrentId] = useState<WindowId>('welcome');
+  const toggleWindow = useCallback((id: WindowId) => setCurrentId(id), []);
+  const openAll  = useCallback(() => { /* no-op in single-window mode */ }, []);
+  const closeAll = useCallback(() => { /* no-op in single-window mode */ }, []);
 
-  const openAll  = useCallback(() => { zCounter.current += WINDOW_IDS.length; dispatch({ type: 'OPEN_ALL', nextZ: zCounter.current }); }, []);
-  const closeAll = useCallback(() => { dispatch({ type: 'CLOSE_ALL' }); }, []);
+  // Build a synthetic windows record so the Dock can highlight the current panel.
+  const dockWindows: Record<WindowId, WindowRecord> = useMemo(() => {
+    const result = {} as Record<WindowId, WindowRecord>;
+    for (const id of WINDOW_IDS) {
+      result[id] = {
+        ...windows[id],
+        isOpen:      id === currentId,
+        isMinimized: false,
+        isFocused:   id === currentId,
+      };
+    }
+    return result;
+  }, [currentId, windows]);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const ctrl = e.metaKey || e.ctrlKey;
       if (!ctrl) return;
-      const focusedId = WINDOW_IDS.find((id) => windows[id].isFocused);
-      switch (e.key) {
-        case 'w': e.preventDefault(); if (focusedId) dispatch({ type: 'CLOSE',    id: focusedId }); return;
-        case 'm': e.preventDefault(); if (focusedId) dispatch({ type: 'MINIMIZE', id: focusedId }); return;
-        case ',': e.preventDefault(); dispatch({ type: 'OPEN', id: 'contact', nextZ: ++zCounter.current }); return;
-      }
       const numKey = parseInt(e.key, 10);
       if (!isNaN(numKey) && numKey >= 1 && numKey <= WINDOW_IDS.length) {
         e.preventDefault();
-        dispatch({ type: 'OPEN', id: WINDOW_IDS[numKey - 1], nextZ: ++zCounter.current });
+        setCurrentId(WINDOW_IDS[numKey - 1]);
       }
     };
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      const focusedId = WINDOW_IDS.find((id) => windows[id].isFocused);
-      if (focusedId) dispatch({ type: 'MINIMIZE', id: focusedId });
-    };
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keydown', handleEscape);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [windows]);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Render the active panel's content
+  const renderPanel = () => {
+    switch (currentId) {
+      case 'welcome':      return <WelcomeWindow onOpenServices={() => setCurrentId('projects')} />;
+      case 'terminal':     return <TerminalWindow />;
+      case 'projects':     return <ProjectsWindow projects={portfolio.projects} state={portfolio.dataState} />;
+      case 'certificates': return <CertificatesWindow certificates={portfolio.certificates} dataState={portfolio.dataState} />;
+      case 'metrics':      return <MetricsWindow metrics={portfolio.metrics} dataState={portfolio.dataState} />;
+      case 'contact':      return <ContactWindow />;
+      case 'assistant':    return <AIAssistantWindow />;
+      case 'search':       return <SearchWindow projects={portfolio.projects} certificates={portfolio.certificates} metrics={portfolio.metrics} />;
+      case 'timeline':     return <TimelineWindow projects={portfolio.projects} />;
+      case 'skills':       return <SkillsWindow projects={portfolio.projects} />;
+    }
+  };
 
   return (
     <div className="relative w-screen h-screen overflow-hidden" style={{ background: '#000000' }}>
-      {/* ── Cinematic opening splash ── */}
-      <AnimatePresence mode="wait">
-        {!splashDone && (
-          <SplashScreen key="splash" onEnter={() => setSplashDone(true)} />
-        )}
-      </AnimatePresence>
-
       <BackgroundImage />
       <DesktopBackground />
-      <VisionBrowserBar />
-      <LeftIconRail windows={windows} onToggle={toggleWindow} />
+      <MenuBar onOpenAll={openAll} onCloseAll={closeAll} />
 
-      {WINDOW_IDS.map((id) => {
-        const win = windows[id];
-        if (!win.isMounted) return null;
-        const isVisible = win.isOpen && !win.isMinimized;
-        const h = handlers[id];
+      {/* Centered single-window stage */}
+      <div className="absolute inset-0 flex items-center justify-center pl-24 pr-8 pointer-events-none">
+        <div
+          key={currentId} // re-trigger animation on swap
+          className="pointer-events-auto overflow-hidden animate-stage-in"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(60px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(60px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            borderRadius: '36px',
+            boxShadow: [
+              'inset 0 1px 0 rgba(255,255,255,0.20)',
+              '0 24px 64px rgba(0,0,0,0.40)',
+              '0 48px 120px rgba(0,0,0,0.25)',
+            ].join(', '),
+            maxHeight: '85vh',
+            overflow: 'auto',
+          }}
+        >
+          {renderPanel()}
+        </div>
+      </div>
 
-        return (
-          <SystemWindow
-            key={id}
-            win={win}
-            isVisible={isVisible}
-            onFocus={h.focus}
-            onClose={h.close}
-            onMinimize={h.minimize}
-            onMove={h.move}
-          >
-            {id === 'welcome'      && <WelcomeWindow onOpenServices={() => dispatch({ type: 'OPEN', id: 'projects', nextZ: ++zCounter.current })} />}
-            {id === 'terminal'     && <TerminalWindow />}
-            {id === 'projects'     && <ProjectsWindow projects={portfolio.projects} state={portfolio.dataState} />}
-            {id === 'certificates' && <CertificatesWindow certificates={portfolio.certificates} dataState={portfolio.dataState} />}
-            {id === 'metrics'      && <MetricsWindow metrics={portfolio.metrics} dataState={portfolio.dataState} />}
-            {id === 'contact'      && <ContactWindow />}
-            {id === 'assistant'    && <AIAssistantWindow />}
-            {id === 'search'       && <SearchWindow projects={portfolio.projects} certificates={portfolio.certificates} metrics={portfolio.metrics} />}
-            {id === 'timeline'     && <TimelineWindow projects={portfolio.projects} />}
-            {id === 'skills'       && <SkillsWindow projects={portfolio.projects} />}
-          </SystemWindow>
-        );
-      })}
+      <Dock windows={dockWindows} onToggle={toggleWindow} />
 
-      <Dock windows={windows} onToggle={toggleWindow} />
-
-      <p className="fixed bottom-2 right-4 text-[9px] text-white/10 font-mono pointer-events-none select-none" aria-hidden="true">
+      <p className="fixed bottom-2 right-4 text-[9px] text-white/15 font-mono pointer-events-none select-none" aria-hidden="true">
         DWS OS v2.0 · Spatial UI Engine · {new Date().getFullYear()}
       </p>
+
+      <style jsx global>{`
+        @keyframes stageIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1);    }
+        }
+        .animate-stage-in {
+          animation: stageIn 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+        }
+      `}</style>
     </div>
   );
 }
