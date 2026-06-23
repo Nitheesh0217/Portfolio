@@ -145,7 +145,7 @@ export const AIAssistantWindow = memo(function AIAssistantWindow() {
   const showTyping = isStreaming && messages.at(-1)?.role === 'assistant' && messages.at(-1)?.content === '';
 
   return (
-    <div className="flex flex-col" style={{ width: '440px', height: '480px' }}>
+    <div className="flex flex-col w-full h-full">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4"
         style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(139,92,246,0.2) transparent' }}>

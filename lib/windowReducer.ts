@@ -101,8 +101,8 @@ function makeRecord(def: WindowDef, open = false, focused = false): WindowRecord
 export const INITIAL_WINDOW_STATE: WindowState = (() => {
   const state = {} as WindowState;
   for (const id of WINDOW_IDS) {
-    // Open welcome + terminal on boot
-    const open    = id === 'welcome' || id === 'terminal';
+    // Open only welcome on boot
+    const open    = id === 'welcome';
     const focused = id === 'welcome';
     state[id] = makeRecord(WINDOW_DEFAULTS[id], open, focused);
   }

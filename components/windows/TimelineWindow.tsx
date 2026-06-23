@@ -36,7 +36,7 @@ export const TimelineWindow = memo(function TimelineWindow({
   }
 
   return (
-    <div className="p-5 overflow-y-auto max-h-[440px]" style={{ scrollbarWidth: 'thin' }}>
+    <div className="p-5 overflow-y-auto h-full" style={{ scrollbarWidth: 'thin' }}>
       <div className="space-y-6">
         {sortedProjects.map((project, idx) => {
           const date = formatDate(project.built_at);

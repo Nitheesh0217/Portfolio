@@ -185,7 +185,7 @@ export function SplashScreen({ onEnter }: SplashScreenProps) {
               {!avatarError ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src="/avatar.jpg"
+                  src="/avatar.png"
                   alt="Nitheesh Donepudi"
                   style={{
                     width: '100%', height: '100%',

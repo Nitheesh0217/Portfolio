@@ -73,7 +73,7 @@ export const SkillsWindow = memo(function SkillsWindow({ projects }: { projects:
   }, [skillStats]);
 
   return (
-    <div className="flex flex-col" style={{ width: '520px', height: '480px' }}>
+    <div className="flex flex-col w-full h-full">
       {/* Header */}
       <div className="shrink-0 border-b border-white/[0.06] p-4">
         <div className="flex items-center gap-2">

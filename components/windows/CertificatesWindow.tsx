@@ -135,7 +135,7 @@ export const CertificatesWindow = memo(function CertificatesWindow({
   }
 
   return (
-    <div className="flex" style={{ width: '560px', height: '440px' }}>
+    <div className="flex w-full h-full">
       {/* Sidebar */}
       <div className="w-[140px] shrink-0 border-r border-white/[0.06] overflow-y-auto flex flex-col pt-2 pb-2">
         <p className="px-4 pb-2 text-[9px] font-bold uppercase tracking-[0.14em] text-white/20">Categories</p>

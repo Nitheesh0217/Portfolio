@@ -17,9 +17,8 @@ import {
 } from 'lucide-react';
 import type { WindowId, WindowRecord } from '@/types/windows';
 
-const DOCK_ICONS: Record<WindowId, LucideIcon> = {
+const DOCK_ICONS: Record<Exclude<WindowId, 'terminal'>, LucideIcon> = {
   welcome:      LayoutDashboard,
-  terminal:     Terminal,
   projects:     FolderOpen,
   certificates: Award,
   metrics:      BarChart2,
@@ -30,9 +29,8 @@ const DOCK_ICONS: Record<WindowId, LucideIcon> = {
   skills:       Zap,
 };
 
-const DOCK_LABELS: Record<WindowId, string> = {
+const DOCK_LABELS: Record<Exclude<WindowId, 'terminal'>, string> = {
   welcome:      'Home',
-  terminal:     'Terminal',
   projects:     'Projects',
   certificates: 'Certs',
   metrics:      'Metrics',
@@ -56,7 +54,7 @@ function DockItem({
   onToggle: (id: WindowId) => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const Icon = DOCK_ICONS[id];
+  const Icon = DOCK_ICONS[id as Exclude<WindowId, 'terminal'>];
   const isOpen    = win?.isOpen ?? false;
   const isFocused = win?.isFocused && isOpen && !win.isMinimized;
 
@@ -67,12 +65,12 @@ function DockItem({
     return val - (bounds.top + bounds.height / 2);
   });
 
-  // Map distance → size
-  const sizeTransform = useTransform(distance, [-80, 0, 80], [44, 60, 44]);
+  // Map distance → size (slimmer footprint)
+  const sizeTransform = useTransform(distance, [-60, 0, 60], [32, 42, 32]);
   const size = useSpring(sizeTransform, { stiffness: 340, damping: 26 });
 
-  // Translate slightly to the RIGHT when magnified (away from screen edge)
-  const xTransform = useTransform(distance, [-80, 0, 80], [0, 6, 0]);
+  // Translate slightly to the RIGHT when magnified
+  const xTransform = useTransform(distance, [-60, 0, 60], [0, 4, 0]);
   const x = useSpring(xTransform, { stiffness: 340, damping: 26 });
 
   return (
@@ -86,14 +84,14 @@ function DockItem({
           width: size,
           height: size,
           background: isFocused
-            ? 'rgba(255,255,255,0.30)'
-            : isOpen
             ? 'rgba(255,255,255,0.18)'
-            : 'rgba(255,255,255,0.06)',
+            : isOpen
+            ? 'rgba(255,255,255,0.10)'
+            : 'rgba(255,255,255,0.03)',
           borderRadius: '50%',
           border: isFocused
-            ? '1px solid rgba(255,255,255,0.35)'
-            : '1px solid rgba(255,255,255,0.10)',
+            ? '1px solid rgba(255,255,255,0.22)'
+            : '1px solid rgba(255,255,255,0.05)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -105,17 +103,17 @@ function DockItem({
       >
         <Icon
           className={`transition-colors ${
-            isFocused ? 'text-white' : isOpen ? 'text-white/85' : 'text-white/55'
+            isFocused ? 'text-white' : isOpen ? 'text-white/80' : 'text-white/40'
           }`}
           style={{ width: '46%', height: '46%' }}
         />
       </motion.button>
 
-      {/* Running dot — to the LEFT of icon (since rail is on left edge) */}
+      {/* Running dot — to the LEFT of icon */}
       {isOpen && !win.isMinimized && (
         <div
           className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full"
-          style={{ background: isFocused ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)' }}
+          style={{ background: isFocused ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.45)' }}
         />
       )}
 
@@ -128,7 +126,7 @@ function DockItem({
           className="whitespace-nowrap text-[11px] font-semibold text-white/90 px-2.5 py-1 rounded-md opacity-0 transition-opacity"
           id={`dock-tooltip-${id}`}
           style={{
-            background: 'rgba(0,0,0,0.72)',
+            background: 'rgba(10, 10, 15, 0.85)',
             backdropFilter: 'blur(12px)',
             border: '1px solid rgba(255,255,255,0.08)',
           }}
@@ -155,20 +153,18 @@ export const Dock = memo(function Dock({ windows, onToggle }: DockProps) {
       initial={{ opacity: 0, x: -40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5, duration: 0.55, ease: [0.34, 1.2, 0.64, 1] }}
-      className="fixed left-6 top-1/2 -translate-y-1/2 z-[9998]"
+      className="fixed left-8 top-1/2 -translate-y-1/2 z-[9998]"
     >
       <div
-        className="flex flex-col items-center gap-2.5 px-3 py-4"
+        className="flex flex-col items-center gap-2 px-2 py-3.5"
         style={{
-          background: 'rgba(255,255,255,0.10)',
-          backdropFilter: 'blur(60px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(60px) saturate(180%)',
-          border: '1px solid rgba(255,255,255,0.18)',
+          background: 'rgba(15, 15, 20, 0.40)',
+          backdropFilter: 'blur(30px) saturate(120%)',
+          WebkitBackdropFilter: 'blur(30px) saturate(120%)',
+          border: '1px solid rgba(255,255,255,0.05)',
           borderRadius: '9999px',
           boxShadow: [
-            'inset 0 1px 0 rgba(255,255,255,0.25)',
-            '0 12px 40px rgba(0,0,0,0.40)',
-            '0 24px 64px rgba(0,0,0,0.20)',
+            '0 8px 32px rgba(0,0,0,0.3)',
           ].join(', '),
         }}
         onMouseMove={(e) => mouseY.set(e.clientY)}

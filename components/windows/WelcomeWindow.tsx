@@ -13,10 +13,7 @@
 'use client';
 
 import { memo, useState } from 'react';
-import {
-  ArrowRight, Star, Lock, RotateCw, ChevronLeft, ChevronRight,
-  Share, Plus, Cast,
-} from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 
 export interface WelcomeWindowProps {
   onOpenServices: () => void;
@@ -33,201 +30,187 @@ export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices }: Wel
   const [avatarError, setAvatarError] = useState(false);
 
   return (
-    <div className="w-[960px] flex flex-col">
-
-      {/* ─── BROWSER CHROME ───────────────────────────────────────── */}
-      <div
-        className="flex items-center gap-3 px-4 py-2.5"
-        style={{
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          background: 'rgba(255,255,255,0.02)',
-        }}
-      >
-        <div className="flex items-center gap-1.5 text-white/45">
-          <div className="grid grid-cols-2 gap-[2px] w-3.5 h-3.5">
-            {[0,1,2,3].map(i => <div key={i} className="bg-white/45 rounded-[1px]" />)}
-          </div>
-          <div className="w-3.5 h-3.5 border border-white/45 rounded-[2px]" />
-        </div>
-        <div className="flex items-center gap-1 text-white/45">
-          <ChevronLeft className="w-4 h-4" />
-          <ChevronRight className="w-4 h-4" />
-        </div>
-        <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-full"
-             style={{ background: 'rgba(255,255,255,0.06)' }}>
-          <Lock className="w-3 h-3 text-white/40" />
-          <span className="text-[12px] text-white/70 tracking-tight">www.nitheesh.dev</span>
-          <RotateCw className="w-3 h-3 ml-auto text-white/40" />
-        </div>
-        <div className="flex items-center gap-2 text-white/45">
-          <Share className="w-4 h-4" />
-          <Plus  className="w-4 h-4" />
-          <Cast  className="w-4 h-4" />
-        </div>
-      </div>
+    <div className="w-[960px] flex flex-col select-none">
 
       {/* ─── BRAND WORDMARK ───────────────────────────────────────── */}
-      <div className="flex items-center justify-center pt-5 pb-1">
+      <div className="flex items-center justify-center pt-4 pb-1">
         <div className="flex items-center gap-2">
           <div
-            className="w-4 h-4 rounded-sm rotate-45"
-            style={{ background: 'linear-gradient(135deg,#fff,#999)' }}
+            className="w-3.5 h-3.5 rounded-sm rotate-45"
+            style={{
+              background: 'linear-gradient(135deg, #ffffff, #999999)',
+              boxShadow: '0 0 8px rgba(255,255,255,0.15)',
+            }}
           />
-          <span className="text-[14px] font-bold tracking-tight text-white">D Web Studios</span>
+          <span className="text-[12.5px] font-bold tracking-tight text-white/90">D Web Studios</span>
         </div>
       </div>
 
       {/* ─── HERO ROW ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-[1.1fr_1fr] gap-8 px-12 pt-6 pb-8 items-start">
+      <div className="grid grid-cols-[1.15fr_0.85fr_1fr] gap-10 px-12 pt-5 pb-7 items-center">
 
-        {/* LEFT — huge headline */}
-        <div className="flex flex-col gap-6 pt-4">
+        {/* COLUMN 1 (Left): Headline & Status Badge */}
+        <div className="flex flex-col gap-5">
           <h1
-            className="text-white font-black leading-[0.96] tracking-[-0.035em]"
-            style={{ fontSize: 'clamp(46px, 5.4vw, 64px)' }}
+            className="text-white font-black leading-[0.92] tracking-[-0.035em] text-[42px] lg:text-[48px]"
+            style={{ textShadow: '0 4px 16px rgba(0,0,0,0.35)' }}
           >
-            Production AI.<br />
+            Production<br />
+            AI.<br />
             Honest data.<br />
-            <span style={{ color: 'rgba(255,255,255,0.55)' }}>Always shipped.</span>
+            <span style={{ color: 'rgba(255,255,255,0.40)' }}>Always</span><br />
+            <span style={{ color: 'rgba(255,255,255,0.40)' }}>shipped.</span>
           </h1>
 
-          {/* Status badge — sits under the headline like Dotdive's left side */}
-          <div className="flex items-center gap-2">
+          {/* Status badge */}
+          <div className="flex items-center gap-2 self-start mt-1">
             <span className="relative inline-flex">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             </span>
-            <span className="text-[11px] font-semibold tracking-wider text-emerald-300 uppercase">
+            <span className="text-[9.5px] font-bold tracking-wider text-emerald-400 uppercase">
               Open to work · STEM OPT · Miramar, FL
             </span>
           </div>
         </div>
 
-        {/* RIGHT — copy + CTA + photo (matches the Dotdive right-stack) */}
-        <div className="flex flex-col gap-5 pt-2">
+        {/* COLUMN 2 (Center): Immersive Portrait Card */}
+        <div className="relative flex flex-col items-center justify-center h-[290px]">
+          <div
+            className="relative w-[230px] h-[245px] rounded-[28px] overflow-hidden flex items-center justify-center pointer-events-none"
+            style={{
+              background: 'rgba(12, 12, 18, 0.65)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: [
+                '0 16px 36px rgba(0, 0, 0, 0.55)',
+                'inset 0 1px 1px rgba(255, 255, 255, 0.06)',
+              ].join(', '),
+            }}
+          >
+            {!avatarError ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/avatar.png"
+                alt="Nitheesh Donepudi"
+                className="w-full h-full object-cover object-[center_15%]"
+                onError={() => setAvatarError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center text-center px-6">
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-xl mb-2"
+                  style={{
+                    background: 'linear-gradient(135deg,#a78bfa,#3b82f6)',
+                    boxShadow: '0 8px 24px rgba(124,58,237,0.40)',
+                    letterSpacing: '-0.05em',
+                  }}
+                >
+                  ND
+                </div>
+                <p className="text-[10px] text-white/40 font-mono">add /public/avatar.png</p>
+              </div>
+            )}
 
-          {/* Short paragraph (replaces "Stay in style..." copy) */}
-          <p className="text-[14px] leading-[1.55] text-white/70 max-w-sm">
-            I'm <span className="text-white font-semibold">Nitheesh Donepudi</span>, a full-stack &amp; data engineer.
-            RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system,
-            then I measure the receipts.
+            {/* Inner bottom vignette to blend portrait shoulder line */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to top, rgba(12, 12, 18, 0.95), transparent)',
+              }}
+            />
+          </div>
+
+          {/* Floating Caption Badge */}
+          <div
+            className="absolute bottom-[10px] z-10 flex items-center justify-between px-3.5 py-2.5 rounded-[14px] w-[185px]"
+            style={{
+              background: 'rgba(10, 10, 15, 0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            }}
+          >
+            <div className="flex flex-col gap-0.5">
+              <div className="text-[7.5px] text-white/45 font-bold uppercase tracking-[0.12em] leading-none">Now Building</div>
+              <div className="text-[10.5px] text-white font-bold tracking-tight leading-none">visionOS Portfolio</div>
+            </div>
+            <span
+              className="text-[8.5px] font-bold text-emerald-300 px-1.5 py-0.5 rounded-full leading-none flex items-center justify-center"
+              style={{ background: 'rgba(16,185,129,0.15)', height: '18px' }}
+            >
+              LIVE
+            </span>
+          </div>
+        </div>
+
+        {/* COLUMN 3 (Right): Description Copy & Gold CTA */}
+        <div className="flex flex-col gap-5">
+          <p
+            className="text-[13px] leading-[1.65] text-white/75 font-medium"
+            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
+          >
+            I&rsquo;m <span className="text-white font-bold">Nitheesh Donepudi</span>, a full-stack &amp; data engineer.
+            RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
           </p>
 
-          {/* Gold CTA — exactly Dotdive's "Shop Collection" treatment */}
           <button
             onClick={onOpenServices}
-            className="group self-start inline-flex items-center gap-2 px-7 py-3 rounded-full text-[13px] font-bold tracking-tight transition-all active:scale-95"
+            className="group self-start inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-[13px] font-bold tracking-tight transition-all active:scale-95 hover:brightness-105"
             style={{
-              background: 'linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%)',
-              color: '#1f1300',
-              boxShadow: '0 8px 24px rgba(251,191,36,0.30), inset 0 1px 0 rgba(255,255,255,0.30)',
+              background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+              color: '#0e0d14',
+              boxShadow: '0 8px 24px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
             }}
           >
             See My Work
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-4 h-4 text-[#0e0d14] group-hover:translate-x-0.5 transition-transform" />
           </button>
-
-          {/* Photo card — the model in the reference */}
-          <div className="relative mt-2">
-            <div
-              className="w-full h-[200px] overflow-hidden rounded-2xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.30), rgba(30,58,138,0.30))',
-                border: '1px solid rgba(255,255,255,0.10)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 12px 32px rgba(0,0,0,0.40)',
-              }}
-            >
-              {!avatarError ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src="/avatar.jpg"
-                  alt="Nitheesh Donepudi"
-                  className="w-full h-full object-cover object-center"
-                  onError={() => setAvatarError(true)}
-                />
-              ) : (
-                // Stylish placeholder until /public/avatar.jpg is added
-                <div className="w-full h-full flex flex-col items-center justify-center text-center px-6">
-                  <div
-                    className="w-20 h-20 rounded-full flex items-center justify-center font-black text-white text-3xl mb-3"
-                    style={{
-                      background: 'linear-gradient(135deg,#a78bfa,#3b82f6)',
-                      boxShadow: '0 8px 24px rgba(124,58,237,0.40)',
-                      letterSpacing: '-0.05em',
-                    }}
-                  >
-                    ND
-                  </div>
-                  <p className="text-[10px] text-white/40 font-mono">add /public/avatar.jpg</p>
-                </div>
-              )}
-            </div>
-
-            {/* Floating "Now Building" chip on the photo */}
-            <div
-              className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-xl"
-              style={{
-                background: 'rgba(0,0,0,0.60)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.10)',
-              }}
-            >
-              <div>
-                <div className="text-[9px] text-white/55 font-semibold uppercase tracking-[0.18em]">Now Building</div>
-                <div className="text-[12px] text-white font-bold tracking-tight">visionOS Portfolio</div>
-              </div>
-              <span
-                className="text-[9px] font-bold text-emerald-300 px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(16,185,129,0.18)' }}
-              >
-                LIVE
-              </span>
-            </div>
-          </div>
         </div>
+
       </div>
 
-      {/* ─── BOTTOM ROW — vouches + rating chip ───────────────────── */}
+      {/* ─── BOTTOM ROW — metadata strip ─────────────────────────── */}
       <div
-        className="flex items-center justify-between px-12 py-5"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+        className="flex items-center justify-between px-12 py-4"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
       >
-        {/* Avatar row + names (Dotdive's customer-row equivalent) */}
-        <div className="flex items-center gap-4">
-          <div className="flex -space-x-2.5">
+        {/* Left: Avatar row + names */}
+        <div className="flex items-center gap-3">
+          <div className="flex -space-x-2">
             {VOUCHES.map((v) => (
               <div
                 key={v.name}
-                className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-bold text-white"
+                className="w-7 h-7 rounded-full border flex items-center justify-center text-[9px] font-bold text-white"
                 style={{
                   background: v.gradient,
-                  borderColor: 'rgba(8,6,20,0.85)',
+                  borderColor: 'rgba(12,12,18,0.95)',
                 }}
               >
                 {v.name.charAt(0)}
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-3 text-[11px] text-white/55">
+          <div className="flex items-center gap-2.5 text-[10.5px] text-white/50">
             {VOUCHES.map((v, i) => (
               <span key={v.name}>
-                <span className="text-white/85 font-semibold">{v.name}</span>
-                <span className="text-white/35 ml-1">{v.role}</span>
-                {i < VOUCHES.length - 1 && <span className="text-white/20 ml-3">·</span>}
+                <span className="text-white/80 font-semibold">{v.name}</span>
+                <span className="text-white/30 ml-1">{v.role}</span>
+                {i < VOUCHES.length - 1 && <span className="text-white/15 ml-2.5">·</span>}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Rating chip — Dotdive's "5.0 ★ Trusted Brand" */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <span className="text-[20px] font-black text-white leading-none">5.0</span>
-            <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
+        {/* Right: Rating chip */}
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-0.5">
+            <span className="text-[17px] font-black text-white leading-none">5.0</span>
+            <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
           </div>
           <div className="flex flex-col">
-            <span className="text-[11px] text-white font-bold tracking-tight">Trusted Engineer</span>
-            <span className="text-[10px] text-white/45">10+ peer endorsements</span>
+            <span className="text-[10px] text-white/80 font-bold tracking-tight leading-none">Trusted Engineer</span>
+            <span className="text-[9px] text-white/40 leading-none mt-0.5">10+ peer endorsements</span>
           </div>
         </div>
       </div>
