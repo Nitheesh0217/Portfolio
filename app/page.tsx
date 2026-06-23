@@ -94,7 +94,7 @@ const MetricsWindow = memo(function MetricsWindow({
       <div className="flex flex-col items-center justify-center h-64 gap-2 p-6">
         <BarChart2 className="w-8 h-8 text-white/10" />
         <p className="text-xs text-white/25 font-mono">
-          No metrics yet. Insert rows into the metrics table (period = 'all-time').
+          No metrics yet. Insert rows into the metrics table (period = &apos;all-time&apos;).
         </p>
       </div>
     );
@@ -445,7 +445,7 @@ export default function DesktopCanvas() {
 
                   {activeProject.process_notes && (
                     <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1.5">Architecture & Process</h4>
+                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1.5">Architecture &amp; Process</h4>
                       <p className="text-[11.5px] leading-relaxed text-white/60">{activeProject.process_notes}</p>
                     </div>
                   )}
@@ -579,7 +579,7 @@ export default function DesktopCanvas() {
               >
                 <div className="flex-1 overflow-y-auto p-6 scrollbar-none flex flex-col gap-6 text-left" style={{ scrollbarWidth: 'none' }}>
                   <div>
-                    <span className="text-[9px] font-black uppercase tracking-[0.16em] text-violet-400">Specs & Impact</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.16em] text-violet-400">Specs &amp; Impact</span>
                     <h3 className="text-[16px] font-black text-white mt-1 leading-tight">Key Metrics</h3>
                   </div>
 
