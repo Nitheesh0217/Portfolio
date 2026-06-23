@@ -1,9 +1,7 @@
 import { NextRequest } from 'next/server';
-import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-// ─── Types ────────────────────────────────────────────────────────────────────────────
 interface IntakePayload {
   project_name: string;
   project_type: string;
@@ -41,9 +39,16 @@ interface IntakeRow {
   id: string;
 }
 
-// ─── POST /api/intake ─────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest): Promise<Response> {
-  const sql = getDb();
+  if (!process.env.DATABASE_URL) {
+    return Response.json(
+      { error: 'Service temporarily unavailable. Please try again later.' },
+      { status: 503 }
+    );
+  }
+
+  const { neon } = await import('@neondatabase/serverless');
+  const sql = neon(process.env.DATABASE_URL);
 
   let body: IntakePayload;
   try {
@@ -98,14 +103,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         Authorization: `Bearer ${process.env.AI_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        promptData: {
-          systemContext:
-            'You are a senior full-stack solutions architect at D Web Studios. ' +
-            'Given a project intake form, produce a structured JSON scope document.',
-          intake: body,
-        },
-      }),
+      body: JSON.stringify({ promptData: { systemContext: 'You are a senior full-stack solutions architect at D Web Studios. Given a project intake form, produce a structured JSON scope document.', intake: body } }),
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
@@ -119,27 +117,11 @@ export async function POST(req: NextRequest): Promise<Response> {
       SET
         ai_architecture   = ${JSON.stringify(aiData.architecture)},
         ai_user_flows     = ${JSON.stringify(aiData.user_flows)},
-        ai_scope_summary  = ${JSON.stringify({
-          summary: aiData.summary,
-          phased_scope: aiData.phased_scope,
-          budget_guidance: aiData.budget_guidance,
-          open_questions: aiData.open_questions,
-        })}
+        ai_scope_summary  = ${JSON.stringify({ summary: aiData.summary, phased_scope: aiData.phased_scope, budget_guidance: aiData.budget_guidance, open_questions: aiData.open_questions })}
       WHERE id = ${row.id};
     `;
 
-    return Response.json({
-      success: true,
-      intakeId: row.id,
-      aiGenerated: true,
-      ai: {
-        summary: aiData.summary,
-        architecture: aiData.architecture,
-        user_flows: aiData.user_flows,
-        phased_scope: aiData.phased_scope,
-        budget_guidance: aiData.budget_guidance,
-      },
-    });
+    return Response.json({ success: true, intakeId: row.id, aiGenerated: true, ai: { summary: aiData.summary, architecture: aiData.architecture, user_flows: aiData.user_flows, phased_scope: aiData.phased_scope, budget_guidance: aiData.budget_guidance } });
   } catch (aiError) {
     console.error('[intake] AI scoping failed:', aiError);
     return Response.json({ success: true, intakeId: row.id, aiGenerated: false });
