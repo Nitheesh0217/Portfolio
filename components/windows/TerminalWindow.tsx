@@ -81,9 +81,8 @@ export const TerminalWindow = memo(function TerminalWindow() {
 
   return (
     <div
-      className="font-mono text-[11px] p-4 overflow-y-auto leading-relaxed"
+      className="font-mono text-[12px] p-10 overflow-y-auto leading-relaxed w-full h-full flex-1"
       style={{
-        width: '520px', height: '320px',
         color: 'rgba(255,255,255,0.55)',
         scrollbarWidth: 'thin',
         scrollbarColor: 'rgba(139,92,246,0.2) transparent',

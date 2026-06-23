@@ -11,22 +11,21 @@ import {
   useTransform,
 } from 'framer-motion';
 import {
-  Terminal, FolderOpen, Award, BarChart2,
-  Mail, Bot, LayoutDashboard, Search, Clock, Zap,
+  Home, Briefcase, Heart, Bell, User,
   type LucideIcon,
 } from 'lucide-react';
 import type { WindowId, WindowRecord } from '@/types/windows';
 
 const DOCK_ICONS: Record<Exclude<WindowId, 'terminal'>, LucideIcon> = {
-  welcome:      LayoutDashboard,
-  projects:     FolderOpen,
-  certificates: Award,
-  metrics:      BarChart2,
-  contact:      Mail,
-  assistant:    Bot,
-  search:       Search,
-  timeline:     Clock,
-  skills:       Zap,
+  welcome:      Home,
+  projects:     Briefcase,
+  certificates: Heart,
+  metrics:      Heart, // Fallback (not in dock list but typings need it)
+  contact:      User,
+  assistant:    Bell,
+  search:       Bell, // Fallback
+  timeline:     Bell, // Fallback
+  skills:       Bell, // Fallback
 };
 
 const DOCK_LABELS: Record<Exclude<WindowId, 'terminal'>, string> = {
@@ -41,6 +40,14 @@ const DOCK_LABELS: Record<Exclude<WindowId, 'terminal'>, string> = {
   skills:       'Skills',
 };
 
+const ACTIVE_DOCK_IDS: Exclude<WindowId, 'terminal'>[] = [
+  'welcome',
+  'projects',
+  'certificates',
+  'assistant',
+  'contact',
+];
+
 // ─── Single magnifying dock item ───────────────────────────────────────────
 function DockItem({
   id,
@@ -48,13 +55,13 @@ function DockItem({
   mouseY,
   onToggle,
 }: {
-  id: WindowId;
+  id: Exclude<WindowId, 'terminal'>;
   win: WindowRecord;
   mouseY: ReturnType<typeof useMotionValue<number>>;
   onToggle: (id: WindowId) => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const Icon = DOCK_ICONS[id as Exclude<WindowId, 'terminal'>];
+  const Icon = DOCK_ICONS[id];
   const isOpen    = win?.isOpen ?? false;
   const isFocused = win?.isFocused && isOpen && !win.isMinimized;
 
@@ -84,26 +91,29 @@ function DockItem({
           width: size,
           height: size,
           background: isFocused
-            ? 'rgba(255,255,255,0.18)'
+            ? 'linear-gradient(135deg, #fbbf24, #f59e0b)'
             : isOpen
             ? 'rgba(255,255,255,0.10)'
             : 'rgba(255,255,255,0.03)',
           borderRadius: '50%',
           border: isFocused
-            ? '1px solid rgba(255,255,255,0.22)'
+            ? '1px solid rgba(255, 220, 130, 0.55)'
             : '1px solid rgba(255,255,255,0.05)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
           flexShrink: 0,
-          transition: 'background 150ms, border-color 150ms',
+          boxShadow: isFocused
+            ? '0 8px 20px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.40)'
+            : 'none',
+          transition: 'background 150ms, border-color 150ms, box-shadow 150ms',
         }}
         whileTap={{ scale: 0.90 }}
       >
         <Icon
           className={`transition-colors ${
-            isFocused ? 'text-white' : isOpen ? 'text-white/80' : 'text-white/40'
+            isFocused ? 'text-[#1a1100]' : isOpen ? 'text-white/80' : 'text-white/40'
           }`}
           style={{ width: '46%', height: '46%' }}
         />
@@ -138,39 +148,38 @@ function DockItem({
   );
 }
 
-// ─── Dock — vertical left rail ─────────────────────────────────────────────
 export interface DockProps {
   windows:  Record<WindowId, WindowRecord>;
   onToggle: (id: WindowId) => void;
+  className?: string;
 }
 
-export const Dock = memo(function Dock({ windows, onToggle }: DockProps) {
+export const Dock = memo(function Dock({ windows, onToggle, className }: DockProps) {
   const mouseY = useMotionValue(Infinity);
-  const ids = Object.keys(DOCK_ICONS) as WindowId[];
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5, duration: 0.55, ease: [0.34, 1.2, 0.64, 1] }}
-      className="fixed left-8 top-1/2 -translate-y-1/2 z-[9998]"
+      className={className ?? "fixed left-8 top-1/2 -translate-y-1/2 z-[9998]"}
     >
       <div
         className="flex flex-col items-center gap-2 px-2 py-3.5"
         style={{
-          background: 'rgba(15, 15, 20, 0.40)',
-          backdropFilter: 'blur(30px) saturate(120%)',
-          WebkitBackdropFilter: 'blur(30px) saturate(120%)',
-          border: '1px solid rgba(255,255,255,0.05)',
+          background: 'rgba(5, 5, 5, 0.95)',
+          backdropFilter: 'blur(40px) saturate(120%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(120%)',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '9999px',
-          boxShadow: [
-            '0 8px 32px rgba(0,0,0,0.3)',
-          ].join(', '),
+          boxShadow: '0 25px 50px -12px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.06)',
         }}
         onMouseMove={(e) => mouseY.set(e.clientY)}
         onMouseLeave={() => mouseY.set(Infinity)}
       >
-        {ids.map((id) => (
+        {ACTIVE_DOCK_IDS.map((id) => (
           <DockItem
             key={id}
             id={id}

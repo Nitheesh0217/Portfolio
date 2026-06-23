@@ -15,7 +15,11 @@ export const BackgroundImage = memo(function BackgroundImage() {
         src="/background.png"
         alt="passthrough background"
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-        style={{ zIndex: 0 }}
+        style={{
+          zIndex: 0,
+          filter: 'blur(12px)',
+          transform: 'scale(1.05)',
+        }}
       />
 
       {/* Layer 1: Ambient light overlay to ensure glass UI readability */}

@@ -174,7 +174,13 @@ const ProjectMockupVisual = memo(function ProjectMockupVisual({ slug, category }
   );
 });
 
-export const ProjectsWindow = memo(function ProjectsWindow({ projects, state }: ProjectsWindowProps) {
+export interface ProjectsWindowProps {
+  projects: ProjectSummary[];
+  state:    DataState;
+  onSelectProject?: (project: ProjectSummary) => void;
+}
+
+export const ProjectsWindow = memo(function ProjectsWindow({ projects, state, onSelectProject }: ProjectsWindowProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('__all__');
   const [activeCaseStudy, setActiveCaseStudy] = useState<ProjectSummary | null>(null);
 
@@ -227,133 +233,103 @@ export const ProjectsWindow = memo(function ProjectsWindow({ projects, state }: 
   }
 
   return (
-    <div className="w-full h-full flex flex-col relative select-none bg-black/10">
+    <div className="w-full h-full flex flex-col relative select-none bg-transparent">
       
-      {/* Category Pills Header */}
-      <div className="flex items-center justify-between px-10 py-5 shrink-0 border-b border-white/[0.04]">
-        <div className="flex items-center gap-2">
-          <span className="text-[14px] font-extrabold tracking-tight text-white/95">Selected Works</span>
-          <span className="text-[11px] font-mono text-white/30">({filteredProjects.length})</span>
-        </div>
-        <div className="flex items-center gap-2.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          <button
-            onClick={() => setSelectedCategory('__all__')}
-            className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-tight transition-all border ${
-              selectedCategory === '__all__'
-                ? 'bg-white/10 text-white border-white/20 shadow-md shadow-black/30'
-                : 'text-white/40 hover:text-white/70 border-transparent'
-            }`}
-          >
-            All Works
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-tight transition-all border whitespace-nowrap ${
-                selectedCategory === cat
-                  ? 'bg-white/10 text-white border-white/20 shadow-md shadow-black/30'
-                  : 'text-white/40 hover:text-white/70 border-transparent'
-              }`}
+      {/* Photo Grid Editorial Gallery Area */}
+      <div 
+        className="flex-1 overflow-y-auto px-10 pt-10 pb-28 scrollbar-none"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pb-12">
+          {filteredProjects.map((p) => (
+            <div
+              key={p.id}
+              onClick={() => onSelectProject ? onSelectProject(p) : setActiveCaseStudy(p)}
+              className="group relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-white/[0.06] bg-[#0c0c14]/40 cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+              style={{
+                boxShadow: '0 12px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.03)',
+              }}
             >
-              {categoryLabel(cat)}
-            </button>
+              {/* Cover visual (Full-bleed Image or Custom Mockup) */}
+              <div className="absolute inset-0 w-full h-full">
+                {p.thumbnail_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.thumbnail_url}
+                    alt={p.title}
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                ) : (
+                  <ProjectMockupVisual slug={p.slug} category={p.category} />
+                )}
+              </div>
+
+              {/* Category Overlay (Top-Left) with top-to-bottom dark gradient */}
+              <div className="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/60 via-black/20 to-transparent pointer-events-none z-10">
+                <span className="text-[17px] font-black text-white/90 tracking-tight drop-shadow-md">
+                  {categoryLabel(p.category)}
+                </span>
+              </div>
+
+              {/* Project Title Overlay (Bottom-Left) with bottom-to-top dark gradient */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/85 via-black/45 to-transparent pointer-events-none z-10">
+                <h3 className="text-[15px] font-bold text-white leading-tight group-hover:text-amber-300 transition-colors drop-shadow-md">
+                  {p.title}
+                </h3>
+                {p.subtitle && (
+                  <p className="text-[11px] text-white/50 truncate mt-1 drop-shadow-md">
+                    {p.subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Bento Grid Editorial Gallery Area */}
-      <div className="flex-1 overflow-y-auto px-10 py-6" style={{ scrollbarWidth: 'thin' }}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[220px] pb-12">
-          {filteredProjects.map((p) => {
-            // Coach Jake is the massive featured card (occupies 2 cols wide by 2 rows tall)
-            const isFeaturedBig = p.slug === 'coach-jake';
-            // Citrix is the wide supporting card (occupies 2 cols wide by 1 row tall)
-            const isFeaturedWide = p.slug === 'citrix-rag-knowledge-assistant';
-            
-            return (
-              <div
-                key={p.id}
-                onClick={() => setActiveCaseStudy(p)}
-                className={`group flex flex-col rounded-[28px] overflow-hidden border border-white/[0.06] bg-white/[0.02] cursor-pointer hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300 hover:-translate-y-1.5 ${
-                  isFeaturedBig
-                    ? 'md:col-span-2 md:row-span-2'
-                    : isFeaturedWide
-                    ? 'md:col-span-2 md:row-span-1'
-                    : 'col-span-1 md:row-span-1'
-                }`}
-                style={{
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.03)',
-                }}
-              >
-                {/* Image Section */}
-                <div className="relative overflow-hidden w-full bg-[#08080c] border-b border-white/[0.05] flex-1">
-                  {p.thumbnail_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={p.thumbnail_url}
-                      alt={p.title}
-                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                    />
-                  ) : (
-                    // Custom mockup illustration simulator
-                    <ProjectMockupVisual slug={p.slug} category={p.category} />
-                  )}
+      {/* Floating Bottom Filter (Window Control) */}
+      <div 
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center p-1 gap-1.5 rounded-full"
+        style={{
+          background: 'rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(30px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(30px) saturate(140%)',
+          border: '1px solid rgba(255, 255, 255, 0.10)',
+          boxShadow: '0 20px 40px -6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
+        }}
+      >
+        <button
+          onClick={() => setSelectedCategory('__all__')}
+          className={`px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-tight transition-all ${
+            selectedCategory === '__all__'
+              ? 'bg-white/25 text-white shadow-inner border border-white/5'
+              : 'text-white/60 hover:text-white'
+          }`}
+        >
+          All Works
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-tight transition-all whitespace-nowrap ${
+              selectedCategory === cat
+                ? 'bg-white/25 text-white shadow-inner border border-white/5'
+                : 'text-white/60 hover:text-white'
+            }`}
+          >
+            {categoryLabel(cat)}
+          </button>
+        ))}
+      </div>
 
-                  {/* Top Left category/featured overlay badge */}
-                  <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider text-amber-300 bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1">
-                    {p.featured && <Star className="w-2.5 h-2.5 fill-amber-300 text-amber-300" />}
-                    {categoryLabel(p.category)}
-                  </div>
-
-                  {/* Hover reveal text overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                    <span className="text-[11px] font-bold text-white/95 tracking-tight flex items-center gap-1.5">
-                      Explore Case Study <ExternalLink className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content Area */}
-                <div className="p-5 flex flex-col justify-between shrink-0 h-[100px] bg-[#0c0c14]/30">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-[15px] font-bold text-white leading-tight group-hover:text-amber-300 transition-colors">
-                      {p.title}
-                    </h3>
-                    {p.roi_value && (
-                      <span className="text-[10px] font-mono font-bold text-emerald-400 leading-none">
-                        {p.roi_value}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-white/[0.04] pt-2">
-                    {/* Small stack tags */}
-                    <div className="flex items-center gap-1.5 overflow-hidden max-w-[70%]">
-                      {p.stack.slice(0, isFeaturedBig ? 4 : 2).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[9px] font-mono font-medium text-white/40 bg-white/[0.02] border border-white/[0.06] px-1.5 py-0.5 rounded"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {p.stack.length > (isFeaturedBig ? 4 : 2) && (
-                        <span className="text-[9px] font-mono text-white/20">
-                          +{p.stack.length - (isFeaturedBig ? 4 : 2)}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[11px] font-bold text-amber-300 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                      Case Study →
-                    </span>
-                  </div>
-                </div>
-
-              </div>
-            );
-          })}
-        </div>
+      {/* Window control resize bar (AVP style window grab handle) */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 opacity-55 z-20">
+        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+        <div className="w-10 h-1 rounded-full bg-white" />
       </div>
 
       {/* ─── CASE STUDY DETAILS OVERLAY ────────────────────────────── */}
@@ -554,6 +530,9 @@ export const ProjectsWindow = memo(function ProjectsWindow({ projects, state }: 
         }
         .animate-fade-in {
           animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
       

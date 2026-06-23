@@ -1,218 +1,208 @@
 // components/windows/WelcomeWindow.tsx
-// Exact layout match to the Dotdive reference, repurposed as Nitheesh's portfolio.
-// Layout map (matches reference):
-//   [browser chrome]
-//   ──────────────────────────────────────────────────
-//   [brand wordmark — centered, small]
-//
-//   [HUGE HEADING]                [paragraph copy]
-//   [3 lines, left half]          [gold CTA]
-//                                 [photo of Nitheesh]
-//
-//   [avatar row]    [5.0 ★ Trusted Engineer chip]
+// Container C: the Main Canvas.
+// Refactored to implement the 3D Hero Overlap Effect with strict layering.
 'use client';
 
 import { memo, useState } from 'react';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, Cpu, Database, Sparkles } from 'lucide-react';
 
 export interface WelcomeWindowProps {
   onOpenServices: () => void;
 }
 
-// Hardcoded vouches (replace with real ones)
-const VOUCHES = [
-  { name: 'Naren A.',  role: 'PM',  gradient: 'linear-gradient(135deg,#a78bfa,#6d28d9)' },
-  { name: 'Mike C.',   role: 'CTO', gradient: 'linear-gradient(135deg,#60a5fa,#1e40af)' },
-  { name: 'Will H.',   role: 'Eng', gradient: 'linear-gradient(135deg,#f472b6,#9d174d)' },
+const PROJECT_CARDS = [
+  {
+    label: 'Agentic AI',
+    icon: Sparkles,
+    bg: 'linear-gradient(135deg, rgba(167,139,250,0.55), rgba(109,40,217,0.40))',
+    ring: 'rgba(167,139,250,0.45)',
+  },
+  {
+    label: 'Data Pipelines',
+    icon: Database,
+    bg: 'linear-gradient(135deg, rgba(96,165,250,0.55), rgba(30,64,175,0.40))',
+    ring: 'rgba(96,165,250,0.45)',
+  },
+  {
+    label: 'visionOS',
+    icon: Cpu,
+    bg: 'linear-gradient(135deg, rgba(251,191,36,0.55), rgba(180,83,9,0.40))',
+    ring: 'rgba(251,191,36,0.45)',
+  },
+];
+
+const AVATARS = [
+  'linear-gradient(135deg,#a78bfa,#6d28d9)',
+  'linear-gradient(135deg,#60a5fa,#1e40af)',
+  'linear-gradient(135deg,#f472b6,#9d174d)',
+  'linear-gradient(135deg,#fbbf24,#b45309)',
 ];
 
 export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices }: WelcomeWindowProps) {
   const [avatarError, setAvatarError] = useState(false);
 
   return (
-    <div className="w-[960px] flex flex-col select-none">
+    <div className="w-full h-full p-16 md:p-20 flex flex-col justify-between relative overflow-visible">
+      {/* Layer 1: Background Text & UI (z-0) */}
+      <div className="relative z-0 w-full h-full flex flex-col justify-between pointer-events-none">
 
-      {/* ─── BRAND WORDMARK ───────────────────────────────────────── */}
-      <div className="flex items-center justify-center pt-4 pb-1">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-3.5 h-3.5 rounded-sm rotate-45"
-            style={{
-              background: 'linear-gradient(135deg, #ffffff, #999999)',
-              boxShadow: '0 0 8px rgba(255,255,255,0.15)',
-            }}
-          />
-          <span className="text-[12.5px] font-bold tracking-tight text-white/90">D Web Studios</span>
-        </div>
-      </div>
+        {/* Middle — Left/Right Typography grid */}
+        <div className="relative z-20 grid grid-cols-2 gap-16 w-full items-center flex-1 my-auto">
+          
+          {/* Left Side Typography */}
+          <div className="flex flex-col gap-6 pointer-events-auto">
+            <h1
+              className="text-white font-black leading-[0.95] tracking-[-0.038em]"
+              style={{
+                fontSize: 'clamp(38px, 3.8vw, 54px)',
+                textShadow: '0 4px 24px rgba(0,0,0,0.55)',
+              }}
+            >
+              AI Engineering.<br />
+              Production data.<br />
+              <span className="text-white/40">Always shipped.</span>
+            </h1>
 
-      {/* ─── HERO ROW ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-[1.15fr_0.85fr_1fr] gap-10 px-12 pt-5 pb-7 items-center">
+            <div className="flex items-center gap-2 self-start">
+              <span className="relative inline-flex">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              </span>
+              <span className="text-[10px] font-bold tracking-[0.16em] text-emerald-400 uppercase">
+                Open to work · STEM OPT · Miramar, FL
+              </span>
+            </div>
+          </div>
 
-        {/* COLUMN 1 (Left): Headline & Status Badge */}
-        <div className="flex flex-col gap-5">
-          <h1
-            className="text-white font-black leading-[0.92] tracking-[-0.035em] text-[42px] lg:text-[48px]"
-            style={{ textShadow: '0 4px 16px rgba(0,0,0,0.35)' }}
-          >
-            Production<br />
-            AI.<br />
-            Honest data.<br />
-            <span style={{ color: 'rgba(255,255,255,0.40)' }}>Always</span><br />
-            <span style={{ color: 'rgba(255,255,255,0.40)' }}>shipped.</span>
-          </h1>
+          {/* Right Side Typography */}
+          <div className="flex flex-col gap-7 items-end text-right pointer-events-auto">
+            <p
+              className="text-[14px] leading-[1.65] text-white/80 font-medium text-left max-w-[360px]"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.50)' }}
+            >
+              I&rsquo;m <span className="text-white font-bold">Nitheesh Donepudi</span>, a full-stack &amp; data engineer.
+              RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system,
+              then I measure the receipts.
+            </p>
 
-          {/* Status badge */}
-          <div className="flex items-center gap-2 self-start mt-1">
-            <span className="relative inline-flex">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            </span>
-            <span className="text-[9.5px] font-bold tracking-wider text-emerald-400 uppercase">
-              Open to work · STEM OPT · Miramar, FL
-            </span>
+            <button
+              onClick={onOpenServices}
+              className="group inline-flex items-center gap-2 self-end px-7 py-3 rounded-full text-[14px] font-bold tracking-tight transition-all active:scale-95 hover:brightness-110"
+              style={{
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                color: '#1a1100',
+                boxShadow: '0 12px 32px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.40)',
+              }}
+            >
+              See My Work
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </button>
           </div>
         </div>
 
-        {/* COLUMN 2 (Center): Immersive Portrait Card */}
-        <div className="relative flex flex-col items-center justify-center h-[290px]">
-          <div
-            className="relative w-[230px] h-[245px] rounded-[28px] overflow-hidden flex items-center justify-center pointer-events-none"
-            style={{
-              background: 'rgba(12, 12, 18, 0.65)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: [
-                '0 16px 36px rgba(0, 0, 0, 0.55)',
-                'inset 0 1px 1px rgba(255, 255, 255, 0.06)',
-              ].join(', '),
-            }}
-          >
-            {!avatarError ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src="/avatar.png"
-                alt="Nitheesh Donepudi"
-                className="w-full h-full object-cover object-[center_15%]"
-                onError={() => setAvatarError(true)}
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-center px-6">
+        {/* Bottom — Pinned project cards (Left) and Trusted Engineer card (Right) */}
+        <div className="flex justify-between items-end w-full mt-auto pt-4">
+          
+          {/* Bottom Left UI: Project cards (z-[2] to ensure hover works) */}
+          <div className="flex items-end gap-3.5 pointer-events-auto z-[2] relative">
+            {PROJECT_CARDS.map(({ label, icon: Icon, bg, ring }) => (
+              <div key={label} className="flex flex-col items-center gap-2">
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-xl mb-2"
+                  className="w-[92px] h-[92px] rounded-[24px] flex items-center justify-center transition-all hover:scale-105 cursor-pointer"
                   style={{
-                    background: 'linear-gradient(135deg,#a78bfa,#3b82f6)',
-                    boxShadow: '0 8px 24px rgba(124,58,237,0.40)',
-                    letterSpacing: '-0.05em',
+                    background: bg,
+                    border: `1px solid ${ring}`,
+                    boxShadow: '0 12px 28px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.25)',
                   }}
                 >
-                  ND
+                  <Icon className="w-9 h-9 text-white" strokeWidth={2} />
                 </div>
-                <p className="text-[10px] text-white/40 font-mono">add /public/avatar.png</p>
+                <span className="text-[10.5px] font-semibold text-white/70 tracking-tight">
+                  {label}
+                </span>
               </div>
-            )}
+            ))}
+          </div>
 
-            {/* Inner bottom vignette to blend portrait shoulder line */}
-            <div
-              className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
+          {/* Bottom Right UI: Trusted Engineer card */}
+          <div
+            className="flex items-center gap-4 px-5 py-3 rounded-2xl pointer-events-auto z-[2] relative"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[22px] font-black text-white leading-none">5.0</span>
+                <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
+              </div>
+              <div className="text-[10px] font-bold text-white/85 tracking-tight mt-0.5">
+                Trusted Engineer
+              </div>
+              <div className="text-[9px] text-white/50 mt-0.5">
+                Customer Reviews
+              </div>
+            </div>
+
+            <div className="flex -space-x-2.5">
+              {AVATARS.map((bg, i) => (
+                <div
+                  key={i}
+                  className="w-7 h-7 rounded-full border-2"
+                  style={{
+                    background: bg,
+                    borderColor: 'rgba(5,5,5,0.95)',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Layer 2: 3D Floating Hero Image (z-10 or higher) */}
+      <div className="absolute inset-0 flex justify-center items-end pointer-events-none z-10 overflow-visible">
+        {!avatarError ? (
+          <div
+            className="relative h-[98%] w-auto flex items-end pointer-events-none select-none overflow-visible"
+            style={{
+              bottom: '-12px',
+              maskImage: 'radial-gradient(ellipse at 50% 45%, black 20%, transparent 68%)',
+              WebkitMaskImage: '-webkit-radial-gradient(50% 45%, ellipse, black 20%, transparent 68%)',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/avatar.png"
+              alt="Nitheesh Donepudi"
+              onError={() => setAvatarError(true)}
+              className="h-full w-auto object-contain select-none pointer-events-none"
               style={{
-                background: 'linear-gradient(to top, rgba(12, 12, 18, 0.95), transparent)',
+                mixBlendMode: 'lighten',
               }}
             />
           </div>
-
-          {/* Floating Caption Badge */}
-          <div
-            className="absolute bottom-[10px] z-10 flex items-center justify-between px-3.5 py-2.5 rounded-[14px] w-[185px]"
-            style={{
-              background: 'rgba(10, 10, 15, 0.85)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-            }}
-          >
-            <div className="flex flex-col gap-0.5">
-              <div className="text-[7.5px] text-white/45 font-bold uppercase tracking-[0.12em] leading-none">Now Building</div>
-              <div className="text-[10.5px] text-white font-bold tracking-tight leading-none">visionOS Portfolio</div>
-            </div>
-            <span
-              className="text-[8.5px] font-bold text-emerald-300 px-1.5 py-0.5 rounded-full leading-none flex items-center justify-center"
-              style={{ background: 'rgba(16,185,129,0.15)', height: '18px' }}
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full pointer-events-auto">
+            <div
+              className="w-72 h-72 rounded-full flex items-center justify-center font-black text-white"
+              style={{
+                background: 'linear-gradient(135deg, #a78bfa, #3b82f6)',
+                boxShadow: '0 30px 60px rgba(0,0,0,0.65), inset 0 2px 0 rgba(255,255,255,0.30)',
+                letterSpacing: '-0.05em',
+                fontSize: '120px',
+              }}
             >
-              LIVE
-            </span>
+              ND
+            </div>
+            <p className="mt-3 text-[9px] text-white/35 font-mono tracking-wide">
+              drop /public/avatar.png (transparent PNG)
+            </p>
           </div>
-        </div>
-
-        {/* COLUMN 3 (Right): Description Copy & Gold CTA */}
-        <div className="flex flex-col gap-5">
-          <p
-            className="text-[13px] leading-[1.65] text-white/75 font-medium"
-            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
-          >
-            I&rsquo;m <span className="text-white font-bold">Nitheesh Donepudi</span>, a full-stack &amp; data engineer.
-            RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
-          </p>
-
-          <button
-            onClick={onOpenServices}
-            className="group self-start inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-[13px] font-bold tracking-tight transition-all active:scale-95 hover:brightness-105"
-            style={{
-              background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-              color: '#0e0d14',
-              boxShadow: '0 8px 24px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-            }}
-          >
-            See My Work
-            <ArrowRight className="w-4 h-4 text-[#0e0d14] group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
-
-      </div>
-
-      {/* ─── BOTTOM ROW — metadata strip ─────────────────────────── */}
-      <div
-        className="flex items-center justify-between px-12 py-4"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-      >
-        {/* Left: Avatar row + names */}
-        <div className="flex items-center gap-3">
-          <div className="flex -space-x-2">
-            {VOUCHES.map((v) => (
-              <div
-                key={v.name}
-                className="w-7 h-7 rounded-full border flex items-center justify-center text-[9px] font-bold text-white"
-                style={{
-                  background: v.gradient,
-                  borderColor: 'rgba(12,12,18,0.95)',
-                }}
-              >
-                {v.name.charAt(0)}
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2.5 text-[10.5px] text-white/50">
-            {VOUCHES.map((v, i) => (
-              <span key={v.name}>
-                <span className="text-white/80 font-semibold">{v.name}</span>
-                <span className="text-white/30 ml-1">{v.role}</span>
-                {i < VOUCHES.length - 1 && <span className="text-white/15 ml-2.5">·</span>}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Rating chip */}
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-0.5">
-            <span className="text-[17px] font-black text-white leading-none">5.0</span>
-            <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] text-white/80 font-bold tracking-tight leading-none">Trusted Engineer</span>
-            <span className="text-[9px] text-white/40 leading-none mt-0.5">10+ peer endorsements</span>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
