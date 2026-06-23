@@ -49,10 +49,10 @@ export const StoryWindow = memo(function StoryWindow() {
         {/* Narrative Text */}
         <div className="space-y-4 text-sm leading-relaxed text-white/75">
           <p>
-            I don't just ship features. I ship <span className="text-violet-300 font-semibold">systems that don't break</span>.
+            I don&apos;t just ship features. I ship <span className="text-violet-300 font-semibold">systems that don&apos;t break</span>.
           </p>
           <p>
-            Every project starts with a question: <span className="text-violet-300 font-semibold">"What does success look like?"</span> Then I measure it. Always.
+            Every project starts with a question: <span className="text-violet-300 font-semibold">&ldquo;What does success look like?&rdquo;</span> Then I measure it. Always.
           </p>
           <p>
             RAG pipelines. Multi-agent orchestration. Real-time SaaS. Everything in this portfolio has a receipt—proof that it worked.

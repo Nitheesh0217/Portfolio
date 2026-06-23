@@ -1,5 +1,5 @@
 'use client';
-// app/page.tsx — DesktopCanvas
+// app/page-backup.tsx — DesktopCanvas (backup)
 // Root orchestrator for the Spatial UI Engine
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -34,10 +34,6 @@ import type {
   ProjectSummary, Certificate, Metric, DataState,
 } from '@/types/portfolio';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Portfolio data state
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface PortfolioState {
   projects:     ProjectSummary[];
   certificates: Certificate[];
@@ -52,9 +48,6 @@ const PORTFOLIO_INITIAL: PortfolioState = {
   dataState:    { status: 'loading' },
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DesktopBackground — memo with zero props, renders ONCE
-// ─────────────────────────────────────────────────────────────────────────────
 const DesktopBackground = memo(function DesktopBackground() {
   return (
     <>
@@ -88,9 +81,6 @@ const DesktopBackground = memo(function DesktopBackground() {
   );
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MetricsWindow — stat cards grid
-// ─────────────────────────────────────────────────────────────────────────────
 const MetricsWindow = memo(function MetricsWindow({
   metrics, dataState,
 }: { metrics: Metric[]; dataState: DataState }) {
@@ -121,7 +111,7 @@ const MetricsWindow = memo(function MetricsWindow({
       <div className="flex flex-col items-center justify-center h-64 gap-2 p-6">
         <BarChart2 className="w-8 h-8 text-white/10" />
         <p className="text-xs text-white/25 font-mono">
-          No metrics yet. Insert rows into the metrics table (period = 'all-time').
+          No metrics yet. Insert rows into the metrics table (period = &apos;all-time&apos;).
         </p>
       </div>
     );
@@ -151,16 +141,13 @@ const MetricsWindow = memo(function MetricsWindow({
   );
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ContactWindow
-// ─────────────────────────────────────────────────────────────────────────────
 const ContactWindow = memo(function ContactWindow() {
   return (
     <div className="p-6 flex flex-col gap-5">
       <div>
         <h3 className="text-[18px] font-bold text-white">Let&rsquo;s build something.</h3>
         <p className="text-sm text-white/45 mt-1 leading-relaxed">
-          Full-stack apps, AI integrations, design systems — I&rsquo;m here for it.
+          Full-stack apps, AI integrations, design systems &mdash; I&rsquo;m here for it.
         </p>
       </div>
 
@@ -202,9 +189,6 @@ const ContactWindow = memo(function ContactWindow() {
   );
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// getDockAction
-// ─────────────────────────────────────────────────────────────────────────────
 function getDockAction(win: WindowRecord, id: WindowId, nextZ: number) {
   if (!win.isOpen)     return { type: 'OPEN'     as const, id, nextZ };
   if (win.isMinimized) return { type: 'RESTORE'  as const, id, nextZ };
@@ -212,15 +196,11 @@ function getDockAction(win: WindowRecord, id: WindowId, nextZ: number) {
   return                      { type: 'FOCUS'    as const, id, nextZ };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DesktopCanvas
-// ─────────────────────────────────────────────────────────────────────────────
 export default function DesktopCanvas() {
   const [windows, dispatch] = useReducer(windowReducer, INITIAL_WINDOW_STATE);
   const zCounter = useRef(Z_BASE + 2);
   const [portfolio, setPortfolio] = useState<PortfolioState>(PORTFOLIO_INITIAL);
 
-  // Parallel-fetch all static portfolio data on mount
   useEffect(() => {
     Promise.all([
       fetch('/api/projects').then((r) => { if (!r.ok) throw new Error(`/api/projects → ${r.status}`); return r.json(); }),
@@ -239,7 +219,6 @@ export default function DesktopCanvas() {
       });
   }, []);
 
-  // Z-normalization guard
   useEffect(() => {
     if (zCounter.current < Z_MAX - 5) return;
     const openIds = WINDOW_IDS
@@ -252,7 +231,6 @@ export default function DesktopCanvas() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windows]);
 
-  // Stable per-window dispatch wrappers
   const handlers = useMemo(() => {
     const h = {} as Record<WindowId, {
       focus: () => void; close: () => void;
@@ -277,7 +255,6 @@ export default function DesktopCanvas() {
   const openAll  = useCallback(() => { zCounter.current += WINDOW_IDS.length; dispatch({ type: 'OPEN_ALL', nextZ: zCounter.current }); }, []);
   const closeAll = useCallback(() => { dispatch({ type: 'CLOSE_ALL' }); }, []);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const ctrl = e.metaKey || e.ctrlKey;
