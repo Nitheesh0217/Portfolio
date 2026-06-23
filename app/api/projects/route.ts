@@ -1,32 +1,24 @@
-// app/api/projects/route.ts
-import { NextResponse }        from 'next/server';
-import { createDbClient }      from '@/lib/dbClient';
-import type { ProjectSummary } from '@/types/portfolio';
+import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const sql = createDbClient();
-
+export async function GET(): Promise<Response> {
   try {
+    const sql = getDb();
     const rows = await sql`
       SELECT
-        id, slug, title, subtitle,
-        category, stack, tags,
-        thumbnail_url, live_url, github_url,
-        roi_label, roi_value, roi_context,
-        testimonial_quote, testimonial_author, testimonial_avatar,
+        id, slug, title, subtitle, category, featured,
+        stack, thumbnail_url, live_url, github_url,
         problem_statement, approach, process_notes,
-        learnings, artifact_urls,
-        featured, sort_order, built_at, created_at
-      FROM   projects
-      WHERE  status = 'published'
-      ORDER  BY featured DESC, sort_order ASC
+        roi_value, roi_label, roi_context,
+        testimonial_quote, testimonial_author, testimonial_avatar,
+        learnings, sort_order
+      FROM projects
+      ORDER BY sort_order ASC NULLS LAST, created_at DESC;
     `;
-
-    return NextResponse.json(rows as ProjectSummary[]);
+    return Response.json(rows);
   } catch (err) {
-    console.error('[api/projects] DB error:', err);
-    return NextResponse.json({ error: 'Failed to load projects' }, { status: 500 });
+    console.error('[api/projects]', err);
+    return Response.json({ error: 'Failed to load projects.' }, { status: 500 });
   }
 }

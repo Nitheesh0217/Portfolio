@@ -1,27 +1,19 @@
-// app/api/metrics/route.ts
-import { NextResponse }   from 'next/server';
-import { createDbClient } from '@/lib/dbClient';
-import type { Metric }    from '@/types/portfolio';
+import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const sql = createDbClient();
-
+export async function GET(): Promise<Response> {
   try {
+    const sql = getDb();
     const rows = await sql`
-      SELECT
-        id, label, value, unit,
-        display_value, context, icon,
-        period, display_order
-      FROM   metrics
-      WHERE  period = 'all-time'
-      ORDER  BY display_order ASC
+      SELECT id, label, value, display_value, unit, context, sort_order
+      FROM metrics
+      WHERE period = 'all-time'
+      ORDER BY sort_order ASC NULLS LAST;
     `;
-
-    return NextResponse.json(rows as Metric[]);
+    return Response.json(rows);
   } catch (err) {
-    console.error('[api/metrics] DB error:', err);
-    return NextResponse.json({ error: 'Failed to load metrics' }, { status: 500 });
+    console.error('[api/metrics]', err);
+    return Response.json({ error: 'Failed to load metrics.' }, { status: 500 });
   }
 }
