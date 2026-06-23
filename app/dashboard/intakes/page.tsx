@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import sql from '@/lib/db';
+import { createDbClient } from '@/lib/dbClient';
 
 interface IntakeRow {
   id: string;
@@ -12,9 +12,10 @@ interface IntakeRow {
   ai_architecture: string | null;
 }
 
-export const dynamic = 'force-dynamic'; // Always fetch fresh data
+export const dynamic = 'force-dynamic';
 
 export default async function IntakesDashboard() {
+  const sql = createDbClient();
   const intakes = (await sql`
     SELECT
       id,
@@ -181,7 +182,7 @@ function CardRow({ label, value }: { label: string; value: string | null | undef
 function EmptyState() {
   return (
     <div className="text-center py-20">
-      <p className="text-slate-600 text-5xl mb-4">📭</p>
+      <p className="text-slate-600 text-5xl mb-4">💭</p>
       <h2 className="text-slate-400 font-medium text-lg">No intakes yet</h2>
       <p className="text-slate-600 text-sm mt-1">
         Submit your first intake via{' '}
