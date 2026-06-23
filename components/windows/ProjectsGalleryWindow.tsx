@@ -1,10 +1,16 @@
 // components/windows/ProjectsGalleryWindow.tsx
-// Visual Gallery Projects Window with Carousel
+// Visual Gallery Projects Window with Carousel + Spatial Tablet Browser
 'use client';
 
 import { memo, useState } from 'react';
+import { Lock } from 'lucide-react';
 import { GLASS_ENGINE } from '@/lib/glassEngine';
 import { projects } from '@/data/projects';
+
+/** Strip protocol and trailing slash for display in the URL bar */
+function cleanUrl(url: string): string {
+  return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
 
 export const ProjectsGalleryWindow = memo(function ProjectsGalleryWindow() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -21,11 +27,11 @@ export const ProjectsGalleryWindow = memo(function ProjectsGalleryWindow() {
 
   return (
     <div
-      className={`absolute w-[800px] h-[680px] rounded-3xl overflow-hidden transition-all duration-300 ${
+      className={`absolute w-[860px] h-[760px] rounded-3xl overflow-hidden transition-all duration-300 ${
         isHovered ? GLASS_ENGINE.focused.combined : GLASS_ENGINE.inactive.combined
       }`}
       style={{
-        top: '420px',
+        top: '380px',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 9,
@@ -35,42 +41,80 @@ export const ProjectsGalleryWindow = memo(function ProjectsGalleryWindow() {
     >
       {/* Content */}
       <div className="relative w-full h-full flex flex-col bg-gradient-to-br from-slate-900/40 to-slate-950/40">
-        {/* Hero Section */}
-        <div
-          className="relative w-full h-72 bg-gradient-to-b from-violet-500/20 via-violet-500/5 to-transparent overflow-hidden transition-all duration-500"
-          style={{
-            backgroundImage: `linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.08))`,
-          }}
-        >
-          {/* Project Hero Content */}
-          <div className="absolute inset-0 p-8 flex flex-col justify-end">
-            <div className="space-y-3">
-              <h2 className="text-5xl font-black tracking-tighter text-white">
-                {project.name}
-              </h2>
-              <p className="text-sm text-white/60">{project.description}</p>
+        {/* ── Spatial Tablet Browser (replaces static hero) ── */}
+        <div className="p-3 bg-black/40 backdrop-blur-3xl border border-white/10 border-t-white/20 border-l-white/20 rounded-[2rem] flex flex-col gap-2 shadow-2xl"
+          style={{ height: '380px', flexShrink: 0 }}>
+
+          {/* Browser Toolbar */}
+          <div className="flex items-center gap-3 px-1">
+            {/* Traffic-light dots (decorative) */}
+            <div className="flex gap-1.5 shrink-0">
+              <div className="w-3 h-3 rounded-full bg-red-500/60" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
+              <div className="w-3 h-3 rounded-full bg-green-500/60" />
+            </div>
+
+            {/* URL Bar */}
+            <div className="flex-1 text-white/60 text-sm bg-black/40 px-4 py-1.5 rounded-full flex items-center gap-2 min-w-0">
+              <Lock className="w-3 h-3 shrink-0 text-white/40" />
+              <span className="truncate">{cleanUrl(project.liveUrl)}</span>
+            </div>
+
+            {/* Action Pills */}
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 transition-all duration-300 backdrop-blur-md text-white/90 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg border border-white/5"
+              >
+                Open Site ↗
+              </a>
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 transition-all duration-300 backdrop-blur-md text-white/90 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg border border-white/5"
+              >
+                GitHub ↗
+              </a>
             </div>
           </div>
 
-          {/* ROI Receipt Badge */}
-          <div
-            className="absolute top-8 right-8 px-6 py-3 rounded-2xl backdrop-blur-xl bg-emerald-500/20 border border-emerald-400/50 text-sm font-mono font-bold text-emerald-300"
-            style={{
-              boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)',
-            }}
-          >
-            📊 {project.impact}
-          </div>
+          {/* Live iframe — fills remaining bezel space */}
+          <iframe
+            key={project.id}
+            src={project.liveUrl}
+            className="flex-1 w-full rounded-[1.25rem] bg-[#050505] border-none"
+            style={{ animation: 'fade-in 0.5s ease-out' }}
+            title={project.name}
+          />
         </div>
 
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
         {/* Description & Metrics Section */}
-        <div className="flex-1 px-8 py-6 overflow-y-auto space-y-6">
+        <div className="flex-1 px-8 py-5 overflow-y-auto space-y-4">
+          {/* Project name + ROI badge */}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black tracking-tighter text-white leading-tight">
+                {project.name}
+              </h2>
+              <p className="text-xs text-white/50 mt-0.5">{project.description}</p>
+            </div>
+            <div
+              className="shrink-0 px-4 py-2 rounded-2xl backdrop-blur-xl bg-emerald-500/20 border border-emerald-400/50 text-xs font-mono font-bold text-emerald-300 whitespace-nowrap"
+              style={{ boxShadow: '0 0 20px rgba(16, 185, 129, 0.2)' }}
+            >
+              📊 {project.impact}
+            </div>
+          </div>
+
           {/* Description */}
           <div>
-            <p className="text-sm leading-relaxed text-white/75">
+            <p className="text-sm leading-relaxed text-white/70">
               {project.longDescription}
             </p>
           </div>

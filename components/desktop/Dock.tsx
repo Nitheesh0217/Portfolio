@@ -11,7 +11,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import {
-  Home, Briefcase, Heart, Bell, User,
+  Home, Briefcase, Heart, Bell, User, Zap,
   type LucideIcon,
 } from 'lucide-react';
 import type { WindowId, WindowRecord } from '@/types/windows';
@@ -20,12 +20,13 @@ const DOCK_ICONS: Record<Exclude<WindowId, 'terminal'>, LucideIcon> = {
   welcome:      Home,
   projects:     Briefcase,
   certificates: Heart,
-  metrics:      Heart, // Fallback (not in dock list but typings need it)
+  metrics:      Heart,
   contact:      User,
   assistant:    Bell,
-  search:       Bell, // Fallback
-  timeline:     Bell, // Fallback
-  skills:       Bell, // Fallback
+  search:       Bell,
+  timeline:     Bell,
+  skills:       Bell,
+  freelance:    Zap,
 };
 
 const DOCK_LABELS: Record<Exclude<WindowId, 'terminal'>, string> = {
@@ -38,6 +39,7 @@ const DOCK_LABELS: Record<Exclude<WindowId, 'terminal'>, string> = {
   search:       'Search',
   timeline:     'Timeline',
   skills:       'Skills',
+  freelance:    'Start a Project',
 };
 
 const ACTIVE_DOCK_IDS: Exclude<WindowId, 'terminal'>[] = [
@@ -46,6 +48,7 @@ const ACTIVE_DOCK_IDS: Exclude<WindowId, 'terminal'>[] = [
   'certificates',
   'assistant',
   'contact',
+  'freelance',
 ];
 
 // ─── Single magnifying dock item ───────────────────────────────────────────

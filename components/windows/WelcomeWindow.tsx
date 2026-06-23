@@ -4,10 +4,11 @@
 'use client';
 
 import { memo, useState } from 'react';
-import { ArrowRight, Star, Cpu, Database, Sparkles } from 'lucide-react';
+import { ArrowRight, Star, Cpu, Database, Sparkles, Zap } from 'lucide-react';
 
 export interface WelcomeWindowProps {
   onOpenServices: () => void;
+  onStartProject?: () => void;
 }
 
 const PROJECT_CARDS = [
@@ -38,7 +39,7 @@ const AVATARS = [
   'linear-gradient(135deg,#fbbf24,#b45309)',
 ];
 
-export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices }: WelcomeWindowProps) {
+export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices, onStartProject }: WelcomeWindowProps) {
   const [avatarError, setAvatarError] = useState(false);
 
   return (
@@ -85,18 +86,31 @@ export const WelcomeWindow = memo(function WelcomeWindow({ onOpenServices }: Wel
               then I measure the receipts.
             </p>
 
-            <button
-              onClick={onOpenServices}
-              className="group inline-flex items-center gap-2 self-end px-7 py-3 rounded-full text-[14px] font-bold tracking-tight transition-all active:scale-95 hover:brightness-110"
-              style={{
-                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                color: '#1a1100',
-                boxShadow: '0 12px 32px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.40)',
-              }}
-            >
-              See My Work
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </button>
+            <div className="flex flex-col gap-2.5 items-end self-end">
+              <button
+                onClick={onStartProject}
+                className="group inline-flex items-center gap-2 px-7 py-3 rounded-full text-[14px] font-bold tracking-tight transition-all active:scale-95 hover:brightness-110"
+                style={{
+                  background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                  color: '#1a1100',
+                  boxShadow: '0 12px 32px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.40)',
+                }}
+              >
+                <Zap className="w-4 h-4" />
+                Start a Project
+              </button>
+              <button
+                onClick={onOpenServices}
+                className="group inline-flex items-center gap-2 px-5 py-2 rounded-full text-[13px] font-semibold tracking-tight transition-all active:scale-95 text-white/60 hover:text-white/90"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                }}
+              >
+                See My Work
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
 

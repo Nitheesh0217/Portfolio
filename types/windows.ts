@@ -11,6 +11,7 @@ export const WINDOW_IDS = [
   'search',
   'timeline',
   'skills',
+  'freelance',
 ] as const;
 
 export type WindowId = typeof WINDOW_IDS[number];

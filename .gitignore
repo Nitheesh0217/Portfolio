@@ -73,3 +73,7 @@ DerivedData/
 *.xcuserstate
 *.swiftpm/
 .build/
+
+# Scratch directory
+scratch/
+

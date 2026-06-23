@@ -86,6 +86,13 @@ const WINDOW_DEFAULTS: Record<WindowId, WindowDef> = {
     position: { x: 900, y: MENUBAR_HEIGHT + 200 },
     size:     { w: 380, h: 'auto' },
   },
+  freelance: {
+    id:       'freelance',
+    title:    '⚡ Start a Project',
+    zIndex:   Z_BASE + 8,
+    position: { x: 40, y: MENUBAR_HEIGHT + 24 },
+    size:     { w: 'auto', h: 'auto' },
+  },
 };
 
 function makeRecord(def: WindowDef, open = false, focused = false): WindowRecord {

@@ -7,7 +7,7 @@ import {
   useReducer, useRef, useCallback, useEffect,
   useMemo, memo, useState,
 } from 'react';
-import { BarChart2, Mail } from 'lucide-react';
+import { BarChart2, Mail, Copy, Check, Lock, RefreshCw } from 'lucide-react';
 
 import { WindowId, WindowRecord, WINDOW_IDS } from '@/types/windows';
 import {
@@ -20,6 +20,7 @@ import {
 import { SystemWindow }        from '@/components/desktop/SystemWindow';
 import { MenuBar }             from '@/components/desktop/MenuBar';
 import { Dock }                from '@/components/desktop/Dock';
+import { MindMap }             from '@/components/desktop/MindMap';
 import { BackgroundImage }     from '@/components/desktop/BackgroundImage';
 import { BrowserToolbar }      from '@/components/desktop/BrowserToolbar';
 import { WelcomeWindow }       from '@/components/windows/WelcomeWindow';
@@ -30,6 +31,7 @@ import { AIAssistantWindow }   from '@/components/windows/AIAssistantWindow';
 import { SearchWindow }        from '@/components/windows/SearchWindow';
 import { TimelineWindow }      from '@/components/windows/TimelineWindow';
 import { SkillsWindow }        from '@/components/windows/SkillsWindow';
+import { FreelanceWindow }     from '@/components/windows/FreelanceWindow';
 
 import type {
   ProjectSummary, Certificate, Metric, DataState,
@@ -224,20 +226,104 @@ function getDockAction(win: WindowRecord, id: WindowId, nextZ: number) {
 // ─────────────────────────────────────────────────────────────────────────────
 // DesktopCanvas
 // ─────────────────────────────────────────────────────────────────────────────
+// ── Per-project demo credentials shown in the Smart Suggestion HUD ───────────
+const DEMO_CREDENTIALS: Record<string, { label: string; email: string; password: string }[]> = {
+  'coach-jake': [
+    { label: 'Head Coach', email: 'coach@demo.com', password: 'demo123' },
+    { label: 'Player',     email: 'player@demo.com', password: 'demo123' },
+  ],
+  'd-scent-house': [
+    { label: 'Admin', email: 'admin@demo.com', password: 'demo123' },
+  ],
+};
+
+// ── Per-project rich overview metadata (tech pills + headline metric) ─────────
+const PROJECT_META: Record<string, { pills: string[]; metric: string }> = {
+  'coach-jake': {
+    pills: ['Next.js 16', 'NextAuth.js', 'PostgreSQL', 'Chart.js'],
+    metric: '50% Admin Overhead Reduced',
+  },
+  'd-scent-house': {
+    pills: ['Next.js 14', 'Stripe', 'pg_notify', 'PostgreSQL'],
+    metric: '$2,400/yr SaaS Savings',
+  },
+  'unick-auto-detailing': {
+    pills: ['Next.js', 'OpenAI', 'Twilio', 'PostgreSQL'],
+    metric: '4.9★ Google Rating Sustained',
+  },
+  'citrix-rag-knowledge-assistant': {
+    pills: ['LangChain', 'Pinecone', 'GPT-4', 'FastAPI'],
+    metric: '60% Support Lookup Reduction',
+  },
+  'koreai-customer-service-agent': {
+    pills: ['Kore.ai', 'Spring Boot', 'NLU', 'PostgreSQL'],
+    metric: '28% Escalation Rate Reduced',
+  },
+  'healthcare-readmission-prediction': {
+    pills: ['Python', 'scikit-learn', 'Flask', 'Docker'],
+    metric: '84% Prediction Accuracy',
+  },
+};
+
 export default function DesktopCanvas() {
   const [windows, dispatch] = useReducer(windowReducer, INITIAL_WINDOW_STATE);
   const zCounter = useRef(Z_BASE + 2);
   const [portfolio, setPortfolio] = useState<PortfolioState>(PORTFOLIO_INITIAL);
   const [activeProject, setActiveProject] = useState<ProjectSummary | null>(null);
   const [iframeLoading, setIframeLoading] = useState(true);
+  const [iframeBlocked, setIframeBlocked] = useState(false);
+  const iframeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [mindMapData, setMindMapData] = useState<{ nodes: any[]; edges: any[] } | null>(null);
+  const [mindMapLoading, setMindMapLoading] = useState<boolean>(false);
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
   useEffect(() => {
     if (activeProject) {
       setIframeLoading(true);
+      setIframeBlocked(false);
+      if (iframeTimeoutRef.current) clearTimeout(iframeTimeoutRef.current);
+      // If iframe hasn't fired onLoad within 12s, assume X-Frame-Options blocked it
+      iframeTimeoutRef.current = setTimeout(() => {
+        setIframeLoading(false);
+        setIframeBlocked(true);
+      }, 12000);
     }
+    return () => {
+      if (iframeTimeoutRef.current) clearTimeout(iframeTimeoutRef.current);
+    };
   }, [activeProject]);
 
-  const isEmbedBlocked = activeProject && activeProject.slug !== 'd-scent-house';
+  useEffect(() => {
+    if (!activeProject) {
+      setMindMapData(null);
+      return;
+    }
+
+    setMindMapLoading(true);
+    fetch('/api/generate-mindmap', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: activeProject.slug,
+        title: activeProject.title,
+        description: activeProject.problem_statement || '',
+        approach: activeProject.approach || '',
+        stack: activeProject.stack || []
+      })
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setMindMapData(data);
+        setMindMapLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error loading mind map:', err);
+        setMindMapLoading(false);
+      });
+  }, [activeProject]);
 
   // Parallel-fetch all static portfolio data on mount
   useEffect(() => {
@@ -355,7 +441,7 @@ export default function DesktopCanvas() {
   // Render the active panel's content
   const renderPanel = () => {
     switch (currentId) {
-      case 'welcome':      return <WelcomeWindow onOpenServices={() => navigateTo('projects')} />;
+      case 'welcome':      return <WelcomeWindow onOpenServices={() => navigateTo('projects')} onStartProject={() => navigateTo('freelance')} />;
       case 'terminal':     return <TerminalWindow />;
       case 'projects':     return <ProjectsWindow projects={portfolio.projects} state={portfolio.dataState} onSelectProject={setActiveProject} />;
       case 'certificates': return <CertificatesWindow certificates={portfolio.certificates} dataState={portfolio.dataState} />;
@@ -365,6 +451,7 @@ export default function DesktopCanvas() {
       case 'search':       return <SearchWindow projects={portfolio.projects} certificates={portfolio.certificates} metrics={portfolio.metrics} />;
       case 'timeline':     return <TimelineWindow projects={portfolio.projects} />;
       case 'skills':       return <SkillsWindow projects={portfolio.projects} />;
+      case 'freelance':    return <FreelanceWindow />;
     }
   };
 
@@ -413,225 +500,309 @@ export default function DesktopCanvas() {
             >
               {/* Left Window (Case Study) */}
               <div
-                className="w-[20vw] max-w-sm h-[70vh] flex-shrink-0 bg-[#050505]/95 backdrop-blur-2xl rounded-[2rem] flex flex-col z-0 shadow-2xl transition-all duration-500 ease-out"
+                className="w-[20vw] max-w-sm h-[70vh] flex-shrink-0 bg-black/40 backdrop-blur-3xl rounded-[2rem] flex flex-col z-0 transition-all duration-500 ease-out"
                 style={{
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
                   borderTop: '1px solid rgba(255, 255, 255, 0.20)',
                   borderLeft: '1px solid rgba(255, 255, 255, 0.20)',
-                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.50)',
                   transform: 'rotateY(12deg)',
                   transformOrigin: 'right center',
                 }}
               >
-                <div className="flex-1 overflow-y-auto p-6 scrollbar-none flex flex-col gap-6 text-left" style={{ scrollbarWidth: 'none' }}>
-                  <div>
+                <div className="flex-1 overflow-y-auto spatial-scroll p-6 flex flex-col gap-5 text-left select-text">
+                  <div className="border-b border-white/[0.12] pb-3 mb-1 shrink-0">
                     <span className="text-[9px] font-black uppercase tracking-[0.16em] text-violet-400">Case Study</span>
-                    <h3 className="text-[16px] font-black text-white mt-1 leading-tight">{activeProject.title}</h3>
+                    <h2 className="text-[20px] font-black text-white mt-1 leading-tight tracking-tight">{activeProject.title}</h2>
                   </div>
                   
-                  {activeProject.problem_statement && (
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1.5">The Challenge</h4>
-                      <p className="text-[11.5px] leading-relaxed text-white/60">{activeProject.problem_statement}</p>
-                    </div>
-                  )}
+                  <div className="prose prose-invert max-w-none text-[11.5px] leading-relaxed text-white/80 font-sans">
+                    {activeProject.problem_statement && (
+                      <div className="mb-4.5">
+                        <h3 className="text-[11px] font-black uppercase tracking-wider text-amber-400 mb-2 leading-none" style={{ textShadow: '0 0 10px rgba(245, 158, 11, 0.2)' }}>The Challenge</h3>
+                        <p className="text-white/85 leading-relaxed m-0 text-justify">{activeProject.problem_statement}</p>
+                      </div>
+                    )}
 
-                  {activeProject.approach && (
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1.5">The Solution</h4>
-                      <p className="text-[11.5px] leading-relaxed text-white/60">{activeProject.approach}</p>
-                    </div>
-                  )}
+                    {activeProject.approach && (
+                      <div className="mb-4.5">
+                        <h3 className="text-[11px] font-black uppercase tracking-wider text-amber-400 mb-2 leading-none" style={{ textShadow: '0 0 10px rgba(245, 158, 11, 0.2)' }}>The Solution</h3>
+                        <p className="text-white/85 leading-relaxed m-0 text-justify">{activeProject.approach}</p>
+                      </div>
+                    )}
 
-                  {activeProject.process_notes && (
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-1.5">Architecture &amp; Process</h4>
-                      <p className="text-[11.5px] leading-relaxed text-white/60">{activeProject.process_notes}</p>
-                    </div>
-                  )}
+                    {activeProject.process_notes && (
+                      <div className="mb-4.5">
+                        <h3 className="text-[11px] font-black uppercase tracking-wider text-amber-400 mb-2 leading-none" style={{ textShadow: '0 0 10px rgba(245, 158, 11, 0.2)' }}>Architecture & Process</h3>
+                        <p className="text-white/85 leading-relaxed m-0 text-justify">{activeProject.process_notes}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Center Window (The Live App) */}
+              {/* Center Window — Spatial Tablet Browser */}
               <div
-                className="w-[50vw] max-w-5xl h-[80vh] flex-shrink-0 bg-[#050505]/95 backdrop-blur-2xl rounded-[2rem] overflow-hidden flex flex-col shadow-2xl transition-all duration-500 ease-out z-10"
+                className="w-[50vw] max-w-5xl h-[80vh] flex-shrink-0 bg-black/40 backdrop-blur-3xl rounded-[2rem] flex flex-col transition-all duration-500 ease-out z-10 p-3"
                 style={{
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
                   borderTop: '1px solid rgba(255, 255, 255, 0.20)',
                   borderLeft: '1px solid rgba(255, 255, 255, 0.20)',
-                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.50)',
                 }}
               >
-                {/* Simulated browser header inside Center Window */}
-                <div className="h-11 bg-white/[0.02] border-b border-white/[0.05] flex items-center justify-between px-6 shrink-0 select-none">
+                {/* ── Tablet Chrome / OS Header ── */}
+                <div className="h-11 flex items-center justify-between px-3 shrink-0 select-none mb-2">
                   {/* Traffic lights */}
                   <div className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-                  </div>
-                  
-                  {/* Domain pill */}
-                  <div className="px-4 py-1.5 bg-white/[0.04] border border-white/[0.06] rounded-full text-[10.5px] font-medium text-white/55 flex items-center gap-1.5 max-w-[280px] truncate">
-                    <span className={`w-1.5 h-1.5 rounded-full ${isEmbedBlocked ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                    {activeProject.live_url ? activeProject.live_url.replace(/^https?:\/\/(www\.)?/, '') : 'Offline'}
+                    <div className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-110 cursor-default transition-all" />
+                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:brightness-110 cursor-default transition-all" />
+                    <div className="w-3 h-3 rounded-full bg-[#27c93f] hover:brightness-110 cursor-default transition-all" />
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-4">
+                  {/* Dynamic Address Bar */}
+                  <div
+                    className="flex items-center gap-2 px-4 py-1.5 rounded-full text-[10.5px] font-medium text-white/70 max-w-[340px] flex-1 mx-4"
+                    style={{
+                      background: 'rgba(0,0,0,0.25)',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                    }}
+                  >
+                    {iframeLoading && !iframeBlocked ? (
+                      <RefreshCw className="w-2.5 h-2.5 text-amber-400 animate-spin shrink-0" />
+                    ) : (
+                      <Lock className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+                    )}
+                    <span className="truncate">
+                      {activeProject.live_url
+                        ? activeProject.live_url.replace(/^https?:\/\/(www\.)?/, '')
+                        : 'No URL'}
+                    </span>
+                    {iframeLoading && !iframeBlocked && (
+                      <span className="ml-auto shrink-0 flex gap-0.5">
+                        {[0,1,2].map(i => (
+                          <span key={i} className="w-1 h-1 rounded-full bg-amber-400/70 animate-bounce" style={{ animationDelay: `${i * 100}ms` }} />
+                        ))}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* External actions */}
+                  <div className="flex items-center gap-3 shrink-0">
                     {activeProject.live_url && (
                       <a
-                        href={activeProject.live_url || undefined}
+                        href={activeProject.live_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-amber-300 hover:text-amber-200 transition-colors flex items-center gap-1"
-                        title="Open Deployed Site"
+                        className="text-[10px] font-bold text-amber-300/80 hover:text-amber-300 transition-colors"
+                        title="Open in new tab"
                       >
-                        Open Site ↗
+                        ↗
                       </a>
                     )}
                     {activeProject.github_url && (
                       <a
-                        href={activeProject.github_url || undefined}
+                        href={activeProject.github_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-white/60 hover:text-white transition-colors flex items-center gap-1"
-                        title="View Source Code"
+                        className="text-[10px] font-bold text-white/40 hover:text-white/70 transition-colors"
+                        title="View source"
                       >
-                        GitHub
+                        GH
                       </a>
                     )}
                   </div>
                 </div>
 
-                {/* Main Content Area */}
-                <div className="flex-1 w-full h-full relative bg-[#07070a]">
-                  {isEmbedBlocked ? (
-                    /* Embedded Frame Protection / Mockup View */
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-violet-950/20 via-[#07070a] to-[#07070a]">
-                      <div className="w-16 h-16 rounded-3xl border border-white/10 bg-white/[0.03] flex items-center justify-center text-2xl shadow-xl mb-4">
+                {/* ── Iframe Viewport ── */}
+                <div className="flex-1 relative overflow-hidden rounded-b-[1.25rem] rounded-t-md bg-[#050505]">
+                  {iframeBlocked ? (
+                    /* Glassmorphic X-Frame fallback */
+                    <div
+                      className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        backdropFilter: 'blur(32px)',
+                      }}
+                    >
+                      <div
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl mb-4"
+                        style={{
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                        }}
+                      >
                         🔒
                       </div>
-                      <h3 className="text-white text-base font-bold tracking-tight">Frame Protection Active</h3>
-                      <p className="text-[12px] text-white/40 max-w-sm mt-2 leading-relaxed">
-                        To maintain secure cookies and D1 session states, {activeProject.title} requires direct client execution.
+                      <h3 className="text-white text-[15px] font-black tracking-tight">Frame Protection Active</h3>
+                      <p className="text-[11px] text-white/45 max-w-[300px] mt-2 leading-relaxed">
+                        {activeProject.title} enforces strict X-Frame-Options headers. View it directly in your browser.
                       </p>
-                      
-                      <div className="flex gap-4 mt-6">
+                      <div className="flex gap-3 mt-6">
                         <a
                           href={activeProject.live_url || undefined}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 active:scale-95 text-[#0e0d14] text-[12.5px] font-bold shadow-lg shadow-amber-400/10 transition-all"
+                          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 active:scale-95 text-[#0e0d14] text-[12px] font-bold shadow-lg shadow-amber-400/10 transition-all"
                         >
-                          Launch Live Application ↗
+                          Launch Live App ↗
                         </a>
                         {activeProject.github_url && (
                           <a
-                            href={activeProject.github_url || undefined}
+                            href={activeProject.github_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-6 py-2.5 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/[0.02] text-white/70 hover:text-white text-[12.5px] font-semibold transition-all"
+                            className="px-5 py-2.5 rounded-xl text-white/60 hover:text-white text-[12px] font-semibold transition-all"
+                            style={{ border: '1px solid rgba(255,255,255,0.12)' }}
                           >
-                            Code Repository
+                            View Code
                           </a>
                         )}
                       </div>
                     </div>
                   ) : (
                     <>
-                      {/* Loading spinner overlay */}
                       {iframeLoading && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#07070a] z-20">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#050505] z-20">
                           <div className="flex gap-1.5">
-                            {[0, 1, 2].map((i) => (
+                            {[0,1,2].map((i) => (
                               <span key={i} className="w-1.5 h-1.5 rounded-full bg-amber-400/60 animate-bounce" style={{ animationDelay: `${i * 120}ms` }} />
                             ))}
                           </div>
-                          <p className="text-[10px] font-mono text-white/25">Connecting to secure host...</p>
+                          <p className="text-[10px] font-mono text-white/25">Connecting to live deployment...</p>
                         </div>
                       )}
-                      
-                      {/* Actual iframe */}
                       <iframe
+                        key={activeProject.slug}
                         src={activeProject.live_url || ''}
-                        onLoad={() => setIframeLoading(false)}
-                        className={`w-full h-full border-none bg-white/5 transition-opacity duration-700 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                        onLoad={() => {
+                          if (iframeTimeoutRef.current) clearTimeout(iframeTimeoutRef.current);
+                          setIframeLoading(false);
+                        }}
+                        className={`w-full h-full border-none transition-opacity duration-700 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                         title={activeProject.title}
                         allow="clipboard-write"
+                        style={{ display: 'block' }}
                       />
                     </>
                   )}
                 </div>
               </div>
 
-              {/* Right Window (Tech Stack & Metrics) */}
+              {/* Right Window — Spatial Architecture HUD */}
               <div
-                className="w-[20vw] max-w-sm h-[70vh] flex-shrink-0 bg-[#050505]/95 backdrop-blur-2xl rounded-[2rem] flex flex-col z-0 shadow-2xl transition-all duration-500 ease-out"
+                className="w-[20vw] max-w-sm h-[70vh] flex-shrink-0 bg-black/40 backdrop-blur-3xl rounded-[2rem] flex flex-col z-0 transition-all duration-500 ease-out overflow-hidden"
                 style={{
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
                   borderTop: '1px solid rgba(255, 255, 255, 0.20)',
                   borderLeft: '1px solid rgba(255, 255, 255, 0.20)',
-                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.50)',
                   transform: 'rotateY(-12deg)',
                   transformOrigin: 'left center',
                 }}
               >
-                <div className="flex-1 overflow-y-auto p-6 scrollbar-none flex flex-col gap-6 text-left" style={{ scrollbarWidth: 'none' }}>
-                  <div>
-                    <span className="text-[9px] font-black uppercase tracking-[0.16em] text-violet-400">Specs &amp; Impact</span>
-                    <h3 className="text-[16px] font-black text-white mt-1 leading-tight">Key Metrics</h3>
+                {/* ── Part 4: Rich Project Overview Header ── */}
+                <div className="shrink-0 px-4 pt-4 pb-3 border-b border-white/[0.12]">
+                  <span className="text-[8px] font-black uppercase tracking-[0.18em] text-violet-400">Architecture HUD</span>
+                  <h3 className="text-[13px] font-black text-white mt-0.5 leading-tight truncate">
+                    {activeProject?.title ?? 'Data Flow Mind Map'}
+                  </h3>
+
+                  {/* Tech stack pills */}
+                  {activeProject && PROJECT_META[activeProject.slug] && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {PROJECT_META[activeProject.slug].pills.map((pill) => (
+                        <span
+                          key={pill}
+                          className="text-[8px] font-mono px-1.5 py-0.5 rounded-md text-emerald-300/80"
+                          style={{
+                            background: 'rgba(16,185,129,0.08)',
+                            border: '1px solid rgba(16,185,129,0.22)',
+                          }}
+                        >
+                          {pill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Impact metric pill */}
+                  {activeProject && PROJECT_META[activeProject.slug] && (
+                    <div
+                      className="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded-lg text-[8px] font-bold text-amber-300"
+                      style={{
+                        background: 'rgba(245,158,11,0.08)',
+                        border: '1px solid rgba(245,158,11,0.25)',
+                      }}
+                    >
+                      ⚡ {PROJECT_META[activeProject.slug].metric}
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Part 3: Smart Suggestion HUD (Demo Credentials) ── */}
+                {activeProject && DEMO_CREDENTIALS[activeProject.slug] && (
+                  <div
+                    className="mx-3 mt-3 shrink-0 rounded-2xl p-3 flex flex-col gap-2"
+                    style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      backdropFilter: 'blur(24px)',
+                      border: '1px solid rgba(234,179,8,0.25)',
+                      boxShadow: '0 4px 24px rgba(234,179,8,0.06)',
+                    }}
+                  >
+                    <p className="text-[8px] font-black uppercase tracking-wider text-yellow-400">
+                      💡 Test the app — demo keys:
+                    </p>
+                    {DEMO_CREDENTIALS[activeProject.slug].map((cred, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between gap-2 rounded-lg px-2.5 py-2"
+                        style={{
+                          background: 'rgba(0,0,0,0.40)',
+                          border: '1px solid rgba(255,255,255,0.05)',
+                        }}
+                      >
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <span className="text-[7px] font-bold text-white/35 uppercase tracking-widest">{cred.label}</span>
+                          <span className="font-mono text-[9px] text-white/80 truncate">{cred.email}</span>
+                          <span className="font-mono text-[9px] text-white/50">{cred.password}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${cred.email}\n${cred.password}`);
+                            setCopiedIdx(idx);
+                            setTimeout(() => setCopiedIdx(null), 1800);
+                          }}
+                          className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-all"
+                          title="Copy credentials"
+                        >
+                          {copiedIdx === idx
+                            ? <Check className="w-3 h-3 text-emerald-400" />
+                            : <Copy className="w-3 h-3" />}
+                        </button>
+                      </div>
+                    ))}
                   </div>
+                )}
 
-                  {/* Metrics Card */}
-                  {activeProject.roi_value && (
-                    <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-4">
-                      <div className="text-[20px] font-black text-emerald-400 leading-none">
-                        {activeProject.roi_value}
-                      </div>
-                      <div className="text-[9px] font-black text-emerald-300 uppercase tracking-wider mt-1">
-                        {activeProject.roi_label}
-                      </div>
-                      {activeProject.roi_context && (
-                        <p className="text-[10.5px] text-white/40 mt-1.5 leading-relaxed font-sans">{activeProject.roi_context}</p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Tech Stack */}
-                  {activeProject.stack && activeProject.stack.length > 0 && (
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-2">Technologies Used</h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {activeProject.stack.map((tech) => (
-                          <span key={tech} className="text-[9.5px] font-mono font-bold text-amber-300 bg-amber-400/5 border border-amber-400/15 px-2 py-0.5 rounded">
-                            {tech}
-                          </span>
+                {/* ── Parts 1 & 2: React Flow Mind Map Canvas ── */}
+                <div className="flex-1 w-full relative min-h-0">
+                  {mindMapLoading ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/10 backdrop-blur-sm z-10">
+                      <div className="flex gap-1.5">
+                        {[0, 1, 2].map((i) => (
+                          <span key={i} className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 animate-bounce" style={{ animationDelay: `${i * 120}ms` }} />
                         ))}
                       </div>
+                      <p className="text-[9px] font-mono text-white/30 tracking-wider">Mapping architecture...</p>
                     </div>
-                  )}
-
-                  {/* learnings */}
-                  {activeProject.learnings && activeProject.learnings.length > 0 && (
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-amber-400 mb-2">Key Takeaways</h4>
-                      <ul className="space-y-1.5 pl-0.5">
-                        {activeProject.learnings.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-[11px] text-white/50 leading-relaxed">
-                            <span className="shrink-0 mt-1.5 w-1 h-1 rounded-full bg-amber-400/40" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Testimonial Vouch */}
-                  {activeProject.testimonial_quote && (
-                    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-4">
-                      <p className="text-[11px] text-white/50 italic leading-relaxed">&ldquo;{activeProject.testimonial_quote}&rdquo;</p>
-                      <p className="text-[9px] text-white/35 mt-2 font-bold">— {activeProject.testimonial_author}</p>
+                  ) : mindMapData ? (
+                    <MindMap initialNodes={mindMapData.nodes} initialEdges={mindMapData.edges} />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-white/25 text-[10px] font-mono">
+                      Select a project to view its architecture
                     </div>
                   )}
                 </div>
@@ -641,14 +812,21 @@ export default function DesktopCanvas() {
             /* Module C: Main Window Shell (Locked Size & Glass Styles) */
             <div
               key={currentId}
-              className={`relative w-[92vw] max-w-[1580px] h-[85vh] max-h-[920px] min-h-[660px] bg-[#050505]/95 backdrop-blur-2xl rounded-[2rem] animate-stage-in flex flex-col ${
-                currentId === 'welcome' ? 'overflow-visible' : 'overflow-hidden'
+              className={`relative w-[92vw] max-w-[1580px] h-[85vh] max-h-[920px] min-h-[660px] rounded-[2rem] animate-stage-in flex flex-col ${
+                currentId === 'welcome'
+                  ? 'bg-[#050505]/95 backdrop-blur-2xl overflow-visible'
+                  : 'bg-black/40 backdrop-blur-3xl overflow-hidden'
               }`}
-              style={{
+              style={currentId === 'welcome' ? {
                 border: '1px solid rgba(255, 255, 255, 0.05)',
                 borderTop: '1px solid rgba(255, 255, 255, 0.20)',
                 borderLeft: '1px solid rgba(255, 255, 255, 0.20)',
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.06)',
+              } : {
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.20)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.20)',
+                boxShadow: '0 8px 32px 0 rgba(0,0,0,0.50)',
               }}
             >
               {renderPanel()}

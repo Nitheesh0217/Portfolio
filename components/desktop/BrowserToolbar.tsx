@@ -31,6 +31,7 @@ const PATH_MAP: Record<WindowId, string> = {
   timeline:     '/timeline',
   skills:       '/skills',
   terminal:     '/terminal',
+  freelance:    '/services',
 };
 
 const PAGE_NAMES: Record<WindowId, string> = {
@@ -44,6 +45,7 @@ const PAGE_NAMES: Record<WindowId, string> = {
   timeline:     'Professional Timeline',
   skills:       'Core Competencies',
   terminal:     'System Developer Shell',
+  freelance:    'Freelance Services',
 };
 
 export const BrowserToolbar = memo(function BrowserToolbar({

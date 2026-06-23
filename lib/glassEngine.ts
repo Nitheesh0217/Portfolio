@@ -4,22 +4,22 @@
 export const GLASS_ENGINE = {
   // Window States
   focused: {
-    backdrop: 'backdrop-blur-2xl',
-    bg: 'bg-white/[0.03]',
+    backdrop: 'backdrop-blur-3xl',
+    bg: 'bg-black/40',
     ring: 'ring-1 ring-white/20',
     shadow: 'shadow-2xl',
     transform: 'scale-100',
-    combined: 'backdrop-blur-2xl bg-white/[0.03] ring-1 ring-white/20 shadow-2xl scale-100 transition-all duration-300',
+    combined: 'backdrop-blur-3xl bg-black/40 ring-1 ring-white/20 shadow-2xl scale-100 transition-all duration-300',
   },
 
   inactive: {
-    backdrop: 'backdrop-blur-md',
-    bg: 'bg-white/[0.02]',
+    backdrop: 'backdrop-blur-3xl',
+    bg: 'bg-black/40',
     ring: 'ring-1 ring-white/10',
     shadow: 'shadow-lg',
     transform: 'scale-[0.98]',
     opacity: 'opacity-60',
-    combined: 'backdrop-blur-md bg-white/[0.02] ring-1 ring-white/10 shadow-lg scale-[0.98] opacity-60 transition-all duration-300',
+    combined: 'backdrop-blur-3xl bg-black/40 ring-1 ring-white/10 shadow-lg scale-[0.98] opacity-60 transition-all duration-300',
   },
 
   // Interactive States
