@@ -463,7 +463,7 @@ export default function DesktopCanvas() {
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-6">
         {/* Centered Main Window Container — sits exactly in the center of the screen */}
-        <div className="relative pointer-events-auto">
+        <div className="relative pointer-events-auto flex items-center justify-center">
           {/* Module B: Top Browser Bar — centered directly on top of the main window */}
           <BrowserToolbar
             currentId={currentId}
@@ -812,7 +812,7 @@ export default function DesktopCanvas() {
             /* Module C: Main Window Shell (Locked Size & Glass Styles) */
             <div
               key={currentId}
-              className={`relative w-[92vw] max-w-[1580px] h-[85vh] max-h-[920px] min-h-[660px] rounded-[2rem] animate-stage-in flex flex-col ${
+              className={`relative w-[85vw] max-w-7xl h-[80vh] max-h-[850px] min-h-[660px] rounded-[2rem] animate-stage-in flex flex-col ${
                 currentId === 'welcome'
                   ? 'bg-[#050505]/95 backdrop-blur-2xl overflow-visible'
                   : 'bg-black/40 backdrop-blur-3xl overflow-hidden'
