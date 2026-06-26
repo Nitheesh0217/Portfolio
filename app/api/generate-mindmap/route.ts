@@ -132,9 +132,20 @@ function handleFallback(id: string) {
 }
 
 export async function POST(req: Request) {
+  // Parse body once — Request body can only be consumed once
+  let id = '', title = '', description = '', approach = '', stack: string[] = [];
   try {
-    const { id, title, description, approach, stack } = await req.json();
+    const body = await req.json();
+    id = body.id ?? '';
+    title = body.title ?? '';
+    description = body.description ?? '';
+    approach = body.approach ?? '';
+    stack = body.stack ?? [];
+  } catch {
+    return NextResponse.json(handleFallback(''));
+  }
 
+  try {
     // Check if Gemini API key exists
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -177,6 +188,11 @@ Keep the number of nodes between 4 and 7. Ensure that the coordinates stack clea
     );
 
     if (!response.ok) {
+      // 429 = rate-limited — use fallback immediately, no point throwing
+      if (response.status === 429) {
+        console.log(`Gemini rate-limited (429) for "${title}" — using curated fallback`);
+        return NextResponse.json(handleFallback(id));
+      }
       throw new Error(`Gemini API error: HTTP status ${response.status}`);
     }
 
@@ -207,12 +223,7 @@ Keep the number of nodes between 4 and 7. Ensure that the coordinates stack clea
 
   } catch (error: any) {
     console.error('Error generating mindmap:', error);
-    // Graceful fallback to static high-fidelity flow
-    try {
-      const body = await req.clone().json();
-      return NextResponse.json(handleFallback(body.id));
-    } catch {
-      return NextResponse.json(handleFallback(''));
-    }
+    // `id` is already parsed above — use directly
+    return NextResponse.json(handleFallback(id));
   }
 }

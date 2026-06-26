@@ -17,7 +17,7 @@ export const BackgroundImage = memo(function BackgroundImage() {
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
         style={{
           zIndex: 0,
-          filter: 'blur(12px)',
+          filter: 'blur(5px)',
           transform: 'scale(1.05)',
         }}
       />

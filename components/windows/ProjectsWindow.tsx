@@ -239,12 +239,24 @@ export const ProjectsWindow = memo(function ProjectsWindow({ projects, state, on
                   <ProjectMockupVisual slug={p.slug} category={p.category} />
                 )}
               </div>
-              <div className="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/60 via-black/20 to-transparent pointer-events-none z-10">
+              <div className="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/60 via-black/20 to-transparent pointer-events-none z-10 flex items-start justify-between">
                 <span className="text-[17px] font-black text-white/90 tracking-tight drop-shadow-md">{categoryLabel(p.category)}</span>
+                {p.featured && (
+                  <span
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider"
+                    style={{ background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.35)', color: '#fbbf24' }}
+                  >
+                    <Star className="w-2.5 h-2.5 fill-current" /> Featured
+                  </span>
+                )}
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/85 via-black/45 to-transparent pointer-events-none z-10">
                 <h3 className="text-[15px] font-bold text-white leading-tight group-hover:text-amber-300 transition-colors drop-shadow-md">{p.title}</h3>
-                {p.subtitle && <p className="text-[11px] text-white/50 truncate mt-1 drop-shadow-md">{p.subtitle}</p>}
+                {p.roi_value && p.roi_label && (
+                  <p className="text-[10px] font-bold mt-1 drop-shadow-md" style={{ color: '#34d399' }}>
+                    ⚡ {p.roi_value} {p.roi_label}
+                  </p>
+                )}
               </div>
             </div>
           ))}

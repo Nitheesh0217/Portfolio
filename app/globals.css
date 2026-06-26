@@ -1,9 +1,9 @@
+/* ── Import Apple Vision Pro UI ────────────────────────────────── */
+@import './apple-vision-ui.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* ── Import Apple Vision Pro UI ────────────────────────────────── */
-@import './apple-vision-ui.css';
 
 /* ── Background animations ────────────────────────────────────── */
 @keyframes kenBurns {

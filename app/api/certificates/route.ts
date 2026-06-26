@@ -6,9 +6,13 @@ export async function GET(): Promise<Response> {
   try {
     const sql = getDb();
     const rows = await sql`
-      SELECT id, title, issuer, issued_date, credential_url, image_url, category, sort_order
+      SELECT
+        id, title, issuer, issuer_logo_url, category,
+        credential_url, badge_url,
+        issued_at, expires_at, credential_id,
+        roi_proof, created_at
       FROM certificates
-      ORDER BY sort_order ASC NULLS LAST, issued_date DESC;
+      ORDER BY issued_at DESC NULLS LAST;
     `;
     return Response.json(rows);
   } catch (err) {

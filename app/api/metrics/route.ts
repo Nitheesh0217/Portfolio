@@ -6,10 +6,10 @@ export async function GET(): Promise<Response> {
   try {
     const sql = getDb();
     const rows = await sql`
-      SELECT id, label, value, display_value, unit, context, sort_order
+      SELECT id, label, value, display_value, unit, context, icon, period, display_order
       FROM metrics
       WHERE period = 'all-time'
-      ORDER BY sort_order ASC NULLS LAST;
+      ORDER BY display_order ASC NULLS LAST;
     `;
     return Response.json(rows);
   } catch (err) {

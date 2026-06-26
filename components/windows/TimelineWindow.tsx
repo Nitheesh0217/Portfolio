@@ -1,126 +1,191 @@
 // components/windows/TimelineWindow.tsx
-// Chronological timeline of projects
 'use client';
 
 import { memo, useMemo } from 'react';
-import { Calendar, ExternalLink } from 'lucide-react';
+import { Clock, ExternalLink, Zap } from 'lucide-react';
 import type { ProjectSummary } from '@/types/portfolio';
+import { TOKENS, accentBox } from '@/lib/designTokens';
 
 function formatDate(iso: string | null) {
   if (!iso) return null;
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
-export const TimelineWindow = memo(function TimelineWindow({
-  projects,
-}: {
-  projects: ProjectSummary[];
-}) {
-  const sortedProjects = useMemo(() => {
-    return [...projects]
+function formatYear(iso: string | null) {
+  if (!iso) return null;
+  return new Date(iso).getFullYear().toString();
+}
+
+export const TimelineWindow = memo(function TimelineWindow({ projects }: { projects: ProjectSummary[] }) {
+  const grouped = useMemo(() => {
+    const sorted = [...projects]
       .filter((p) => p.built_at)
-      .sort((a, b) => {
-        const dateA = a.built_at ? new Date(a.built_at).getTime() : 0;
-        const dateB = b.built_at ? new Date(b.built_at).getTime() : 0;
-        return dateB - dateA;
-      });
+      .sort((a, b) => new Date(b.built_at!).getTime() - new Date(a.built_at!).getTime());
+
+    const byYear: Record<string, ProjectSummary[]> = {};
+    for (const p of sorted) {
+      const yr = formatYear(p.built_at) ?? 'Unknown';
+      if (!byYear[yr]) byYear[yr] = [];
+      byYear[yr].push(p);
+    }
+    return Object.entries(byYear).sort((a, b) => Number(b[0]) - Number(a[0]));
   }, [projects]);
 
-  if (sortedProjects.length === 0) {
+  if (grouped.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[440px] gap-3 p-6">
-        <Calendar className="w-8 h-8 text-white/10" />
-        <p className="text-[11px] text-white/25 text-center">No timeline data available</p>
+      <div className="flex flex-col items-center justify-center h-full gap-3 p-6">
+        <Clock style={{ width: 32, height: 32, color: 'rgba(255,255,255,0.10)' }} />
+        <p className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          No timeline data — set built_at on your projects.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="p-5 overflow-y-auto h-full" style={{ scrollbarWidth: 'thin' }}>
-      <div className="space-y-6">
-        {sortedProjects.map((project, idx) => {
-          const date = formatDate(project.built_at);
-          const isFirst = idx === 0;
-          const isLast = idx === sortedProjects.length - 1;
+    <div className="flex flex-col w-full h-full">
+      {/* Header */}
+      <div
+        className="shrink-0 flex items-center gap-3 px-8 pt-7 pb-5 border-b"
+        style={{ borderColor: TOKENS.border.base }}
+      >
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={accentBox(TOKENS.amber)}>
+          <Clock style={{ width: 15, height: 15, color: TOKENS.amber }} />
+        </div>
+        <div>
+          <h2 className="text-[15px] font-black text-white tracking-tight">Engineering Chronicle</h2>
+          <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            {projects.length} projects · {grouped.length} years
+          </p>
+        </div>
+      </div>
 
-          return (
-            <div key={project.id} className="relative">
-              {/* Timeline line */}
-              {!isLast && (
-                <div className="absolute left-4 top-10 bottom-0 w-px bg-gradient-to-b from-violet-400/50 to-violet-400/0" />
-              )}
+      {/* Timeline body */}
+      <div className="flex-1 overflow-y-auto px-8 py-7 min-h-0" style={{ scrollbarWidth: 'none' }}>
+        <div className="relative">
+          {/* Vertical spine */}
+          <div
+            className="absolute left-[17px] top-0 bottom-0 w-px"
+            style={{ background: 'linear-gradient(to bottom, rgba(167,139,250,0.40), rgba(167,139,250,0.05))' }}
+          />
 
-              {/* Dot and content */}
-              <div className="flex gap-4">
-                {/* Timeline dot */}
-                <div className="shrink-0 pt-1">
-                  <div className="w-9 h-9 rounded-full border-2 border-violet-400/50 bg-violet-400/10 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-violet-400" />
+          <div className="flex flex-col gap-10">
+            {grouped.map(([year, projs], groupIdx) => (
+              <div key={year} className="flex flex-col gap-5">
+                {/* Year marker */}
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-9 h-9 rounded-full shrink-0 flex items-center justify-center z-10"
+                    style={{
+                      background: groupIdx === 0
+                        ? `linear-gradient(135deg, ${TOKENS.violet}40, ${TOKENS.violet}20)`
+                        : 'rgba(255,255,255,0.04)',
+                      border: `2px solid ${groupIdx === 0 ? TOKENS.violet : 'rgba(255,255,255,0.10)'}`,
+                    }}
+                  >
+                    <div
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ background: groupIdx === 0 ? TOKENS.violet : 'rgba(255,255,255,0.25)' }}
+                    />
                   </div>
+                  <span
+                    className="text-[26px] font-black tracking-tight"
+                    style={{ color: groupIdx === 0 ? TOKENS.violet : 'rgba(255,255,255,0.18)' }}
+                  >
+                    {year}
+                  </span>
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 pb-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-[13px] font-bold text-white/90">{project.title}</h3>
-                      {date && (
-                        <p className="text-[11px] text-white/40 mt-0.5 flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {date}
-                        </p>
+                {/* Project cards */}
+                <div className="ml-[52px] flex flex-col gap-3">
+                  {projs.map((p) => (
+                    <div
+                      key={p.id}
+                      className="rounded-2xl p-4 flex flex-col gap-3 transition-all"
+                      style={{
+                        background: 'rgba(255,255,255,0.02)',
+                        border: '1px solid rgba(255,255,255,0.07)',
+                      }}
+                    >
+                      {/* Top row */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <h3
+                            className="text-[13px] font-black text-white leading-tight truncate"
+                          >
+                            {p.title}
+                          </h3>
+                          {formatDate(p.built_at) && (
+                            <p className="text-[10px] font-mono mt-0.5" style={{ color: 'rgba(255,255,255,0.30)' }}>
+                              {formatDate(p.built_at)}
+                            </p>
+                          )}
+                        </div>
+                        {p.live_url && (
+                          <a
+                            href={p.live_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all"
+                            style={{
+                              background: 'rgba(251,191,36,0.08)',
+                              border: '1px solid rgba(251,191,36,0.20)',
+                              color: TOKENS.amber,
+                            }}
+                          >
+                            <ExternalLink style={{ width: 10, height: 10 }} />
+                            Live
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Stack pills */}
+                      {p.stack?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {p.stack.slice(0, 5).map((tech) => (
+                            <span
+                              key={tech}
+                              className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md"
+                              style={{
+                                background: 'rgba(167,139,250,0.08)',
+                                border: '1px solid rgba(167,139,250,0.18)',
+                                color: 'rgba(167,139,250,0.80)',
+                              }}
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                          {p.stack.length > 5 && (
+                            <span className="text-[9px] font-mono" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                              +{p.stack.length - 5}
+                            </span>
+                          )}
+                        </div>
                       )}
-                    </div>
-                    {project.live_url && (
-                      <a
-                        href={project.live_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="shrink-0 w-6 h-6 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-white/40 hover:text-white/70 transition-all"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
 
-                  {/* Subtitle and description */}
-                  {project.subtitle && (
-                    <p className="text-[11px] text-white/50 mt-1">{project.subtitle}</p>
-                  )}
-
-                  {/* Stack badges */}
-                  {project.stack?.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {project.stack.slice(0, 4).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[9px] px-2 py-1 rounded-md bg-violet-500/15 text-violet-300/80 border border-violet-500/20"
+                      {/* ROI badge */}
+                      {p.roi_value && (
+                        <div
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl self-start"
+                          style={{
+                            background: 'rgba(52,211,153,0.07)',
+                            border: '1px solid rgba(52,211,153,0.20)',
+                          }}
                         >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.stack.length > 4 && (
-                        <span className="text-[9px] px-2 py-1 text-white/30">
-                          +{project.stack.length - 4}
-                        </span>
+                          <Zap style={{ width: 10, height: 10, color: TOKENS.emerald }} />
+                          <span className="text-[10px] font-bold" style={{ color: TOKENS.emerald }}>
+                            {p.roi_value}
+                            {p.roi_label && <span className="font-normal opacity-70"> — {p.roi_label}</span>}
+                          </span>
+                        </div>
                       )}
                     </div>
-                  )}
-
-                  {/* ROI */}
-                  {project.roi_value && (
-                    <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <p className="text-[10px] text-emerald-300/80">
-                        <span className="font-bold">{project.roi_value}</span>
-                        {project.roi_label && <span> — {project.roi_label}</span>}
-                      </p>
-                    </div>
-                  )}
+                  ))}
                 </div>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
