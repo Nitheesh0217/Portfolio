@@ -57,6 +57,57 @@ const PORTFOLIO_INITIAL: PortfolioState = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Audio Synthesizers for Spatial UI Acoustics
+// ─────────────────────────────────────────────────────────────────────────────
+const playTick = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1500, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.04);
+    
+    gain.gain.setValueAtTime(0.015, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.04);
+  } catch (e) {
+    // Ignore block context
+  }
+};
+
+const playWhoosh = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(150, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.45);
+    
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.45);
+  } catch (e) {
+    // Ignore
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // DesktopBackground — quiet, visionOS keeps the environment minimal so the
 // glass panels are the focus. All the ambient light comes from BackgroundImage.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -139,16 +190,16 @@ const ContactWindow = memo(function ContactWindow() {
       <div 
         className="absolute -left-20 top-1/2 -translate-y-1/2 z-50 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
       >
-        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
           <User className="w-5 h-5" />
         </button>
-        <button className="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all">
+        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all">
           <Briefcase className="w-5 h-5" />
         </button>
-        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
           <Mail className="w-5 h-5" />
         </button>
-        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
           <Settings className="w-5 h-5" />
         </button>
       </div>
@@ -185,7 +236,8 @@ const ContactWindow = memo(function ContactWindow() {
 
           {/* Tile 2: Kore.ai (col-span-2) - Liquid Glass styled */}
           <div 
-            onClick={() => setSelectedTile('kore-ai')}
+            onMouseEnter={playTick}
+            onClick={() => { playWhoosh(); setSelectedTile('kore-ai'); }}
             className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
@@ -210,7 +262,8 @@ const ContactWindow = memo(function ContactWindow() {
 
           {/* Tile 4: FAU Graduation (col-span-1, Square) - Liquid Glass styled */}
           <div 
-            onClick={() => setSelectedTile('fau-grad')}
+            onMouseEnter={playTick}
+            onClick={() => { playWhoosh(); setSelectedTile('fau-grad'); }}
             className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
@@ -227,7 +280,8 @@ const ContactWindow = memo(function ContactWindow() {
 
           {/* Tile 5: Teaching Assistant (col-span-1, Square) - Liquid Glass styled */}
           <div 
-            onClick={() => setSelectedTile('fau-ta')}
+            onMouseEnter={playTick}
+            onClick={() => { playWhoosh(); setSelectedTile('fau-ta'); }}
             className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
@@ -244,7 +298,8 @@ const ContactWindow = memo(function ContactWindow() {
 
           {/* Tile 3: Citrix (col-span-2) - Liquid Glass styled */}
           <div 
-            onClick={() => setSelectedTile('citrix')}
+            onMouseEnter={playTick}
+            onClick={() => { playWhoosh(); setSelectedTile('citrix'); }}
             className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
@@ -269,7 +324,8 @@ const ContactWindow = memo(function ContactWindow() {
 
           {/* Tile 6: Cognizant (col-span-full) - Liquid Glass styled */}
           <div 
-            onClick={() => setSelectedTile('cognizant')}
+            onMouseEnter={playTick}
+            onClick={() => { playWhoosh(); setSelectedTile('cognizant'); }}
             className="col-span-full transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
@@ -304,6 +360,7 @@ const ContactWindow = memo(function ContactWindow() {
               <div className="flex flex-wrap gap-2.5 mt-4 select-none">
                 <a 
                   href="mailto:nitheeshd.17@gmail.com"
+                  onMouseEnter={playTick}
                   className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
                   style={{ textDecoration: 'none' }}
                 >
@@ -313,6 +370,7 @@ const ContactWindow = memo(function ContactWindow() {
                   href="https://linkedin.com/in/"
                   target="_blank" 
                   rel="noopener noreferrer"
+                  onMouseEnter={playTick}
                   className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
                   style={{ textDecoration: 'none' }}
                 >
@@ -322,6 +380,7 @@ const ContactWindow = memo(function ContactWindow() {
                   href="https://github.com/Nitheesh0217"
                   target="_blank" 
                   rel="noopener noreferrer"
+                  onMouseEnter={playTick}
                   className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
                   style={{ textDecoration: 'none' }}
                 >
@@ -334,6 +393,7 @@ const ContactWindow = memo(function ContactWindow() {
             <a 
               href="/resume.pdf"
               download
+              onMouseEnter={playTick}
               className="bg-white text-black font-extrabold text-base py-4 px-8 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.22)] hover:scale-105 transition-transform flex items-center justify-center gap-3 select-none active:scale-[0.98]"
               style={{ textDecoration: 'none' }}
             >
@@ -354,7 +414,8 @@ const ContactWindow = memo(function ContactWindow() {
           >
             {/* Back button */}
             <button 
-              onClick={() => setSelectedTile(null)}
+              onClick={() => { playWhoosh(); setSelectedTile(null); }}
+              onMouseEnter={playTick}
               className="text-white/60 hover:text-white flex items-center gap-2 mb-8 cursor-pointer select-none border-none bg-transparent outline-none font-bold text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -699,6 +760,14 @@ export default function DesktopCanvas() {
   const [aiAnswerVisible, setAiAnswerVisible]       = useState<boolean>(false);
   const [activeRepoFile, setActiveRepoFile]         = useState<string>('');
 
+  const [booted, setBooted] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBooted(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const getAiQuestions = () => {
     const slug = activeProject?.slug || '';
     const qList: string[] = [];
@@ -932,33 +1001,75 @@ export default function DesktopCanvas() {
         position: 'relative',
       }}
     >
-      <BackgroundImage />
-      <DesktopBackground />
+      {/* Cinematic boot-up fade & blur for environment background */}
+      <div 
+        className="transition-all duration-[1500ms] ease-out transform-gpu w-full h-full absolute inset-0"
+        style={{
+          opacity: booted ? 1 : 0,
+          filter: booted ? 'blur(0px)' : 'blur(40px)',
+        }}
+      >
+        <BackgroundImage />
+        <DesktopBackground />
+      </div>
       <MenuBar onOpenAll={openAll} onCloseAll={closeAll} />
 
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-6">
+      <div 
+        className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-6"
+        style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+      >
         {/* Centered Main Window Container — sits exactly in the center of the screen */}
-        <div className="relative pointer-events-auto flex items-center justify-center">
-          {/* Module B: Top Browser Bar — centered directly on top of the main window */}
-          <BrowserToolbar
-            currentId={currentId}
-            onNavigate={navigateTo}
-            onBack={activeProject ? () => setActiveProject(null) : navigateBack}
-            onForward={navigateForward}
-            canGoBack={activeProject ? true : historyIndex > 0}
-            canGoForward={historyIndex < navHistory.length - 1}
-            customPath={activeProject ? `/projects/${activeProject.slug}` : undefined}
-            className="absolute bottom-full mb-6 left-1/2 -translate-x-1/2 z-[9997] flex items-center gap-3 px-4 py-2"
-          />
-
+        <div 
+          className="relative pointer-events-auto flex items-center justify-center"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
           {/* Module A: Left Dock Rail — positioned right beside the window without shifting it */}
           {!activeProject && (
-            <Dock
-              windows={dockWindows}
-              onToggle={toggleWindow}
-              className="absolute right-full mr-6 top-1/2 -translate-y-1/2 z-[9998]"
-            />
+            <div
+              className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu absolute right-full mr-6 top-1/2 -translate-y-1/2 z-[9998]"
+              style={{
+                opacity: booted ? 1 : 0,
+                transform: booted 
+                  ? 'translateY(-50%) scale(1) translateZ(0)' 
+                  : 'translateY(-50%) scale(0.9) translateZ(-200px)',
+                transitionDelay: '200ms',
+                transformStyle: 'preserve-3d',
+                backfaceVisibility: 'hidden',
+                pointerEvents: booted ? 'auto' : 'none'
+              }}
+            >
+              <Dock
+                windows={dockWindows}
+                onToggle={toggleWindow}
+              />
+            </div>
           )}
+
+          {/* Module B: Top Browser Bar & Workspace Wrap (staggered delay 450ms) */}
+          <div
+            className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu relative flex flex-col items-center justify-center"
+            style={{
+              opacity: booted ? 1 : 0,
+              transform: booted 
+                ? 'translateY(0px) scale(1) translateZ(0)' 
+                : 'translateY(48px) scale(0.9) translateZ(-200px)',
+              transitionDelay: '450ms',
+              transformStyle: 'preserve-3d',
+              backfaceVisibility: 'hidden',
+              pointerEvents: booted ? 'auto' : 'none'
+            }}
+          >
+            {/* Module B: Top Browser Bar — centered directly on top of the main window */}
+            <BrowserToolbar
+              currentId={currentId}
+              onNavigate={navigateTo}
+              onBack={activeProject ? () => setActiveProject(null) : navigateBack}
+              onForward={navigateForward}
+              canGoBack={activeProject ? true : historyIndex > 0}
+              canGoForward={historyIndex < navHistory.length - 1}
+              customPath={activeProject ? `/projects/${activeProject.slug}` : undefined}
+              className="absolute bottom-full mb-6 left-1/2 -translate-x-1/2 z-[9997] flex items-center gap-3 px-4 py-2"
+            />
 
           {activeProject ? (
             /* ── Zero-Bezel Panoramic Spatial Workspace ── */
@@ -1001,7 +1112,8 @@ export default function DesktopCanvas() {
                   {/* Tab Selector */}
                   <div className="shrink-0 flex rounded-full p-1 bg-black/40 border border-white/5 mb-4 select-none">
                     {['challenge', 'solution', 'impact'].map(t => (
-                      <button key={t} onClick={() => setActiveLeftTab(t as any)}
+                      <button key={t} onClick={() => { playTick(); setActiveLeftTab(t as any); }}
+                        onMouseEnter={playTick}
                         className={`flex-1 px-2 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all duration-300 ${
                           activeLeftTab === t ? 'bg-white/10 text-white shadow-lg' : 'text-white/40 hover:text-white/70'
                         }`}>
@@ -1480,7 +1592,8 @@ export default function DesktopCanvas() {
                   {/* AI Pills — glowing query nodes */}
                   <div className="mx-3 mt-2 shrink-0 flex flex-col gap-1.5">
                     {getAiQuestions().map(q => (
-                      <button key={q} onClick={() => handleAskQuestion(q)} title="Ask Co-Pilot"
+                      <button key={q} onClick={() => { playWhoosh(); handleAskQuestion(q); }} title="Ask Co-Pilot"
+                        onMouseEnter={playTick}
                         className="w-full text-left px-3 py-2 rounded-xl text-[9.5px] text-white/65 transition-all duration-200 transform-gpu will-change-[transform,opacity] hover:text-white hover:bg-white/[0.07] active:scale-[0.98] group"
                         style={{ background: 'rgba(0,0,0,0.55)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.55)', borderTop: '1px solid rgba(255,255,255,0.06)', borderLeft: '2px solid rgba(255,255,255,0.04)' }}
                       >
@@ -1498,7 +1611,7 @@ export default function DesktopCanvas() {
                       <div className="ai-answer-zoom absolute inset-0 p-4 flex flex-col bg-black/75 backdrop-blur-xl border border-white/5">
                         <div className="flex items-center justify-between mb-2 select-none">
                           <span className="text-[7.5px] font-black uppercase tracking-widest text-violet-400">Response</span>
-                          <button onClick={() => setAiAnswerVisible(false)} className="text-[9px] font-black text-white/30 hover:text-white/60 uppercase tracking-wider">✕ Clear</button>
+                          <button onClick={() => { playWhoosh(); setAiAnswerVisible(false); }} onMouseEnter={playTick} className="text-[9px] font-black text-white/30 hover:text-white/60 uppercase tracking-wider">✕ Clear</button>
                         </div>
                         <div className="flex-1 overflow-y-auto pr-1 text-left select-text scrollbar-none" style={{ scrollbarWidth: 'none' }}>
                           <span className="text-[9px] font-black text-white/40 block mb-1.5 uppercase leading-snug">Q: {selectedAiQuestion}</span>
@@ -1640,6 +1753,7 @@ export default function DesktopCanvas() {
               {renderPanel()}
             </div>
           )}
+          </div>
         </div>
       </div>
 
