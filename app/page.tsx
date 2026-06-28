@@ -229,10 +229,10 @@ const ContactWindow = memo(function ContactWindow() {
   };
 
   return (
-    <div className="flex-1 w-full h-full relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem] overflow-visible">
+    <div className="flex-1 w-full h-full relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden">
       {/* 1. Detached Dock (Far Left Side, completely breakout relative to main window) */}
       <div 
-        className="absolute -left-24 top-1/2 -translate-y-1/2 z-50 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
+        className="fixed left-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-3 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl select-none"
       >
         <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
           <User className="w-5 h-5" />
@@ -1911,8 +1911,6 @@ export default function DesktopCanvas() {
               className={`relative w-[85vw] max-w-7xl h-[80vh] max-h-[850px] min-h-[660px] rounded-[2rem] animate-stage-in flex flex-col ${
                 currentId === 'welcome'
                   ? 'bg-[#050505]/95 backdrop-blur-2xl overflow-visible'
-                  : currentId === 'contact'
-                  ? 'bg-black/40 backdrop-blur-3xl overflow-visible'
                   : 'bg-black/40 backdrop-blur-3xl overflow-hidden'
               }`}
               style={currentId === 'welcome' ? {
