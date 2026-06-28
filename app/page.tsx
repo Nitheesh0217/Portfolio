@@ -221,6 +221,7 @@ export default function DesktopCanvas() {
   const [copiedIdx, setCopiedIdx]   = useState<number | null>(null);
   const [leftFanned, setLeftFanned] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
+  const [cardTilt, setCardTilt] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (activeProject) {
@@ -434,9 +435,9 @@ export default function DesktopCanvas() {
           {activeProject ? (
             /* ── Zero-Bezel Panoramic Spatial Workspace ── */
             <div
-              className="flex flex-row items-center justify-center gap-5 animate-stage-in"
+              className="flex flex-row items-center justify-center gap-8 animate-stage-in"
               style={{
-                perspective: '2400px',
+                perspective: '3200px',
                 perspectiveOrigin: '50% 48%',
                 width: '97vw',
                 maxWidth: '1800px',
@@ -453,7 +454,7 @@ export default function DesktopCanvas() {
                   ══════════════════════════════════════════════ */}
               <div
                 className="spatial-glow-left transform-gpu backface-hidden will-change-[transform,opacity] w-[24vw] min-w-[280px] max-w-[380px] h-[75vh] flex-shrink-0 z-20 rounded-3xl relative flex items-center justify-center"
-                style={{ transform: 'translateZ(-50px) scale(0.95)', transformOrigin: 'right center', perspective: '1000px' }}
+                style={{ transform: 'translateZ(-60px) rotateY(10deg) scale(0.95)', transformOrigin: 'right center', perspective: '1200px' }}
                 onMouseEnter={() => setLeftFanned(true)}
                 onMouseLeave={() => setLeftFanned(false)}
               >
@@ -554,19 +555,20 @@ export default function DesktopCanvas() {
                     const stackPos = (i - activeCard + deckCards.length) % deckCards.length;
                     const isFront = stackPos === 0;
 
-                    // Default stacked 3D positions
+                    // Default stacked 3D positions — deep z recession for maximum drama
                     const defaultTransforms: Record<number, string> = {
                       0: 'translateZ(0px) translateY(0px) scale(1)',
-                      1: 'translateZ(-50px) translateY(-20px) scale(0.95)',
-                      2: 'translateZ(-100px) translateY(-40px) scale(0.90)',
+                      1: 'translateZ(-110px) translateY(-44px) scale(0.91)',
+                      2: 'translateZ(-220px) translateY(-88px) scale(0.82)',
                     };
-                    // Fanned positions — spread downward so all headers visible
+                    // Fanned positions — equal vertical spread so all cards are fully legible
                     const fannedTransforms: Record<number, string> = {
-                      0: 'translateZ(0px) translateY(-60px) scale(1)',
-                      1: 'translateZ(0px) translateY(30px) scale(0.97)',
-                      2: 'translateZ(0px) translateY(120px) scale(0.94)',
+                      0: 'translateZ(0px) translateY(-74px) scale(1)',
+                      1: 'translateZ(0px) translateY(0px) scale(0.97)',
+                      2: 'translateZ(0px) translateY(74px) scale(0.94)',
                     };
-                    const defaultOpacity = [1, 0.55, 0.25][stackPos] ?? 0.25;
+
+                    const defaultOpacity = [1, 0.45, 0.15][stackPos] ?? 0.15;
                     const defaultBlur = ['none', 'blur(1.5px)', 'blur(3px)'][stackPos] ?? 'blur(3px)';
                     const zIndex = [30, 20, 10][stackPos] ?? 10;
 
@@ -580,19 +582,22 @@ export default function DesktopCanvas() {
                         onClick={() => !leftFanned && setActiveCard(i)}
                         className="absolute transform-gpu will-change-[transform,opacity] w-full rounded-3xl p-6 cursor-pointer select-none"
                         style={{
-                          height: '82%',
-                          background: `linear-gradient(145deg, rgba(0,0,0,0.55) 0%, ${card.accentBg} 100%)`,
-                          backdropFilter: 'blur(24px)',
-                          border: isFront ? `1px solid ${card.accent}30` : '1px solid rgba(255,255,255,0.07)',
-                          borderTop: isFront ? `1px solid ${card.accent}50` : '1px solid rgba(255,255,255,0.14)',
+                          height: '84%',
+                          background: isFront
+                            ? `linear-gradient(145deg, rgba(4,4,10,0.80) 0%, ${card.accentBg} 60%, rgba(0,0,0,0.70) 100%)`
+                            : `linear-gradient(145deg, rgba(2,2,6,0.75) 0%, ${card.accentBg} 100%)`,
+                          backdropFilter: 'blur(32px) saturate(160%)',
+                          WebkitBackdropFilter: 'blur(32px) saturate(160%)',
+                          border: isFront ? `1px solid ${card.accent}35` : '1px solid rgba(255,255,255,0.06)',
+                          borderTop: isFront ? `1px solid ${card.accent}70` : '1px solid rgba(255,255,255,0.10)',
                           boxShadow: isFront
-                            ? `0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px ${card.accent}15, inset 0 1px 0 rgba(255,255,255,0.08)`
-                            : '0 16px 48px rgba(0,0,0,0.5)',
+                            ? `0 40px 80px rgba(0,0,0,0.90), 0 0 0 1px ${card.accent}18, inset 0 1px 0 rgba(255,255,255,0.10), 0 0 50px ${card.accent}10`
+                            : '0 20px 50px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.03)',
                           transform,
                           opacity,
                           filter: blur === 'none' ? undefined : blur,
                           zIndex,
-                          transition: 'transform 0.7s cubic-bezier(0.23,1,0.32,1), opacity 0.7s ease, filter 0.7s ease, box-shadow 0.3s ease',
+                          transition: 'transform 0.7s cubic-bezier(0.23,1,0.32,1), opacity 0.7s ease, filter 0.7s ease, box-shadow 0.4s ease',
                         }}
                         onMouseEnter={e => {
                           if (leftFanned) e.currentTarget.style.borderColor = `${card.accent}50`;
@@ -635,8 +640,15 @@ export default function DesktopCanvas() {
               <div className="relative flex-shrink-0 z-10 w-[55vw] min-w-[900px] max-w-5xl">
 
                 {/* ── visionOS Floating Top Pill — icon-only buttons, no URL ── */}
-                <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-1.5 rounded-full"
-                  style={{ background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+                <div className="absolute -top-[60px] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-2 rounded-full transform-gpu will-change-[transform,opacity]"
+                  style={{
+                    background: 'rgba(0,0,0,0.85)',
+                    backdropFilter: 'blur(40px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderTop: '1px solid rgba(255,255,255,0.35)',
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.20)',
+                  }}>
 
                   {/* Live button */}
                   {activeProject.live_url && (
@@ -686,8 +698,12 @@ export default function DesktopCanvas() {
                   └─────────────────────────────────────────────────────────────┘
                 */}
                 <div
-                  className="w-full h-full bg-[#050505] rounded-[2rem] overflow-hidden relative"
-                  style={{ boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)' }}
+                  className="w-full h-full bg-[#030308] rounded-[2.5rem] overflow-hidden relative"
+                  style={{
+                    boxShadow: '0 30px 70px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.12)',
+                    borderTop: '1px solid rgba(255,255,255,0.18)',
+                    borderLeft: '1px solid rgba(255,255,255,0.06)',
+                  }}
                 >
                   {iframeBlocked ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-10 text-center bg-[#050505]">
@@ -749,44 +765,81 @@ export default function DesktopCanvas() {
                   ══════════════════════════════════════════════ */}
               <div
                 className="spatial-glow-right transform-gpu backface-hidden will-change-[transform,opacity] transition-all duration-500 ease-out w-[24vw] min-w-[280px] max-w-[380px] h-[75vh] flex-shrink-0 z-20 rounded-3xl"
-                style={{ transform: 'translateZ(-50px) scale(0.95)', transformOrigin: 'left center' }}
+                style={{ transform: 'translateZ(-60px) rotateY(-10deg) scale(0.95)', transformOrigin: 'left center' }}
               >
                 <div
-                  className="w-full h-full bg-black/60 backdrop-blur-2xl rounded-3xl flex flex-col overflow-hidden"
-                  style={{ border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 24px 64px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05)' }}
+                  className="w-full h-full rounded-3xl flex flex-col overflow-hidden"
+                  style={{
+                    background: 'rgba(3,3,10,0.75)',
+                    backdropFilter: 'blur(40px) saturate(160%)',
+                    WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderTop: '1px solid rgba(255,255,255,0.16)',
+                    boxShadow: '0 30px 70px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08)',
+                  }}
                 >
                   {/* ── Module A: Biometric Tilt-Card ── */}
                   {DEMO_CREDENTIALS[activeProject.slug] ? (
-                    <div className="mx-3 mt-3 shrink-0 rounded-2xl p-4 relative overflow-hidden transition-all duration-300 cursor-default"
+                    <div className="mx-3 mt-3 shrink-0 rounded-2xl p-4 relative overflow-hidden cursor-default"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.50) 50%, rgba(255,255,255,0.05) 100%)',
-                        border: '1px solid rgba(255,255,255,0.20)',
-                        boxShadow: '0 0 30px rgba(255,255,255,0.05)',
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.65) 55%, rgba(255,255,255,0.05) 100%)',
+                        border: '1px solid rgba(255,255,255,0.22)',
+                        borderTop: '1px solid rgba(255,255,255,0.35)',
+                        boxShadow: '0 12px 40px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.15)',
+                        transformStyle: 'preserve-3d' as const,
+                        transform: `perspective(700px) rotateX(${-cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
+                        transition: cardTilt.x === 0 && cardTilt.y === 0 ? 'transform 0.6s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s ease' : 'transform 0.08s ease-out',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.40)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.5)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.20)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,255,255,0.05)'; }}
+                      onMouseMove={e => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = (e.clientY - rect.top) / rect.height - 0.5;
+                        const y = (e.clientX - rect.left) / rect.width - 0.5;
+                        setCardTilt({ x: x * 14, y: y * 14 });
+                        e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.22)';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.40)';
+                      }}
+                      onMouseLeave={e => {
+                        setCardTilt({ x: 0, y: 0 });
+                        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.15)';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)';
+                      }}
                     >
-                      {/* Holographic diagonal sheen overlay */}
+                      {/* Holographic conic gradient base */}
+                      <div className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden" style={{ opacity: 0.45 }}>
+                        <div className="absolute inset-0" style={{ background: 'conic-gradient(from 180deg at 50% 50%, rgba(139,92,246,0.25) 0deg, rgba(34,211,238,0.18) 120deg, rgba(251,191,36,0.12) 240deg, rgba(139,92,246,0.25) 360deg)' }} />
+                      </div>
+                      {/* Animated sweeping sheen */}
                       <div className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden">
                         <div className="absolute inset-0"
-                          style={{ background: 'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.12) 50%, transparent 80%)', animation: 'holoSheen 3.5s ease-in-out infinite' }} />
+                          style={{ background: 'linear-gradient(115deg, transparent 15%, rgba(255,255,255,0.20) 50%, transparent 85%)', animation: 'holoSheen 2.8s ease-in-out infinite' }} />
+                      </div>
+                      {/* Smart-card chip icon */}
+                      <div className="absolute top-3 left-3 z-10 opacity-55">
+                        <svg width="20" height="15" viewBox="0 0 20 15" fill="none" aria-hidden="true">
+                          <rect x="3" y="2" width="14" height="11" rx="2" stroke="rgba(255,255,255,0.55)" strokeWidth="0.8" fill="rgba(255,255,255,0.06)" />
+                          <line x1="7" y1="2" x2="7" y2="13" stroke="rgba(255,255,255,0.30)" strokeWidth="0.6" />
+                          <line x1="10" y1="2" x2="10" y2="13" stroke="rgba(255,255,255,0.30)" strokeWidth="0.6" />
+                          <line x1="13" y1="2" x2="13" y2="13" stroke="rgba(255,255,255,0.30)" strokeWidth="0.6" />
+                          <line x1="3" y1="5.5" x2="17" y2="5.5" stroke="rgba(255,255,255,0.25)" strokeWidth="0.6" />
+                          <line x1="3" y1="9.5" x2="17" y2="9.5" stroke="rgba(255,255,255,0.25)" strokeWidth="0.6" />
+                        </svg>
                       </div>
                       {/* Verified badge */}
                       <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-10">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         <span className="text-[7px] font-black uppercase tracking-widest text-emerald-400/80">Verified</span>
                       </div>
-                      <p className="text-[7.5px] font-black uppercase tracking-wider text-yellow-400/80 mb-2.5 relative z-10">
+                      <p className="text-[7.5px] font-black uppercase tracking-wider text-amber-400/90 mb-2.5 relative z-10 mt-4">
                         ⬡ Demo Access Keys
                       </p>
                       <div className="flex flex-col gap-1.5 relative z-10">
                         {DEMO_CREDENTIALS[activeProject.slug].map((cred, idx) => (
-                          <div key={idx} className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl"
-                            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                          <div key={idx} className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl transition-all duration-200 hover:bg-white/[0.04]"
+                            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}>
                             <div className="flex flex-col gap-0.5 min-w-0">
                               <span className="text-[7px] font-bold text-white/35 uppercase tracking-widest">{cred.label}</span>
                               <span className="font-mono text-[9px] text-white/85 truncate">{cred.email}</span>
-                              <span className="font-mono text-[8.5px] text-white/45">{cred.password}</span>
+                              <span className="font-mono text-[8.5px] text-cyan-300/55">{cred.password}</span>
                             </div>
                             <button onClick={() => { navigator.clipboard.writeText(`${cred.email}\n${cred.password}`); setCopiedIdx(idx); setTimeout(() => setCopiedIdx(null), 1800); }}
                               className="shrink-0 transform-gpu will-change-[transform,opacity] w-6 h-6 rounded-md flex items-center justify-center text-white/30 hover:text-white/80 hover:bg-white/[0.08] transition-all active:scale-90">
@@ -798,36 +851,45 @@ export default function DesktopCanvas() {
                     </div>
                   ) : (
                     <div className="mx-3 mt-3 shrink-0 px-4 py-3 rounded-2xl"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
                       <span className="text-[8px] font-black uppercase tracking-[0.22em] text-violet-400">Live Telemetry</span>
                       <p className="text-[11px] text-white/50 mt-1 leading-snug">{activeProject.title}</p>
                     </div>
                   )}
 
-                  {/* ── Module B: Breathing Siri-Core Orb ── */}
+                  {/* ── Module B: Breathing AI Core ── */}
                   <div className="mx-3 mt-3 shrink-0 flex items-center gap-3">
-                    <div className="relative flex-shrink-0 w-10 h-10 transform-gpu will-change-[transform,opacity]">
-                      {/* Outer ping ring */}
-                      <div className="absolute inset-0 rounded-full opacity-25"
-                        style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #06b6d4, #6366f1)', animation: 'ping 2s cubic-bezier(0,0,0.2,1) infinite' }} />
+                    <div className="relative flex-shrink-0 w-14 h-14 transform-gpu will-change-[transform,opacity]">
+                      {/* Outer diffused glow halo */}
+                      <div className="absolute -inset-2 rounded-full"
+                        style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #22d3ee, #6366f1)', filter: 'blur(10px)', opacity: 0.35, animation: 'aiOrbBreath 4s ease-in-out infinite' }} />
+                      {/* Mid ping ring */}
+                      <div className="absolute inset-0 rounded-full"
+                        style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #22d3ee, #6366f1)', opacity: 0.18, animation: 'ping 3.5s cubic-bezier(0,0,0.2,1) infinite 0.6s' }} />
                       {/* Core spinning orb */}
                       <div className="absolute inset-0 rounded-full"
                         style={{
-                          background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #06b6d4, #6366f1)',
-                          boxShadow: '0 0 18px rgba(139,92,246,0.7), 0 0 36px rgba(99,102,241,0.3)',
-                          animation: 'siriOrb 4s linear infinite',
+                          background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #22d3ee, #6366f1)',
+                          boxShadow: '0 0 28px rgba(139,92,246,0.95), 0 0 56px rgba(99,102,241,0.45)',
+                          animation: 'aiOrbSpin 5s linear infinite',
                         }} />
-                      {/* Frosted glass center dot */}
-                      <div className="absolute inset-[6px] rounded-full"
-                        style={{ background: 'rgba(0,0,0,0.60)', backdropFilter: 'blur(4px)' }} />
+                      {/* Frosted glass inner sphere */}
+                      <div className="absolute inset-[8px] rounded-full"
+                        style={{ background: 'rgba(0,0,0,0.68)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }} />
+                      {/* Inner spark pulse */}
+                      <div className="absolute inset-[16px] rounded-full"
+                        style={{ background: 'rgba(139,92,246,0.60)', boxShadow: '0 0 14px rgba(139,92,246,0.90)', animation: 'aiOrbBreath 4s ease-in-out infinite 0.6s' }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[8px] font-black uppercase tracking-[0.18em] text-emerald-400 mb-0.5">AI Co-Pilot</p>
-                      <p className="text-[9.5px] text-white/45">Ask me anything about this project</p>
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <p className="text-[8px] font-black uppercase tracking-[0.18em] text-emerald-400">AI Co-Pilot</p>
+                      </div>
+                      <p className="text-[9.5px] text-white/45 leading-snug">Ask me anything about this project</p>
                     </div>
                   </div>
 
-                  {/* AI Pills — deeply inset dark glass */}
+                  {/* AI Pills — glowing query nodes */}
                   <div className="mx-3 mt-2 shrink-0 flex flex-col gap-1.5">
                     {[
                       activeProject.stack?.includes('LangChain') || activeProject.stack?.includes('Pinecone')
@@ -843,19 +905,19 @@ export default function DesktopCanvas() {
                       `What makes ${activeProject.title.split(' ')[0]} production-ready?`,
                     ].map(q => (
                       <button key={q} onClick={() => navigator.clipboard.writeText(q)} title="Click to copy"
-                        className="w-full text-left px-3 py-2 rounded-xl text-[9.5px] text-white/70 transition-all duration-200 transform-gpu will-change-[transform,opacity] hover:text-white hover:bg-white/10 active:scale-[0.98]"
-                        style={{ background: 'rgba(0,0,0,0.60)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)', borderTop: '1px solid rgba(255,255,255,0.08)' }}
+                        className="w-full text-left px-3 py-2 rounded-xl text-[9.5px] text-white/65 transition-all duration-200 transform-gpu will-change-[transform,opacity] hover:text-white hover:bg-white/[0.07] active:scale-[0.98] group"
+                        style={{ background: 'rgba(0,0,0,0.55)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.55)', borderTop: '1px solid rgba(255,255,255,0.06)', borderLeft: '2px solid rgba(255,255,255,0.04)' }}
                       >
-                        <span className="text-white/25 mr-1.5">›</span>{q}
+                        <span className="text-violet-400/55 mr-1.5 inline-block group-hover:translate-x-0.5 transition-transform duration-200">▸</span>{q}
                       </button>
                     ))}
                   </div>
 
-                  {/* ── Module C: Neural Data Pulse Map ── */}
-                  <div className="flex-1 min-h-0 mx-3 mt-3 mb-3 rounded-2xl relative"
-                    style={{ background: 'rgba(0,0,0,0.30)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  {/* ── Module C: Neural Diamond Map ── */}
+                  <div className="flex-1 min-h-0 mx-3 mt-3 mb-3 rounded-2xl relative overflow-hidden"
+                    style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderTop: '1px solid rgba(255,255,255,0.10)' }}>
                     <div className="absolute top-2.5 left-3 z-10">
-                      <span className="text-[7.5px] font-black uppercase tracking-widest text-white/20">Data Flow</span>
+                      <span className="text-[7.5px] font-black uppercase tracking-widest text-white/25">Live Data Flow</span>
                     </div>
                     {(() => {
                       const stack = activeProject.stack || [];
@@ -863,46 +925,95 @@ export default function DesktopCanvas() {
                       const hasDB     = stack.some(s => ['PostgreSQL','MongoDB','MySQL','Supabase','Firebase','Redis','Neon'].some(k => s.includes(k)));
                       const hasFE     = stack.some(s => ['React','Next.js','Vue','Svelte'].some(k => s.includes(k)));
                       const hasStripe = stack.some(s => s.includes('Stripe'));
+                      // Diamond topology: User(top) → FE(left) + AI(right) → DB(bottom)
                       const nodes = [
-                        { label: 'User',                      color: '#a78bfa', glyph: '◎' },
-                        { label: hasFE ? 'Next.js' : 'Client', color: '#60a5fa', glyph: '▣' },
-                        { label: hasLLM ? 'AI Engine' : hasStripe ? 'Payments' : 'API', color: hasLLM ? '#c084fc' : hasStripe ? '#4ade80' : '#34d399', glyph: hasLLM ? '◉' : '⬡' },
-                        { label: hasDB ? 'Database' : 'Storage', color: '#fb923c', glyph: '⬢' },
+                        { id: 'user',  label: 'User',                                                                         color: '#a78bfa', glyph: '◎', cx: 140, cy: 52  },
+                        { id: 'fe',    label: hasFE ? 'Next.js' : 'Client',                                                   color: '#60a5fa', glyph: '▣', cx: 68,  cy: 148 },
+                        { id: 'core',  label: hasLLM ? 'AI Engine' : hasStripe ? 'Payments' : 'API',
+                                       color: hasLLM ? '#c084fc' : hasStripe ? '#4ade80' : '#34d399',  glyph: hasLLM ? '◉' : '⬡', cx: 212, cy: 148 },
+                        { id: 'db',    label: hasDB  ? 'Database' : 'Storage',                                                color: '#fb923c', glyph: '⬢', cx: 140, cy: 244 },
                       ];
+                      const edges = [
+                        { from: 0, to: 1, delay: '0s'   },
+                        { from: 0, to: 2, delay: '0.5s' },
+                        { from: 1, to: 3, delay: '1.0s' },
+                        { from: 2, to: 3, delay: '1.5s' },
+                      ];
+                      const R = 22;
                       return (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pb-4 gap-0">
-                          {nodes.map((node, i) => (
-                            <div key={node.label} className="flex flex-col items-center"
-                              style={{ flex: i < nodes.length - 1 ? '1 1 0' : 'none', minHeight: i < nodes.length - 1 ? 60 : 'auto' }}>
-                              {/* Glass node circle */}
-                              <div className="transform-gpu will-change-[transform,opacity] w-12 h-12 rounded-full flex-shrink-0 flex flex-col items-center justify-center z-10 transition-transform duration-300 hover:scale-110"
-                                style={{
-                                  background: 'rgba(0,0,0,0.80)',
-                                  border: '1px solid rgba(255,255,255,0.20)',
-                                  borderTop: `1px solid ${node.color}60`,
-                                  boxShadow: `0 0 16px ${node.color}25, inset 0 1px 0 rgba(255,255,255,0.05)`,
-                                }}>
-                                <span className="text-[13px] leading-none" style={{ color: node.color }}>{node.glyph}</span>
-                                <span className="text-[6px] font-bold text-white/45 mt-0.5 tracking-wide">{node.label}</span>
-                              </div>
-                              {/* SVG wire with animated cyan data packet */}
-                              {i < nodes.length - 1 && (
-                                <svg className="transform-gpu will-change-[transform,opacity]"
-                                  width="2" style={{ flex: 1 }} viewBox="0 0 2 40" preserveAspectRatio="none">
-                                  <line x1="1" y1="0" x2="1" y2="40" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5"/>
-                                  <line x1="1" y1="0" x2="1" y2="40"
-                                    stroke="#22d3ee" strokeWidth="1.5"
-                                    strokeDasharray="8 32"
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg viewBox="0 0 280 300" className="w-full h-full" aria-hidden="true" style={{ overflow: 'visible' }}>
+                            <defs>
+                              {nodes.map(n => (
+                                <radialGradient key={`rg-${n.id}`} id={`rg-${n.id}`} cx="50%" cy="50%" r="50%">
+                                  <stop offset="0%" stopColor={n.color} stopOpacity="0.30" />
+                                  <stop offset="100%" stopColor={n.color} stopOpacity="0" />
+                                </radialGradient>
+                              ))}
+                            </defs>
+                            {/* Ambient glow halos under each node */}
+                            {nodes.map(n => (
+                              <circle key={`halo-${n.id}`} cx={n.cx} cy={n.cy} r={R + 18}
+                                fill={`url(#rg-${n.id})`} />
+                            ))}
+                            {/* Bezier connection paths */}
+                            {edges.map((e, i) => {
+                              const n1 = nodes[e.from]; const n2 = nodes[e.to];
+                              const mx = (n1.cx + n2.cx) / 2; const my = (n1.cy + n2.cy) / 2;
+                              const d = `M ${n1.cx} ${n1.cy} C ${n1.cx} ${my} ${n2.cx} ${my} ${n2.cx} ${n2.cy}`;
+                              return (
+                                <g key={`edge-${i}`}>
+                                  {/* Static wire */}
+                                  <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
+                                  {/* Glowing animated packet */}
+                                  <path d={d} fill="none"
+                                    stroke={nodes[e.to].color} strokeWidth="2.5" strokeLinecap="round"
+                                    strokeDasharray="10 110"
                                     style={{
-                                      filter: 'drop-shadow(0 0 3px #22d3ee) drop-shadow(0 0 6px rgba(34,211,238,0.4))',
-                                      animation: 'neuralPulse 1.4s linear infinite',
-                                      animationDelay: `${i * 0.35}s`,
+                                      filter: `drop-shadow(0 0 5px ${nodes[e.to].color}) drop-shadow(0 0 10px ${nodes[e.to].color}80)`,
+                                      animation: 'dataPacketFlow 2.2s linear infinite',
+                                      animationDelay: e.delay,
+                                      strokeDashoffset: 120,
                                     }}
                                   />
-                                </svg>
-                              )}
-                            </div>
-                          ))}
+                                </g>
+                              );
+                            })}
+                            {/* Node circles with glyphs */}
+                            {nodes.map((n, i) => (
+                              <g key={n.id}>
+                                {/* Pulsing ring on user node only */}
+                                {i === 0 && (
+                                  <circle cx={n.cx} cy={n.cy} r={R + 8}
+                                    fill="none" stroke={n.color} strokeWidth="1"
+                                    style={{ animation: 'nodePulseRing 3s ease-out infinite', opacity: 0.5, transformOrigin: `${n.cx}px ${n.cy}px` }}
+                                  />
+                                )}
+                                {/* Node body */}
+                                <circle cx={n.cx} cy={n.cy} r={R}
+                                  fill="rgba(0,0,0,0.88)"
+                                  stroke={n.color} strokeWidth="1"
+                                  strokeOpacity="0.55"
+                                  style={{ filter: `drop-shadow(0 0 10px ${n.color}70)` }}
+                                />
+                                {/* Specular top edge */}
+                                <path
+                                  d={`M ${n.cx - R + 4} ${n.cy - R + 8} Q ${n.cx} ${n.cy - R - 4} ${n.cx + R - 4} ${n.cy - R + 8}`}
+                                  fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1"
+                                />
+                                {/* Glyph */}
+                                <text x={n.cx} y={n.cy - 3} textAnchor="middle" dominantBaseline="middle"
+                                  fontSize="14" fill={n.color} style={{ userSelect: 'none', fontFamily: 'system-ui' }}>
+                                  {n.glyph}
+                                </text>
+                                {/* Label */}
+                                <text x={n.cx} y={n.cy + 12} textAnchor="middle" dominantBaseline="middle"
+                                  fontSize="6.5" fill="rgba(255,255,255,0.45)" style={{ userSelect: 'none', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.04em' }}>
+                                  {n.label}
+                                </text>
+                              </g>
+                            ))}
+                          </svg>
                         </div>
                       );
                     })()}
@@ -976,19 +1087,51 @@ export default function DesktopCanvas() {
           to   { stroke-dashoffset: -40; }
         }
 
+        /* ── NEW: Anti-Gravity Animation Suite ── */
+
+        /* AI Orb — slow conic gradient spin */
+        @keyframes aiOrbSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+
+        /* AI Orb — breathing pulse for outer halo and inner spark */
+        @keyframes aiOrbBreath {
+          0%,  100% { opacity: 0.28; transform: scale(1.00); }
+          50%        { opacity: 0.60; transform: scale(1.20); }
+        }
+
+        /* Data packet — flows along SVG bezier path via stroke-dashoffset */
+        @keyframes dataPacketFlow {
+          from { stroke-dashoffset:  120; }
+          to   { stroke-dashoffset: -24; }
+        }
+
+        /* Node pulse ring — expands outward + fades on User node */
+        @keyframes nodePulseRing {
+          0%   { transform: scale(1.00); opacity: 0.65; }
+          100% { transform: scale(2.60); opacity: 0.00; }
+        }
+
         /* ── Global scrollbar eradication ── */
         *::-webkit-scrollbar { display: none; }
         * { scrollbar-width: none; -ms-overflow-style: none; }
 
-        /* ── Spatial window glow (outer wrappers only — never on backdrop-blur elements) ── */
+        /* ── Spatial window glow — massive compound drop-shadows for zero-gravity levitation ── */
         .spatial-glow-left {
-          filter: drop-shadow(-6px 0 32px rgba(139,92,246,0.20));
+          filter:
+            drop-shadow(-12px 0 60px rgba(139,92,246,0.35))
+            drop-shadow(0 30px 70px rgba(0,0,0,0.80));
         }
         .spatial-glow-right {
-          filter: drop-shadow(6px 0 32px rgba(52,211,153,0.16));
+          filter:
+            drop-shadow(12px 0 60px rgba(52,211,153,0.30))
+            drop-shadow(0 30px 70px rgba(0,0,0,0.80));
         }
         .spatial-glow-center {
-          filter: drop-shadow(0 8px 48px rgba(99,102,241,0.24));
+          filter:
+            drop-shadow(0 30px 80px rgba(99,102,241,0.45))
+            drop-shadow(0 8px 24px rgba(0,0,0,0.90));
         }
       `}</style>
     </div>
