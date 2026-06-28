@@ -72,7 +72,7 @@ const ContactWindow = memo(function ContactWindow() {
     <div className="flex-1 w-full h-full flex flex-row p-12 gap-12 relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem]">
       {/* 1. Detached Dock (Far Left Side, completely breakout) */}
       <div 
-        className="fixed left-8 top-1/2 -translate-y-1/2 z-50 bg-black/45 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
+        className="absolute -left-20 top-1/2 -translate-y-1/2 z-50 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
       >
         <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
           <User className="w-5 h-5" />
@@ -95,13 +95,12 @@ const ContactWindow = memo(function ContactWindow() {
       </div>
 
       {/* 3. Left Pane (40% width) - Sticky Identity & Contact */}
-      <div className="w-[38%] flex flex-col justify-between h-full select-text z-20">
-        <div className="flex flex-col gap-6">
-          <h2 className="text-white font-extrabold text-[3.25rem] leading-[1.08] tracking-tight">
-            Full Stack &<br />AI Engineer.<br />
-            <span className="text-white/40">Architecting intelligent systems.</span>
-          </h2>
-          <p className="text-[13px] leading-relaxed text-white/50 max-w-[340px]">
+      <div className="w-[38%] pl-16 flex flex-col justify-between h-full select-text z-20">
+        <div className="flex flex-col">
+          <h1 className="text-white font-extrabold text-5xl leading-[1.1] tracking-tight">
+            Full Stack & AI Engineer. Architecting intelligent systems.
+          </h1>
+          <p className="text-[13px] leading-relaxed text-white/50 max-w-[340px] mt-6">
             RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
           </p>
         </div>
