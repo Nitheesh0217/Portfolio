@@ -75,46 +75,43 @@ const ContactWindow = memo(function ContactWindow() {
       title: 'Full Stack Engineer',
       company: 'Kore.ai',
       date: 'Jan 2024 — Present',
-      summary: 'Led development of enterprise conversational AI models, NLP retraining pipeline, and Spring Boot webhook deduplication middleware.',
-      tech: ['Next.js', 'Java', 'Spring Boot', 'Redis', 'Kore.ai', 'NLP', 'PostgreSQL'],
+      summary: 'Architected and deployed enterprise Generative AI workflows and conversational agents using React, TypeScript, and Java Spring Boot.',
+      tech: ['React', 'TypeScript', 'Java', 'Spring Boot', 'PostgreSQL', 'AWS', 'OpenAI', 'LangChain', 'Pinecone', 'RAG'],
       bullets: [
-        'Designed and implemented NLP intent retraining architectures matching enterprise Kore.ai dialogue graphs, optimizing intent classification precision.',
-        'Engineered Spring Boot webhook deduplication interceptors backed by Redis, eliminating database race conditions on concurrent event broadcasts.',
-        'Built responsive Next.js analytical dashboards displaying conditioning logs, user flows, and KPI metrics.',
-        'Authored robust SQL migrations and relational schema partitions in PostgreSQL to guarantee data pipeline integrity.'
+        'Architected and deployed enterprise Generative AI workflows and conversational agents using React, TypeScript, and Java Spring Boot, scaling to support thousands of daily user interactions.',
+        'Engineered a high-performance Retrieval-Augmented Generation (RAG) pipeline utilizing OpenAI embeddings and Pinecone vector databases, significantly improving contextual accuracy for internal knowledge retrieval.',
+        'Spearheaded the UI/UX development of AI-powered dashboards in React, directly reducing manual support ticket resolution time by automating common customer queries.'
       ]
     },
     'citrix': {
-      title: 'Senior Full Stack Developer (RAG)',
+      title: 'Software Engineer',
       company: 'Citrix',
       date: 'Jun 2022 — Dec 2023',
-      summary: 'Engineered RAG pipelines for Citrix knowledge base search indexing 40k+ articles. Optimized vector retrieval with Pinecone.',
-      tech: ['Python', 'LangChain', 'Pinecone', 'OpenAI', 'React', 'AWS ECS'],
+      summary: 'Developed and optimized scalable enterprise microservices using Java and Spring Boot, reducing latency and deploying OpenAI search.',
+      tech: ['Java', 'Spring Boot', 'React', 'Docker', 'Kubernetes', 'AWS ECS', 'CI/CD', 'GitHub Actions'],
       bullets: [
-        'Built and optimized RAG (Retrieval-Augmented Generation) pipelines searching over 40k internal Citrix articles using Pinecone and LangChain.',
-        'Implemented citation validation validators that parsed bracketed references [Source X] in real-time, reducing LLM hallucination by 98%.',
-        'Containerized and served LLM routing APIs on AWS ECS utilizing Docker and Flask.',
-        'Designed and deployed custom workflow managers to synchronize document vector embeddings with Pinecone indexes.'
+        'Developed and optimized scalable enterprise microservices using Java and Spring Boot, seamlessly integrating with PostgreSQL and reducing backend API latency.',
+        'Integrated OpenAI-driven document search capabilities into internal enterprise tools, accelerating knowledge management workflows for cross-functional teams.',
+        'Automated CI/CD deployment pipelines utilizing GitHub Actions, Docker, and AWS, decreasing release preparation time and mitigating production deployment risks.'
       ]
     },
     'cognizant': {
-      title: 'Software Engineer & ML Specialist',
+      title: 'Software Engineer',
       company: 'Cognizant',
       date: 'Aug 2020 — May 2022',
-      summary: 'Trained and deployed random forest machine learning models for patient readmission prediction. Built high-performance ETL pipelines.',
-      tech: ['Scikit-Learn', 'Flask', 'PostgreSQL', 'Docker', 'AWS'],
+      summary: 'Designed and maintained transactional microservices, optimized SQL database queries, and automated builds under Agile practices.',
+      tech: ['Java', 'Microservices', 'REST APIs', 'SQL', 'Jenkins', 'Agile', 'Scrum'],
       bullets: [
-        'Developed and trained scikit-learn Random Forest classifiers to predict patient readmissions, processing 15k+ clinical records.',
-        'Built robust ETL data ingestion pipelines utilizing Python, pandas, and PostgreSQL.',
-        'Maintained and optimized database queries, reducing data warehouse sync times by 35%.',
-        'Managed deployments on AWS and containerized core microservices.'
+        'Designed and maintained high-volume transactional REST APIs and Java Spring Boot microservices supporting mission-critical business operations.',
+        'Optimized complex SQL queries and database schemas, substantially improving data retrieval response times across high-traffic enterprise applications.',
+        'Streamlined software delivery by containerizing applications with Docker and automating builds via Jenkins in a fast-paced Agile/Scrum environment.'
       ]
     },
     'fau-grad': {
       title: 'M.S. Computer Science',
       company: 'Florida Atlantic University',
       date: 'Graduated 2020',
-      summary: 'Specialized in Machine Learning, advanced databases, and cloud systems engineering.',
+      summary: 'Specialized in Machine Learning, advanced database systems, and cloud systems engineering.',
       image: '/fau_graduation.png',
       bullets: [
         'Master of Science degree focusing on computer science foundations and artificial intelligence.',
@@ -173,10 +170,9 @@ const ContactWindow = memo(function ContactWindow() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-12 pt-16">
           
-          {/* Tile 1: Hero Identity (Full Width, col-span-full) */}
+          {/* Tile 1: Hero Identity (Full Width, col-span-full) - Non-clickable Liquid Glass */}
           <div 
-            className="col-span-full bg-white/5 border border-white/10 rounded-3xl p-10 flex flex-col gap-6 relative shadow-lg cursor-default select-text"
-            style={{ backdropFilter: 'blur(20px)' }}
+            className="col-span-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] rounded-3xl p-10 flex flex-col gap-6 relative select-text"
           >
             <h1 className="text-white font-extrabold text-[2.85rem] md:text-[3.5rem] leading-[1.08] tracking-tight">
               Full Stack & AI Engineer.<br />
@@ -187,11 +183,10 @@ const ContactWindow = memo(function ContactWindow() {
             </p>
           </div>
 
-          {/* Tile 2: Kore.ai (col-span-2) */}
+          {/* Tile 2: Kore.ai (col-span-2) - Liquid Glass styled */}
           <div 
             onClick={() => setSelectedTile('kore-ai')}
-            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
-            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
               <h4 className="text-[16px] font-extrabold text-white tracking-tight">Full Stack Engineer</h4>
@@ -213,10 +208,10 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Tile 4: FAU Graduation (col-span-1, Square) */}
+          {/* Tile 4: FAU Graduation (col-span-1, Square) - Liquid Glass styled */}
           <div 
             onClick={() => setSelectedTile('fau-grad')}
-            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-[transform,opacity] cursor-pointer"
+            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
               src="/fau_graduation.png" 
@@ -230,10 +225,10 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Tile 5: Teaching Assistant (col-span-1, Square) */}
+          {/* Tile 5: Teaching Assistant (col-span-1, Square) - Liquid Glass styled */}
           <div 
             onClick={() => setSelectedTile('fau-ta')}
-            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-[transform,opacity] cursor-pointer"
+            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
               src="/teaching_assistant.jpg" 
@@ -247,14 +242,13 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Tile 3: Citrix (col-span-2) */}
+          {/* Tile 3: Citrix (col-span-2) - Liquid Glass styled */}
           <div 
             onClick={() => setSelectedTile('citrix')}
-            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
-            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
-              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Senior Full Stack Developer (RAG)</h4>
+              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Software Engineer</h4>
               <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider shrink-0 mt-0.5">Jun 2022 — Dec 2023</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -273,14 +267,13 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Tile 6: Cognizant (col-span-full) */}
+          {/* Tile 6: Cognizant (col-span-full) - Liquid Glass styled */}
           <div 
             onClick={() => setSelectedTile('cognizant')}
-            className="col-span-full transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
-            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+            className="col-span-full transform-gpu will-change-[transform,opacity] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[40px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_0_4px_rgba(255,255,255,0.3)] hover:bg-white/15 hover:shadow-[0_16px_64px_rgba(255,255,255,0.1),inset_0_0_8px_rgba(255,255,255,0.5)] hover:-translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-3xl p-8 flex flex-col gap-4 text-left cursor-pointer"
           >
             <div className="flex justify-between items-start gap-4">
-              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Software Engineer & ML Specialist</h4>
+              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Software Engineer</h4>
               <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider shrink-0 mt-0.5">Aug 2020 — May 2022</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -352,11 +345,11 @@ const ContactWindow = memo(function ContactWindow() {
         </div>
       </div>
 
-      {/* 5. Apple News Style Expanded Interactive Overlay */}
+      {/* 5. Apple News Style Expanded Interactive Overlay (Semantic markup for Bots/ATS) */}
       {selectedTile && (() => {
         const data = tilesData[selectedTile as keyof typeof tilesData];
         return (
-          <div 
+          <article 
             className="ai-answer-zoom absolute inset-0 z-50 bg-[#0d0e15]/98 backdrop-blur-3xl p-12 overflow-y-auto text-left"
           >
             {/* Back button */}
@@ -372,8 +365,8 @@ const ContactWindow = memo(function ContactWindow() {
               {/* Header */}
               <div>
                 <span className="text-[10px] font-mono text-yellow-500 uppercase tracking-widest block mb-2">{data.date}</span>
-                <h2 className="text-[2.25rem] font-black text-white leading-tight tracking-tight">{data.title}</h2>
-                <h3 className="text-xl font-bold text-white/65 mt-1">{data.company}</h3>
+                <h3 className="text-[2.25rem] font-black text-white leading-tight tracking-tight">{data.title}</h3>
+                <h4 className="text-xl font-bold text-white/65 mt-1">{data.company}</h4>
               </div>
 
               {/* Memory Image (if milestone) */}
@@ -388,10 +381,10 @@ const ContactWindow = memo(function ContactWindow() {
                 {data.summary}
               </p>
 
-              {/* Detailed Bullet Points */}
+              {/* Detailed Bullet Points (Semantic list for ATS scrapers) */}
               <div className="mt-4">
                 <h4 className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-4">Core Work & Outcomes</h4>
-                <ul className="flex flex-col gap-3.5">
+                <ul className="flex flex-col gap-3.5 list-none pl-0">
                   {data.bullets.map((b, i) => (
                     <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-white/70">
                       <span className="text-yellow-500 select-none shrink-0 mt-0.5">✦</span>
@@ -415,7 +408,7 @@ const ContactWindow = memo(function ContactWindow() {
                 </div>
               )}
             </div>
-          </div>
+          </article>
         );
       })()}
     </div>
