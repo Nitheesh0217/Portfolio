@@ -435,7 +435,7 @@ export default function DesktopCanvas() {
           {activeProject ? (
             /* ── Zero-Bezel Panoramic Spatial Workspace ── */
             <div
-              className="flex flex-row items-center justify-center gap-8 animate-stage-in"
+              className="projects-spatial-zoom flex flex-row items-center justify-center gap-8 animate-stage-in"
               style={{
                 perspective: '3200px',
                 perspectiveOrigin: '50% 48%',
@@ -670,19 +670,21 @@ export default function DesktopCanvas() {
                     <span className="w-px h-4 bg-white/15 shrink-0" />
                   )}
 
-                  {/* GitHub button — icon + text */}
+                  {/* GitHub button — opens in new tab (GitHub blocks iframes) */}
                   {activeProject.github_url && (
-                    <button
-                      onClick={() => { setIframeUrl(activeProject.github_url!); setIframeLoading(true); setIframeBlocked(false); }}
+                    <a
+                      href={activeProject.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all hover:bg-white/10"
-                      style={{ color: iframeUrl === activeProject.github_url ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
+                      style={{ color: 'rgba(255,255,255,0.70)', textDecoration: 'none' }}
                     >
                       {/* GitHub SVG logo */}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
                       </svg>
-                      GitHub
-                    </button>
+                      GitHub ↗
+                    </a>
                   )}
                 </div>
 
@@ -850,10 +852,47 @@ export default function DesktopCanvas() {
                       </div>
                     </div>
                   ) : (
-                    <div className="mx-3 mt-3 shrink-0 px-4 py-3 rounded-2xl"
-                      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <span className="text-[8px] font-black uppercase tracking-[0.22em] text-violet-400">Live Telemetry</span>
-                      <p className="text-[11px] text-white/50 mt-1 leading-snug">{activeProject.title}</p>
+                    /* ── Project Identity Card (when no demo credentials) ── */
+                    <div className="mx-3 mt-3 shrink-0 rounded-2xl p-4 relative overflow-hidden"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(0,0,0,0.60) 60%, rgba(139,92,246,0.06) 100%)',
+                        border: '1px solid rgba(99,102,241,0.25)',
+                        borderTop: '1px solid rgba(139,92,246,0.40)',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.10)',
+                      }}>
+                      {/* Subtle gradient shimmer */}
+                      <div className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden">
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(115deg, transparent 20%, rgba(99,102,241,0.08) 50%, transparent 80%)', animation: 'holoSheen 4s ease-in-out infinite' }} />
+                      </div>
+                      {/* Category badge */}
+                      <div className="flex items-center justify-between mb-3 relative z-10">
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full" style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.30)' }}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                          <span className="text-[7px] font-black uppercase tracking-widest text-indigo-300">Production Live</span>
+                        </div>
+                        <span className="text-[7px] font-mono text-white/25">v1.0</span>
+                      </div>
+                      {/* Project title */}
+                      <p className="text-[13px] font-black text-white leading-tight mb-1 relative z-10">{activeProject.title}</p>
+                      <p className="text-[9px] text-white/40 leading-snug relative z-10 mb-3">{activeProject.subtitle || 'Full-stack production application'}</p>
+                      {/* Quick links */}
+                      <div className="flex gap-2 relative z-10">
+                        {activeProject.live_url && (
+                          <a href={activeProject.live_url} target="_blank" rel="noopener noreferrer"
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[8px] font-bold text-amber-300 hover:text-amber-200 transition-colors"
+                            style={{ background: 'rgba(251,191,36,0.10)', border: '1px solid rgba(251,191,36,0.25)', textDecoration: 'none' }}>
+                            <span className="w-1 h-1 rounded-full bg-amber-400" />Live ↗
+                          </a>
+                        )}
+                        {activeProject.github_url && (
+                          <a href={activeProject.github_url} target="_blank" rel="noopener noreferrer"
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[8px] font-bold text-violet-300 hover:text-violet-200 transition-colors"
+                            style={{ background: 'rgba(139,92,246,0.10)', border: '1px solid rgba(139,92,246,0.25)', textDecoration: 'none' }}>
+                            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                            Code ↗
+                          </a>
+                        )}
+                      </div>
                     </div>
                   )}
 
