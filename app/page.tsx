@@ -121,6 +121,50 @@ const DesktopBackground = memo(function DesktopBackground() {
 const ContactWindow = memo(function ContactWindow() {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
 
+  const [activeIntent, setActiveIntent] = useState<'job' | 'freelance' | 'networking'>('job');
+  const [draftText, setDraftText] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+  const [cardTilt, setCardTilt] = useState({ x: 0, y: 0 });
+
+  const TEMPLATES = {
+    job: `Hi Nitheesh, I was blown away by your spatial portfolio. We have a Senior Full Stack role at [Company] that fits your background in AI and React. Let's set up a call soon!`,
+    freelance: `Hi Nitheesh, I love your Liquid Glass spatial UI work. We have a project for a premium dashboard interface and want to discuss design & consulting rates.`,
+    networking: `Hi Nitheesh, your portfolio is outstanding. I'm also building in the AI/spatial space and would love to connect for a casual chat or virtual coffee to exchange ideas.`
+  };
+  
+  const SUBJECTS = {
+    job: 'Senior Software Engineer / AI Role Inquiry',
+    freelance: 'Freelance Design & Consulting Engagement',
+    networking: 'Spatial Computing & AI Networking'
+  };
+
+  useEffect(() => {
+    const template = TEMPLATES[activeIntent];
+    let idx = 0;
+    setDraftText('');
+    const timer = setInterval(() => {
+      setDraftText(template.substring(0, idx + 3));
+      idx += 3;
+      if (idx >= template.length) {
+        clearInterval(timer);
+      }
+    }, 12);
+    return () => clearInterval(timer);
+  }, [activeIntent]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (flipped) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientY - rect.top) / rect.height - 0.5;
+    const y = (e.clientX - rect.left) / rect.width - 0.5;
+    setCardTilt({ x: -x * 12, y: y * 12 });
+  };
+  
+  const handleMouseLeave = () => {
+    setCardTilt({ x: 0, y: 0 });
+  };
+
   const tilesData = {
     'kore-ai': {
       title: 'Full Stack Engineer',
@@ -348,58 +392,189 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Bottom Footer (Contact & Download) */}
-          <div className="col-span-full mt-12 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 pb-16">
-            <div className="text-left">
-              <h3 className="text-xl font-bold text-white tracking-tight">Reach Out</h3>
-              <p className="text-[12px] text-white/40 mt-1 max-w-[320px]">
-                Open for full-time roles, contract work, and interesting collaborations.
-              </p>
-              
-              {/* Direct Channel Pills */}
-              <div className="flex flex-wrap gap-2.5 mt-4 select-none">
-                <a 
-                  href="mailto:nitheeshd.17@gmail.com"
-                  onMouseEnter={playTick}
-                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
-                  style={{ textDecoration: 'none' }}
+          {/* Bottom Footer - Holographic Comm-Link Hub (3D Tilting / Flipping Smart Card) */}
+          <div className="col-span-full mt-12 pt-12 border-t border-white/10 flex flex-col items-center justify-center gap-6 pb-16 text-center select-none">
+            <h3 className="text-xl font-bold text-white tracking-tight">Holographic Comm-Link Hub</h3>
+            <p className="text-[12px] text-white/40 mt-1 max-w-[360px] leading-relaxed">
+              Select your inquiry intent below to draft an encrypted transmission, or view the digital business card.
+            </p>
+
+            <div 
+              className="relative w-full max-w-2xl h-[460px] mt-4"
+              style={{ perspective: '2000px' }}
+            >
+              <div 
+                className="w-full h-full relative transition-transform duration-700 ease-out transform-gpu cursor-default"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: `rotateY(${flipped ? 180 : 0}deg) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
+                }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* FRONT FACE: Comm-Link Drafting System */}
+                <div 
+                  className="absolute inset-0 w-full h-full rounded-3xl p-8 flex flex-col justify-between bg-[#0a0a0a]/60 backdrop-blur-3xl border border-white/20 shadow-[0_30px_70px_rgba(0,0,0,0.7),inset_0_0_8px_rgba(255,255,255,0.2)] text-left"
+                  style={{ transform: 'translateZ(0px)', backfaceVisibility: 'hidden', transformStyle: 'preserve-3d' }}
                 >
-                  ✉ Email
-                </a>
-                <a 
-                  href="https://linkedin.com/in/"
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onMouseEnter={playTick}
-                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
-                  style={{ textDecoration: 'none' }}
+                  {/* Top Header */}
+                  <div className="flex justify-between items-center select-none">
+                    <span className="text-[9px] font-black tracking-widest text-white/40 uppercase">COMM-LINK UPLINK v2.0</span>
+                    {/* Live Status indicator */}
+                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
+                      <span className="text-[8px] font-black text-emerald-400 tracking-[0.08em]">UPLINK ESTABLISHED / OPEN TO WORK</span>
+                    </div>
+                  </div>
+
+                  {/* Intent Selector Pills */}
+                  <div className="flex gap-2.5 justify-start my-1 select-none">
+                    {(['job', 'freelance', 'networking'] as const).map((intent) => {
+                      const label = intent === 'job' ? '💼 Job Opportunity' : intent === 'freelance' ? '🚀 Freelance Project' : '☕ Networking';
+                      const active = activeIntent === intent;
+                      return (
+                        <button
+                          key={intent}
+                          onMouseEnter={playTick}
+                          onClick={() => { playTick(); setActiveIntent(intent); }}
+                          className="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 cursor-pointer outline-none border-none"
+                          style={{
+                            background: active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.03)',
+                            border: `1px solid ${active ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.06)'}`,
+                            color: active ? '#ffffff' : 'rgba(255,255,255,0.45)',
+                            boxShadow: active ? '0 0 15px rgba(255,255,255,0.10)' : 'none'
+                          }}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Drafting Terminal Block */}
+                  <div className="bg-black/85 shadow-[inset_0_0_25px_rgba(0,0,0,0.95)] border border-white/10 rounded-xl p-5 font-mono text-[12px] text-green-400/90 h-[210px] relative overflow-hidden flex flex-col">
+                    {/* Clipboard copy icon */}
+                    <button
+                      onClick={() => {
+                        playTick();
+                        navigator.clipboard.writeText(TEMPLATES[activeIntent]);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 800);
+                      }}
+                      className={`absolute top-4 right-4 p-2 rounded-lg border transition-all duration-200 cursor-pointer ${
+                        copied ? 'scale-90 border-white bg-white text-black' : 'border-white/10 bg-white/5 text-white/50 hover:text-white hover:border-white/20'
+                      }`}
+                      title="Copy to Clipboard"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+
+                    <div className="flex-1 overflow-y-auto pr-8 text-left select-text scrollbar-none" style={{ scrollbarWidth: 'none' }}>
+                      <div className="text-white/25 text-[9px] mb-2 uppercase tracking-wider select-none font-sans font-bold">DRAFT TRANSMISSION PAYLOAD:</div>
+                      <p className="leading-relaxed whitespace-pre-wrap">{draftText}</p>
+                      <span className="w-2 h-4 bg-green-400 inline-block animate-pulse ml-0.5" />
+                    </div>
+                  </div>
+
+                  {/* Actions Row */}
+                  <div className="flex gap-4 items-center justify-between select-none">
+                    <a
+                      href={`mailto:nitheeshd.17@gmail.com?subject=${encodeURIComponent(SUBJECTS[activeIntent])}&body=${encodeURIComponent(TEMPLATES[activeIntent])}`}
+                      onMouseEnter={playTick}
+                      onClick={playWhoosh}
+                      className="flex-1 bg-white text-black font-extrabold text-xs py-3.5 px-6 rounded-full shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                      style={{ textDecoration: 'none' }}
+                    >
+                      Send Transmission ↗
+                    </a>
+                    <button
+                      onMouseEnter={playTick}
+                      onClick={() => { playWhoosh(); setFlipped(true); }}
+                      className="px-5 py-3.5 rounded-full text-xs font-bold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+                    >
+                      View Digital Card
+                    </button>
+                  </div>
+                </div>
+
+                {/* BACK FACE: SVG QR Code & Business Details */}
+                <div 
+                  className="absolute inset-0 w-full h-full rounded-3xl p-8 flex flex-col justify-between bg-[#0a0a0a]/60 backdrop-blur-3xl border border-white/20 shadow-[0_30px_70px_rgba(0,0,0,0.7),inset_0_0_8px_rgba(255,255,255,0.2)] text-left"
+                  style={{ transform: 'rotateY(180deg) translateZ(0px)', backfaceVisibility: 'hidden', transformStyle: 'preserve-3d' }}
                 >
-                  🔗 LinkedIn
-                </a>
-                <a 
-                  href="https://github.com/Nitheesh0217"
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onMouseEnter={playTick}
-                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
-                  style={{ textDecoration: 'none' }}
-                >
-                  💻 GitHub
-                </a>
+                  {/* Top Header */}
+                  <div className="flex justify-between items-center select-none">
+                    <span className="text-[9px] font-black tracking-widest text-white/40 uppercase">DIGITAL V-CARD v2.0</span>
+                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="text-[8px] font-black text-emerald-400 tracking-[0.08em]">SECURE DIRECT UPLINK</span>
+                    </div>
+                  </div>
+
+                  {/* Info Panel with SVG QR */}
+                  <div className="flex flex-row items-center justify-center gap-10 my-3">
+                    {/* SVG QR Code */}
+                    <div className="w-36 h-36 bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-center shadow-lg relative group overflow-hidden shrink-0 select-none">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none" />
+                      <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" className="text-white/80">
+                        <rect x="5" y="5" width="22" height="22" strokeWidth="4.5" rx="2" />
+                        <rect x="11" y="11" width="10" height="10" fill="currentColor" />
+                        <rect x="73" y="5" width="22" height="22" strokeWidth="4.5" rx="2" />
+                        <rect x="79" y="11" width="10" height="10" fill="currentColor" />
+                        <rect x="5" y="73" width="22" height="22" strokeWidth="4.5" rx="2" />
+                        <rect x="11" y="79" width="10" height="10" fill="currentColor" />
+                        <path d="M 38 12 H 45 M 52 12 H 65 M 38 20 H 55 M 38 28 H 48 M 58 28 H 68 M 12 38 H 28 M 38 38 H 42 M 52 38 H 62 M 78 38 H 88 M 12 48 H 22 M 38 48 H 52 M 62 48 H 72 M 82 48 H 88 M 12 58 H 32 M 42 58 H 58 M 72 58 H 82 M 12 68 H 28 M 38 68 H 48 M 58 68 H 68 M 38 78 H 58 M 72 78 H 88 M 38 88 H 48 M 52 88 H 68 M 78 88 H 88" strokeWidth="4.5" strokeLinecap="square" />
+                      </svg>
+                    </div>
+
+                    {/* Direct Contact Details */}
+                    <div className="flex flex-col gap-4 text-left">
+                      <div>
+                        <div className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">Direct Line</div>
+                        <a href="tel:+15615550199" onMouseEnter={playTick} className="text-base font-bold text-white hover:text-yellow-500 transition-colors" style={{ textDecoration: 'none' }}>
+                          +1 (561) 555-0199
+                        </a>
+                      </div>
+                      <div>
+                        <div className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">Direct Mail</div>
+                        <a href="mailto:nitheeshd.17@gmail.com" onMouseEnter={playTick} className="text-base font-bold text-white hover:text-yellow-500 transition-colors" style={{ textDecoration: 'none' }}>
+                          nitheeshd.17@gmail.com
+                        </a>
+                      </div>
+                      <div>
+                        <div className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">Office Location</div>
+                        <span className="text-sm font-semibold text-white/70">Florida, United States</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions Row */}
+                  <div className="flex gap-4 items-center justify-between select-none">
+                    <button
+                      onMouseEnter={playTick}
+                      onClick={() => { playWhoosh(); setFlipped(false); }}
+                      className="flex-1 bg-white/10 hover:bg-white/15 text-white border border-white/25 py-3.5 px-6 rounded-full transition-all cursor-pointer text-xs font-bold"
+                    >
+                      Flip Back to Comm-Link
+                    </button>
+                    <a
+                      href="/resume.pdf"
+                      download
+                      onMouseEnter={playTick}
+                      className="bg-white text-black font-extrabold text-xs py-3.5 px-6 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <Download className="w-3.5 h-3.5 text-black" />
+                      Download CV
+                    </a>
+                  </div>
+                </div>
+
               </div>
             </div>
-
-            {/* Primary Action Button (Download Resume) */}
-            <a 
-              href="/resume.pdf"
-              download
-              onMouseEnter={playTick}
-              className="bg-white text-black font-extrabold text-base py-4 px-8 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.22)] hover:scale-105 transition-transform flex items-center justify-center gap-3 select-none active:scale-[0.98]"
-              style={{ textDecoration: 'none' }}
-            >
-              <Download className="w-5 h-5 text-black" />
-              Download Full Resume
-            </a>
           </div>
 
         </div>
