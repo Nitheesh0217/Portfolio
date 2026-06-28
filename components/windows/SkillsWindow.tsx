@@ -27,6 +27,118 @@ function categorize(skill: string): Category {
   return 'backend';
 }
 
+function getTechLogoSvg(name: string, color: string) {
+  const norm = name.toLowerCase();
+  
+  if (norm.includes('react')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#61dafb" strokeWidth="1.8">
+        <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(30,12,12)"/>
+        <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(90,12,12)"/>
+        <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(150,12,12)"/>
+        <circle cx="12" cy="12" r="1.8" fill="#61dafb"/>
+      </svg>
+    );
+  }
+  if (norm.includes('typescript') || norm === 'ts') {
+    return (
+      <svg className="w-7 h-7 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#3178c6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <path d="M8 8h5M10.5 8v8M15.5 11.5c.5-.5 1-.5 1.5 0 .5.5.5 1.5 0 2s-1 .5-1.5 0v-2.5" />
+      </svg>
+    );
+  }
+  if (norm.includes('javascript') || norm === 'js') {
+    return (
+      <svg className="w-7 h-7 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#f7df1e" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <path d="M10 15c.5.5 1.5.5 2 0s.5-1.5 0-2-1.5-.5-2-1c-.5-.5-.5-1.5 0-2s1.5-.5 2 0M16.5 10v4c0 .8-.5 1.5-1.5 1.5" />
+      </svg>
+    );
+  }
+  if (norm.includes('python')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#3776ab" strokeWidth="1.8">
+        <path d="M12 2C7.5 2 7 3.5 7 5.5v1.5h5v1H5.5C3.5 8 2 9.5 2 11.5c0 2.5 1.5 3 3 3h1.5v-1.5c0-2.5 2-4.5 4.5-4.5h3c1.5 0 3-1 3-3V5.5c0-2-1.5-3.5-5-3.5z" />
+        <path d="M12 22C16.5 22 17 20.5 17 18.5v-1.5h-5v-1h6.5c2 0 3.5-1.5 3.5-3.5c0-2.5-1.5-3-3-3h-1.5v1.5c0 2.5-2 4.5-4.5 4.5h-3c-1.5 0-3 1-3 3v1.5c0 2 1.5 3.5 5 3.5z" />
+      </svg>
+    );
+  }
+  if (norm.includes('aws') || norm.includes('amazon')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#ff9900" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 4L3 8l9 4 9-4-9-4z" />
+        <path d="M3 12l9 4 9-4" />
+        <path d="M3 16l9 4 9-4" />
+      </svg>
+    );
+  }
+  if (norm.includes('postgres') || norm.includes('sql') || norm.includes('neon') || norm.includes('snowflake') || norm.includes('database')) {
+    return (
+      <svg className="w-7 h-7 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#336791" strokeWidth="2">
+        <ellipse cx="12" cy="6" rx="8" ry="3"/>
+        <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" />
+        <path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+      </svg>
+    );
+  }
+  if (norm.includes('docker') || norm.includes('kubernetes')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#2496ed" strokeWidth="1.8" strokeLinecap="round">
+        <rect x="4" y="6" width="3.5" height="3.5" rx="0.5"/>
+        <rect x="9" y="6" width="3.5" height="3.5" rx="0.5"/>
+        <rect x="14" y="6" width="3.5" height="3.5" rx="0.5"/>
+        <rect x="4" y="11" width="3.5" height="3.5" rx="0.5"/>
+        <rect x="9" y="11" width="3.5" height="3.5" rx="0.5"/>
+        <rect x="14" y="11" width="3.5" height="3.5" rx="0.5"/>
+        <path d="M4 18c0 1.5 2 2 8 2s8-0.5 8-2v-2H4v2z" />
+      </svg>
+    );
+  }
+  if (norm.includes('openai') || norm.includes('gpt') || norm.includes('claude') || norm.includes('anthropic') || norm.includes('ai') || norm.includes('rag') || norm.includes('langchain') || norm.includes('pinecone') || norm.includes('nlu')) {
+    return (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#10a37f" strokeWidth="1.8">
+        <circle cx="12" cy="12" r="9" strokeDasharray="3 3"/>
+        <path d="M12 3v18M3 12h18 M7.5 7.5l9 9 M7.5 16.5l9-9" strokeLinecap="round" />
+        <circle cx="12" cy="12" r="3" fill="#0d0e15" stroke="#10a37f" strokeWidth="1.5" />
+      </svg>
+    );
+  }
+  if (norm.includes('spring') || norm.includes('java')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#6db33f" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2C6.5 2 2 6.5 2 12c0 4.5 3 8 7 9.5L12 22l3-0.5c4-1.5 7-5 7-9.5 0-5.5-4.5-10-10-10z" />
+        <path d="M9 12l2 2 4-4" />
+      </svg>
+    );
+  }
+  if (norm.includes('node') || norm.includes('express')) {
+    return (
+      <svg className="w-8 h-8 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#68a063" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" />
+        <path d="M12 22V12 M4 7l8 5 8-5" />
+      </svg>
+    );
+  }
+  if (norm.includes('css') || norm.includes('tailwind') || norm.includes('html') || norm.includes('sass')) {
+    return (
+      <svg className="w-7 h-7 drop-shadow-md" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5" />
+        <path d="M2 12l10 5 10-5" />
+      </svg>
+    );
+  }
+  
+  // Default Generic node
+  return (
+    <svg className="w-7 h-7 drop-shadow-md text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M5.5 16.5l2-2M16.5 7.5l2-2" />
+    </svg>
+  );
+}
+
 const playTick = () => {
   if (typeof window === 'undefined') return;
   try {
@@ -241,28 +353,46 @@ export const SkillsWindow = memo(function SkillsWindow({ projects }: { projects:
                   style={{
                     left: '50%',
                     top: '50%',
-                    marginLeft: '-45px', // offset half width
-                    marginTop: '-15px', // offset half height
+                    marginLeft: '-32px', // offset half width
+                    marginTop: '-32px',  // offset half height
                     transform: `translate3d(${node.x}px, ${node.y}px, ${node.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg) scale(${scale})`,
                     transformStyle: 'preserve-3d',
                     zIndex,
                     opacity
                   }}
                 >
+                  {/* Liquid Glass Orb Container */}
                   <div 
-                    className="px-3.5 py-1.5 rounded-full border text-[11px] font-extrabold flex items-center gap-1.5 whitespace-nowrap shadow-lg cursor-pointer"
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden group border cursor-pointer transition-all duration-300"
                     style={{
-                      background: isHov 
-                        ? `linear-gradient(135deg, ${color}22, ${color}11)` 
-                        : 'rgba(255,255,255,0.06)',
-                      borderColor: isHov ? color : 'rgba(255,255,255,0.15)',
-                      boxShadow: isHov ? `0 0 25px ${color}40, inset 0 0 6px rgba(255,255,255,0.2)` : '0 4px 12px rgba(0,0,0,0.15)',
-                      color: isHov ? '#ffffff' : 'rgba(255,255,255,0.85)',
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.05) 100%)',
+                      borderColor: isHov ? color : 'rgba(255,255,255,0.25)',
+                      boxShadow: isHov 
+                        ? `0 15px 40px ${color}45, inset 0 0 15px rgba(255,255,255,0.35)` 
+                        : '0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.20)',
                     }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
-                    {node.name}
+                    {/* Background Radial Glow Effect matching tech theme */}
+                    <div 
+                      className="absolute inset-0 rounded-full blur-xl opacity-35 group-hover:opacity-65 transition-opacity pointer-events-none"
+                      style={{ background: `radial-gradient(circle, ${color} 0%, transparent 70%)` }}
+                    />
+                    
+                    {/* Centered Logo Content */}
+                    <div className="relative z-10 w-8 h-8 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                      {getTechLogoSvg(node.name, color)}
+                    </div>
                   </div>
+
+                  {/* Hover Caption Label */}
+                  {isHov && (
+                    <div 
+                      className="absolute top-full mt-2.5 left-1/2 -translate-x-1/2 bg-black/90 text-white font-mono text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md border border-white/10 shadow-xl pointer-events-none whitespace-nowrap z-50 animate-fade-in"
+                      style={{ transform: 'translateZ(20px)' }}
+                    >
+                      {node.name}
+                    </div>
+                  )}
                 </div>
               );
             })}
