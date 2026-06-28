@@ -7,7 +7,7 @@ import {
   useReducer, useRef, useCallback, useEffect,
   useMemo, memo, useState,
 } from 'react';
-import { Mail, Copy, Check, Lock, RefreshCw, MessageSquare, Briefcase, User, Settings } from 'lucide-react';
+import { Mail, Copy, Check, Lock, RefreshCw, MessageSquare, Briefcase, User, Settings, ArrowLeft, Download } from 'lucide-react';
 
 import { WindowId, WindowRecord, WINDOW_IDS } from '@/types/windows';
 import {
@@ -68,9 +68,77 @@ const DesktopBackground = memo(function DesktopBackground() {
 // ContactWindow
 // ─────────────────────────────────────────────────────────────────────────────
 const ContactWindow = memo(function ContactWindow() {
+  const [selectedTile, setSelectedTile] = useState<string | null>(null);
+
+  const tilesData = {
+    'kore-ai': {
+      title: 'Full Stack Engineer',
+      company: 'Kore.ai',
+      date: 'Jan 2024 — Present',
+      summary: 'Led development of enterprise conversational AI models, NLP retraining pipeline, and Spring Boot webhook deduplication middleware.',
+      tech: ['Next.js', 'Java', 'Spring Boot', 'Redis', 'Kore.ai', 'NLP', 'PostgreSQL'],
+      bullets: [
+        'Designed and implemented NLP intent retraining architectures matching enterprise Kore.ai dialogue graphs, optimizing intent classification precision.',
+        'Engineered Spring Boot webhook deduplication interceptors backed by Redis, eliminating database race conditions on concurrent event broadcasts.',
+        'Built responsive Next.js analytical dashboards displaying conditioning logs, user flows, and KPI metrics.',
+        'Authored robust SQL migrations and relational schema partitions in PostgreSQL to guarantee data pipeline integrity.'
+      ]
+    },
+    'citrix': {
+      title: 'Senior Full Stack Developer (RAG)',
+      company: 'Citrix',
+      date: 'Jun 2022 — Dec 2023',
+      summary: 'Engineered RAG pipelines for Citrix knowledge base search indexing 40k+ articles. Optimized vector retrieval with Pinecone.',
+      tech: ['Python', 'LangChain', 'Pinecone', 'OpenAI', 'React', 'AWS ECS'],
+      bullets: [
+        'Built and optimized RAG (Retrieval-Augmented Generation) pipelines searching over 40k internal Citrix articles using Pinecone and LangChain.',
+        'Implemented citation validation validators that parsed bracketed references [Source X] in real-time, reducing LLM hallucination by 98%.',
+        'Containerized and served LLM routing APIs on AWS ECS utilizing Docker and Flask.',
+        'Designed and deployed custom workflow managers to synchronize document vector embeddings with Pinecone indexes.'
+      ]
+    },
+    'cognizant': {
+      title: 'Software Engineer & ML Specialist',
+      company: 'Cognizant',
+      date: 'Aug 2020 — May 2022',
+      summary: 'Trained and deployed random forest machine learning models for patient readmission prediction. Built high-performance ETL pipelines.',
+      tech: ['Scikit-Learn', 'Flask', 'PostgreSQL', 'Docker', 'AWS'],
+      bullets: [
+        'Developed and trained scikit-learn Random Forest classifiers to predict patient readmissions, processing 15k+ clinical records.',
+        'Built robust ETL data ingestion pipelines utilizing Python, pandas, and PostgreSQL.',
+        'Maintained and optimized database queries, reducing data warehouse sync times by 35%.',
+        'Managed deployments on AWS and containerized core microservices.'
+      ]
+    },
+    'fau-grad': {
+      title: 'M.S. Computer Science',
+      company: 'Florida Atlantic University',
+      date: 'Graduated 2020',
+      summary: 'Specialized in Machine Learning, advanced databases, and cloud systems engineering.',
+      image: '/fau_graduation.png',
+      bullets: [
+        'Master of Science degree focusing on computer science foundations and artificial intelligence.',
+        'Coursework: Advanced Machine Learning, Cloud Computing, Database Systems, Analysis of Algorithms.',
+        'Maintained a high GPA and conducted research projects on predictive modeling.'
+      ]
+    },
+    'fau-ta': {
+      title: 'Teaching Assistant',
+      company: 'Florida Atlantic University',
+      date: '2019 — 2020',
+      summary: 'Assisted professors in software engineering principles, databases, and Python data structures.',
+      image: '/teaching_assistant.jpg',
+      bullets: [
+        'Guided undergraduate students through lab assignments covering Python programming and database architectures.',
+        'Graded coursework, held weekly office hours, and managed recitation sessions for 60+ students.',
+        'Collaborated with computer science department faculty to upgrade curriculum lab material.'
+      ]
+    }
+  };
+
   return (
-    <div className="flex-1 w-full h-full flex flex-row p-12 gap-12 relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem]">
-      {/* 1. Detached Dock (Far Left Side, completely breakout) */}
+    <div className="flex-1 w-full h-full relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden">
+      {/* 1. Detached Dock (Far Left Side, completely breakout relative to main window) */}
       <div 
         className="absolute -left-20 top-1/2 -translate-y-1/2 z-50 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
       >
@@ -94,83 +162,35 @@ const ContactWindow = memo(function ContactWindow() {
         Open to work
       </div>
 
-      {/* 3. Left Pane (40% width) - Sticky Identity & Contact */}
-      <div className="w-[38%] pl-16 flex flex-col justify-between h-full select-text z-20">
-        <div className="flex flex-col">
-          <h1 className="text-white font-extrabold text-5xl leading-[1.1] tracking-tight">
-            Full Stack & AI Engineer. Architecting intelligent systems.
-          </h1>
-          <p className="text-[13px] leading-relaxed text-white/50 max-w-[340px] mt-6">
-            RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
-          </p>
-        </div>
-
-        {/* Direct Channels Widget */}
-        <div 
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4 w-full"
-          style={{ backdropFilter: 'blur(20px)' }}
-        >
-          <div>
-            <h3 className="text-[14px] font-black text-white tracking-tight">Direct Channels</h3>
-            <p className="text-[10px] mt-0.5 text-white/35">Fastest way to reach me.</p>
-          </div>
-
-          <div className="flex flex-col gap-2.5">
-            <a
-              href="mailto:nitheeshd.17@gmail.com"
-              className="flex items-center justify-center gap-2.5 w-full py-3 rounded-xl text-[13px] font-extrabold transition-all active:scale-[0.98] bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_8px_24px_rgba(234,179,8,0.25)] hover:shadow-[0_8px_28px_rgba(234,179,8,0.4)]"
-              style={{ textDecoration: 'none' }}
-            >
-              <Mail className="w-4 h-4" />
-              nitheeshd.17@gmail.com
-            </a>
-            <div className="flex gap-2">
-              <a
-                href="https://linkedin.com/in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-[12px] font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
-                style={{ textDecoration: 'none' }}
-              >
-                LinkedIn ↗
-              </a>
-              <a
-                href="https://github.com/Nitheesh0217"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-[12px] font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
-                style={{ textDecoration: 'none' }}
-              >
-                GitHub ↗
-              </a>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-indigo-500/15 shrink-0 select-none">
-              <span className="text-[13px]">👋</span>
-            </div>
-            <div>
-              <p className="text-[11px] font-bold text-white/80">Available for freelance</p>
-              <p className="text-[10px] mt-0.5 text-white/30">STEM OPT · Miramar, FL · Remote-first</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Right Pane (60% width) - Mixed-Media VisionOS News Feed */}
-      <div className="flex-1 min-w-0 h-full relative z-20">
-        <div 
-          className="grid grid-cols-2 gap-6 overflow-y-auto h-full pr-4 pb-20 pt-6 select-text scrollbar-none"
-          style={{
-            scrollbarWidth: 'none',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
-          }}
-        >
-          {/* Kore.ai Card (col-span-2) */}
+      {/* 3. Main Scrollable Container */}
+      <div 
+        className={`w-full h-full pr-4 select-text scrollbar-none ${selectedTile ? 'overflow-hidden' : 'overflow-y-auto'}`}
+        style={{
+          scrollbarWidth: 'none',
+          WebkitMaskImage: selectedTile ? 'none' : 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+          maskImage: selectedTile ? 'none' : 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
+        }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-12 pt-16">
+          
+          {/* Tile 1: Hero Identity (Full Width, col-span-full) */}
           <div 
-            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
+            className="col-span-full bg-white/5 border border-white/10 rounded-3xl p-10 flex flex-col gap-6 relative shadow-lg cursor-default select-text"
+            style={{ backdropFilter: 'blur(20px)' }}
+          >
+            <h1 className="text-white font-extrabold text-[2.85rem] md:text-[3.5rem] leading-[1.08] tracking-tight">
+              Full Stack & AI Engineer.<br />
+              <span className="text-white/40">Architecting intelligent systems.</span>
+            </h1>
+            <p className="text-[13.5px] leading-relaxed text-white/50 max-w-[540px]">
+              RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
+            </p>
+          </div>
+
+          {/* Tile 2: Kore.ai (col-span-2) */}
+          <div 
+            onClick={() => setSelectedTile('kore-ai')}
+            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
@@ -181,11 +201,11 @@ const ContactWindow = memo(function ContactWindow() {
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
               <span className="text-[11px] font-black uppercase tracking-wider text-yellow-500">Kore.ai</span>
             </div>
-            <p className="text-[12px] leading-relaxed text-white/70">
-              Led development of enterprise conversational AI models, NLP retraining pipeline, and Spring Boot webhook deduplication middleware. Implemented Redis-backed webhook idempotency mechanisms resolving concurrent event race conditions.
+            <p className="text-[12px] leading-relaxed text-white/60">
+              {tilesData['kore-ai'].summary}
             </p>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {['Next.js', 'Java', 'Spring Boot', 'Redis', 'Kore.ai', 'NLP', 'PostgreSQL'].map(t => (
+            <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+              {tilesData['kore-ai'].tech.map(t => (
                 <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
                   {t}
                 </span>
@@ -193,9 +213,10 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Visual Milestone: FAU Graduation (col-span-1) */}
+          {/* Tile 4: FAU Graduation (col-span-1, Square) */}
           <div 
-            className="col-span-1 relative overflow-hidden rounded-2xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-transform"
+            onClick={() => setSelectedTile('fau-grad')}
+            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
               src="/fau_graduation.png" 
@@ -204,14 +225,15 @@ const ContactWindow = memo(function ContactWindow() {
             />
             <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/95 via-black/45 to-transparent p-6 flex flex-col justify-end text-left select-none">
               <span className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Academic Milestone</span>
-              <h4 className="text-[13px] font-extrabold text-white tracking-tight leading-snug">FAU Graduation</h4>
+              <h4 className="text-[14px] font-extrabold text-white tracking-tight leading-snug">FAU Graduation</h4>
               <p className="text-[10px] text-white/55 mt-0.5">M.S. Computer Science</p>
             </div>
           </div>
 
-          {/* Visual Milestone: Teaching Assistant (col-span-1) */}
+          {/* Tile 5: Teaching Assistant (col-span-1, Square) */}
           <div 
-            className="col-span-1 relative overflow-hidden rounded-2xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-transform"
+            onClick={() => setSelectedTile('fau-ta')}
+            className="col-span-1 relative overflow-hidden rounded-3xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-[transform,opacity] cursor-pointer"
           >
             <img 
               src="/teaching_assistant.jpg" 
@@ -220,14 +242,15 @@ const ContactWindow = memo(function ContactWindow() {
             />
             <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/95 via-black/45 to-transparent p-6 flex flex-col justify-end text-left select-none">
               <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 mb-1">Academic Leadership</span>
-              <h4 className="text-[13px] font-extrabold text-white tracking-tight leading-snug">Teaching Assistant</h4>
+              <h4 className="text-[14px] font-extrabold text-white tracking-tight leading-snug">Teaching Assistant</h4>
               <p className="text-[10px] text-white/55 mt-0.5">FAU Computer Science Dept.</p>
             </div>
           </div>
 
-          {/* Citrix Card (col-span-2) */}
+          {/* Tile 3: Citrix (col-span-2) */}
           <div 
-            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
+            onClick={() => setSelectedTile('citrix')}
+            className="col-span-1 md:col-span-2 transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
@@ -238,11 +261,11 @@ const ContactWindow = memo(function ContactWindow() {
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               <span className="text-[11px] font-black uppercase tracking-wider text-cyan-400">Citrix</span>
             </div>
-            <p className="text-[12px] leading-relaxed text-white/70">
-              Engineered RAG pipelines for Citrix knowledge base search indexing 40k+ articles. Optimized vector retrieval with Pinecone and implemented Regex-based bracket citation validation to prevent LLM hallucinations.
+            <p className="text-[12px] leading-relaxed text-white/60">
+              {tilesData['citrix'].summary}
             </p>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {['Python', 'LangChain', 'Pinecone', 'OpenAI', 'React', 'AWS ECS'].map(t => (
+            <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+              {tilesData['citrix'].tech.map(t => (
                 <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
                   {t}
                 </span>
@@ -250,9 +273,10 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Cognizant Card (col-span-2) */}
+          {/* Tile 6: Cognizant (col-span-full) */}
           <div 
-            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
+            onClick={() => setSelectedTile('cognizant')}
+            className="col-span-full transform-gpu will-change-[transform,opacity] bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-4 text-left cursor-pointer"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
@@ -263,11 +287,11 @@ const ContactWindow = memo(function ContactWindow() {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">Cognizant</span>
             </div>
-            <p className="text-[12px] leading-relaxed text-white/70">
-              Trained and deployed random forest machine learning models for patient readmission prediction. Built high-performance ETL data pipelines, processing 15k+ clinical records.
+            <p className="text-[12px] leading-relaxed text-white/60">
+              {tilesData['cognizant'].summary}
             </p>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {['Scikit-Learn', 'Flask', 'PostgreSQL', 'Docker', 'AWS'].map(t => (
+            <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+              {tilesData['cognizant'].tech.map(t => (
                 <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
                   {t}
                 </span>
@@ -275,8 +299,125 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
+          {/* Bottom Footer (Contact & Download) */}
+          <div className="col-span-full mt-12 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 pb-16">
+            <div className="text-left">
+              <h3 className="text-xl font-bold text-white tracking-tight">Reach Out</h3>
+              <p className="text-[12px] text-white/40 mt-1 max-w-[320px]">
+                Open for full-time roles, contract work, and interesting collaborations.
+              </p>
+              
+              {/* Direct Channel Pills */}
+              <div className="flex flex-wrap gap-2.5 mt-4 select-none">
+                <a 
+                  href="mailto:nitheeshd.17@gmail.com"
+                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                  style={{ textDecoration: 'none' }}
+                >
+                  ✉ Email
+                </a>
+                <a 
+                  href="https://linkedin.com/in/"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                  style={{ textDecoration: 'none' }}
+                >
+                  🔗 LinkedIn
+                </a>
+                <a 
+                  href="https://github.com/Nitheesh0217"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full text-[11px] font-semibold text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                  style={{ textDecoration: 'none' }}
+                >
+                  💻 GitHub
+                </a>
+              </div>
+            </div>
+
+            {/* Primary Action Button (Download Resume) */}
+            <a 
+              href="/resume.pdf"
+              download
+              className="bg-white text-black font-extrabold text-base py-4 px-8 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.22)] hover:scale-105 transition-transform flex items-center justify-center gap-3 select-none active:scale-[0.98]"
+              style={{ textDecoration: 'none' }}
+            >
+              <Download className="w-5 h-5 text-black" />
+              Download Full Resume
+            </a>
+          </div>
+
         </div>
       </div>
+
+      {/* 5. Apple News Style Expanded Interactive Overlay */}
+      {selectedTile && (() => {
+        const data = tilesData[selectedTile as keyof typeof tilesData];
+        return (
+          <div 
+            className="ai-answer-zoom absolute inset-0 z-50 bg-[#0d0e15]/98 backdrop-blur-3xl p-12 overflow-y-auto text-left"
+          >
+            {/* Back button */}
+            <button 
+              onClick={() => setSelectedTile(null)}
+              className="text-white/60 hover:text-white flex items-center gap-2 mb-8 cursor-pointer select-none border-none bg-transparent outline-none font-bold text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>← Back</span>
+            </button>
+
+            <div className="max-w-3xl mx-auto flex flex-col gap-6">
+              {/* Header */}
+              <div>
+                <span className="text-[10px] font-mono text-yellow-500 uppercase tracking-widest block mb-2">{data.date}</span>
+                <h2 className="text-[2.25rem] font-black text-white leading-tight tracking-tight">{data.title}</h2>
+                <h3 className="text-xl font-bold text-white/65 mt-1">{data.company}</h3>
+              </div>
+
+              {/* Memory Image (if milestone) */}
+              {'image' in data && data.image && (
+                <div className="w-full h-[320px] rounded-3xl overflow-hidden border border-white/10 my-4 shadow-2xl">
+                  <img src={data.image} alt={data.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              {/* Summary / Description */}
+              <p className="text-[14px] leading-relaxed text-white/80 border-l-2 border-yellow-500 pl-4 py-1">
+                {data.summary}
+              </p>
+
+              {/* Detailed Bullet Points */}
+              <div className="mt-4">
+                <h4 className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-4">Core Work & Outcomes</h4>
+                <ul className="flex flex-col gap-3.5">
+                  {data.bullets.map((b, i) => (
+                    <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-white/70">
+                      <span className="text-yellow-500 select-none shrink-0 mt-0.5">✦</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Technologies Stack */}
+              {'tech' in data && data.tech && (
+                <div className="mt-6 pt-6 border-t border-white/5">
+                  <h4 className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-3">Technologies Leveraged</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {data.tech.map(t => (
+                      <span key={t} className="bg-white/5 border border-white/10 text-white/70 px-3.5 py-1 rounded-full text-xs font-mono">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 });
