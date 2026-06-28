@@ -403,7 +403,16 @@ export default function DesktopCanvas() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden" style={{ background: '#000000' }}>
+    <div
+      style={{
+        zoom: 0.80,
+        width: '125vw',
+        height: '125vh',
+        overflow: 'hidden',
+        background: '#000000',
+        position: 'relative',
+      }}
+    >
       <BackgroundImage />
       <DesktopBackground />
       <MenuBar onOpenAll={openAll} onCloseAll={closeAll} />
@@ -670,12 +679,12 @@ export default function DesktopCanvas() {
                     <span className="w-px h-4 bg-white/15 shrink-0" />
                   )}
 
-                  {/* GitHub button — loads in iframe; Frame Protection screen shows if blocked */}
+                  {/* GitHub button — immediately shows premium blocked card (GitHub blocks all iframes) */}
                   {activeProject.github_url && (
                     <button
-                      onClick={() => { setIframeUrl(activeProject.github_url!); setIframeLoading(true); setIframeBlocked(false); }}
+                      onClick={() => { setIframeBlocked(true); setIframeLoading(false); setIframeUrl(''); }}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all hover:bg-white/10"
-                      style={{ color: iframeUrl === activeProject.github_url ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
+                      style={{ color: iframeBlocked ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
                     >
                       {/* GitHub SVG logo */}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

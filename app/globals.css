@@ -45,12 +45,6 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
   height: 100%;
-  zoom: 0.80;
-}
-
-/* Projects panoramic workspace gets tighter zoom for spatial depth */
-.projects-spatial-zoom {
-  zoom: 0.67;
 }
 
 /* Thin scrollbar for all overflow containers */
