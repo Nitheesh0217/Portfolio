@@ -70,7 +70,7 @@ const DesktopBackground = memo(function DesktopBackground() {
 const ContactWindow = memo(function ContactWindow() {
   return (
     <div className="flex-1 w-full h-full flex flex-row p-12 gap-12 relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem]">
-      {/* 1. Detached Dock (Breakout floating left nav pill) */}
+      {/* 1. Detached Dock (Far Left Side, completely breakout) */}
       <div 
         className="fixed left-8 top-1/2 -translate-y-1/2 z-50 bg-black/45 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
       >
@@ -97,10 +97,9 @@ const ContactWindow = memo(function ContactWindow() {
       {/* 3. Left Pane (40% width) - Sticky Identity & Contact */}
       <div className="w-[38%] flex flex-col justify-between h-full select-text z-20">
         <div className="flex flex-col gap-6">
-          <h2 className="text-white font-extrabold text-[40px] leading-[1.1] tracking-tight">
-            AI Engineering.<br />
-            Data pipelines.<br />
-            Always shipped.
+          <h2 className="text-white font-extrabold text-[3.25rem] leading-[1.08] tracking-tight">
+            Full Stack &<br />AI Engineer.<br />
+            <span className="text-white/40">Architecting intelligent systems.</span>
           </h2>
           <p className="text-[13px] leading-relaxed text-white/50 max-w-[340px]">
             RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
@@ -160,19 +159,19 @@ const ContactWindow = memo(function ContactWindow() {
         </div>
       </div>
 
-      {/* 4. Right Pane (60% width) - Spatial Rolodex Timeline */}
+      {/* 4. Right Pane (60% width) - Mixed-Media VisionOS News Feed */}
       <div className="flex-1 min-w-0 h-full relative z-20">
         <div 
-          className="flex flex-col gap-6 overflow-y-auto h-full pr-4 pb-12 pt-6 select-text scrollbar-none"
+          className="grid grid-cols-2 gap-6 overflow-y-auto h-full pr-4 pb-20 pt-6 select-text scrollbar-none"
           style={{
             scrollbarWidth: 'none',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
             maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
           }}
         >
-          {/* Kore.ai */}
+          {/* Kore.ai Card (col-span-2) */}
           <div 
-            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
@@ -195,9 +194,41 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Citrix */}
+          {/* Visual Milestone: FAU Graduation (col-span-1) */}
           <div 
-            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            className="col-span-1 relative overflow-hidden rounded-2xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-transform"
+          >
+            <img 
+              src="/fau_graduation.png" 
+              alt="FAU Graduation"
+              className="object-cover w-full h-full opacity-85 group-hover:scale-105 transition-transform duration-500" 
+            />
+            <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/95 via-black/45 to-transparent p-6 flex flex-col justify-end text-left select-none">
+              <span className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Academic Milestone</span>
+              <h4 className="text-[13px] font-extrabold text-white tracking-tight leading-snug">FAU Graduation</h4>
+              <p className="text-[10px] text-white/55 mt-0.5">M.S. Computer Science</p>
+            </div>
+          </div>
+
+          {/* Visual Milestone: Teaching Assistant (col-span-1) */}
+          <div 
+            className="col-span-1 relative overflow-hidden rounded-2xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-transform"
+          >
+            <img 
+              src="/teaching_assistant.png" 
+              alt="Teaching Assistant at FAU"
+              className="object-cover w-full h-full opacity-85 group-hover:scale-105 transition-transform duration-500" 
+            />
+            <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/95 via-black/45 to-transparent p-6 flex flex-col justify-end text-left select-none">
+              <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 mb-1">Academic Leadership</span>
+              <h4 className="text-[13px] font-extrabold text-white tracking-tight leading-snug">Teaching Assistant</h4>
+              <p className="text-[10px] text-white/55 mt-0.5">FAU Computer Science Dept.</p>
+            </div>
+          </div>
+
+          {/* Citrix Card (col-span-2) */}
+          <div 
+            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
@@ -220,9 +251,9 @@ const ContactWindow = memo(function ContactWindow() {
             </div>
           </div>
 
-          {/* Cognizant */}
+          {/* Cognizant Card (col-span-2) */}
           <div 
-            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            className="col-span-2 transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left animate-stage-in"
             style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
           >
             <div className="flex justify-between items-start gap-4">
