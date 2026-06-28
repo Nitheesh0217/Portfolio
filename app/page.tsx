@@ -670,21 +670,19 @@ export default function DesktopCanvas() {
                     <span className="w-px h-4 bg-white/15 shrink-0" />
                   )}
 
-                  {/* GitHub button — opens in new tab (GitHub blocks iframes) */}
+                  {/* GitHub button — loads in iframe; Frame Protection screen shows if blocked */}
                   {activeProject.github_url && (
-                    <a
-                      href={activeProject.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => { setIframeUrl(activeProject.github_url!); setIframeLoading(true); setIframeBlocked(false); }}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all hover:bg-white/10"
-                      style={{ color: 'rgba(255,255,255,0.70)', textDecoration: 'none' }}
+                      style={{ color: iframeUrl === activeProject.github_url ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
                     >
                       {/* GitHub SVG logo */}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
                       </svg>
-                      GitHub ↗
-                    </a>
+                      GitHub
+                    </button>
                   )}
                 </div>
 
@@ -708,27 +706,52 @@ export default function DesktopCanvas() {
                   }}
                 >
                   {iframeBlocked ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-10 text-center bg-[#050505]">
-                      <div className="w-16 h-16 rounded-3xl flex items-center justify-center text-2xl mb-5"
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}>
-                        🔒
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#050508]">
+                      {/* Background grid pattern */}
+                      <div className="absolute inset-0 opacity-[0.04]"
+                        style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+                      {/* Glowing center blob */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-[420px] h-[420px] rounded-full opacity-10"
+                          style={{ background: 'radial-gradient(circle, #a78bfa 0%, transparent 70%)' }} />
                       </div>
-                      <h3 className="text-white text-[16px] font-bold tracking-tight">Frame Protection Active</h3>
-                      <p className="text-[12px] text-white/40 max-w-[320px] mt-2.5 leading-relaxed">
-                        {activeProject.title} enforces X-Frame-Options. Open it directly.
-                      </p>
-                      <div className="flex gap-3 mt-7">
-                        <a href={activeProject.live_url || undefined} target="_blank" rel="noopener noreferrer"
-                          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 active:scale-95 text-[#0e0d14] text-[12px] font-bold shadow-lg shadow-amber-400/15 transition-all">
-                          Launch Live ↗
-                        </a>
+                      {/* Card */}
+                      <div className="relative z-10 flex flex-col items-center text-center max-w-[440px] px-8">
+                        {/* GitHub mark */}
+                        <div className="w-20 h-20 rounded-3xl flex items-center justify-center mb-6 relative"
+                          style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.20) 0%, rgba(0,0,0,0.80) 100%)', border: '1px solid rgba(139,92,246,0.35)', borderTop: '1px solid rgba(139,92,246,0.60)', boxShadow: '0 20px 60px rgba(0,0,0,0.80), 0 0 40px rgba(139,92,246,0.20)' }}>
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(167,139,250,0.90)" aria-hidden="true">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                          </svg>
+                        </div>
+                        {/* Repo path */}
                         {activeProject.github_url && (
-                          <a href={activeProject.github_url} target="_blank" rel="noopener noreferrer"
-                            className="px-6 py-2.5 rounded-xl text-white/60 hover:text-white text-[12px] font-semibold transition-all"
-                            style={{ border: '1px solid rgba(255,255,255,0.10)' }}>
-                            View GitHub
-                          </a>
+                          <p className="text-[10px] font-mono text-violet-400/70 mb-2 tracking-wide">
+                            {activeProject.github_url.replace('https://github.com/', 'github.com/')}
+                          </p>
                         )}
+                        <h3 className="text-white text-[20px] font-black tracking-tight mb-2">{activeProject.title}</h3>
+                        <p className="text-[12px] text-white/35 mb-8 leading-relaxed max-w-[300px]">
+                          GitHub enforces frame protection. Click below to view the full repository.
+                        </p>
+                        {/* Action buttons */}
+                        <div className="flex gap-3">
+                          {activeProject.github_url && (
+                            <a href={activeProject.github_url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-6 py-3 rounded-2xl text-[13px] font-bold transition-all hover:brightness-110 active:scale-95"
+                              style={{ background: 'linear-gradient(135deg, #7c3aed, #6366f1)', boxShadow: '0 8px 32px rgba(124,58,237,0.45), 0 0 0 1px rgba(139,92,246,0.40)', color: '#fff', textDecoration: 'none' }}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                              View Repository ↗
+                            </a>
+                          )}
+                          {activeProject.live_url && (
+                            <a href={activeProject.live_url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-5 py-3 rounded-2xl text-[13px] font-semibold text-white/60 hover:text-white transition-all"
+                              style={{ border: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.04)', textDecoration: 'none' }}>
+                              Launch Live ↗
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (
