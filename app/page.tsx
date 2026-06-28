@@ -215,7 +215,7 @@ const ContactWindow = memo(function ContactWindow() {
             className="col-span-1 relative overflow-hidden rounded-2xl group min-h-[250px] shadow-lg border border-white/10 hover:-translate-y-1 transition-all duration-300 transform-gpu will-change-transform"
           >
             <img 
-              src="/teaching_assistant.png" 
+              src="/teaching_assistant.jpg" 
               alt="Teaching Assistant at FAU"
               className="object-cover w-full h-full opacity-85 group-hover:scale-105 transition-transform duration-500" 
             />
