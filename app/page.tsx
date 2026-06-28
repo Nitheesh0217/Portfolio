@@ -7,7 +7,7 @@ import {
   useReducer, useRef, useCallback, useEffect,
   useMemo, memo, useState,
 } from 'react';
-import { Mail, Copy, Check, Lock, RefreshCw, MessageSquare } from 'lucide-react';
+import { Mail, Copy, Check, Lock, RefreshCw, MessageSquare, Briefcase, User, Settings } from 'lucide-react';
 
 import { WindowId, WindowRecord, WINDOW_IDS } from '@/types/windows';
 import {
@@ -69,114 +69,182 @@ const DesktopBackground = memo(function DesktopBackground() {
 // ─────────────────────────────────────────────────────────────────────────────
 const ContactWindow = memo(function ContactWindow() {
   return (
-    <div className="flex-1 w-full h-full flex flex-col">
-      {/* Header */}
-      <div className="shrink-0 flex items-center gap-3 px-8 pt-7 pb-5 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.25)' }}>
-          <MessageSquare style={{ width: 15, height: 15, color: '#a78bfa' }} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="text-[15px] font-black text-white tracking-tight">Let&rsquo;s Collaborate</h2>
-          <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Response within 12 hours · Remote or hybrid</p>
-        </div>
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold" style={{ background: 'rgba(52,211,153,0.10)', border: '1px solid rgba(52,211,153,0.25)', color: '#34d399' }}>
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#34d399' }} />
-          Open to work
-        </div>
+    <div className="flex-1 w-full h-full flex flex-row p-12 gap-12 relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem]">
+      {/* 1. Detached Dock (Breakout floating left nav pill) */}
+      <div 
+        className="fixed left-8 top-1/2 -translate-y-1/2 z-50 bg-black/45 backdrop-blur-2xl border border-white/10 rounded-full flex flex-col gap-4 p-3 shadow-2xl select-none"
+      >
+        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+          <User className="w-5 h-5" />
+        </button>
+        <button className="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all">
+          <Briefcase className="w-5 h-5" />
+        </button>
+        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+          <Mail className="w-5 h-5" />
+        </button>
+        <button className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
+          <Settings className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Body */}
-      <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-10 px-12 py-8 md:px-16 overflow-y-auto min-h-0">
-        {/* Left side */}
-        <div className="flex-1 flex flex-col gap-6 text-left max-w-[400px]">
-          <h2 className="text-white font-black leading-[1.05] tracking-tight" style={{ fontSize: 'clamp(28px, 3.2vw, 44px)' }}>
+      {/* 2. Top Right Status */}
+      <div className="absolute top-8 right-8 bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs flex items-center gap-2 select-none z-30">
+        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
+        Open to work
+      </div>
+
+      {/* 3. Left Pane (40% width) - Sticky Identity & Contact */}
+      <div className="w-[38%] flex flex-col justify-between h-full select-text z-20">
+        <div className="flex flex-col gap-6">
+          <h2 className="text-white font-extrabold text-[40px] leading-[1.1] tracking-tight">
             AI Engineering.<br />
             Data pipelines.<br />
-            <span style={{ color: 'rgba(255,255,255,0.35)' }}>Always shipped.</span>
+            Always shipped.
           </h2>
-          <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <p className="text-[13px] leading-relaxed text-white/50 max-w-[340px]">
             RAG pipelines, multi-agent orchestration, Snowflake ETL, real-time SaaS — I build the system, then I measure the receipts.
           </p>
-          {/* Social row */}
-          <div className="flex gap-2">
-            {[
-              { label: 'GitHub',   href: 'https://github.com/Nitheesh0217' },
-              { label: 'LinkedIn', href: 'https://linkedin.com/in/' },
-              { label: 'Twitter',  href: 'https://twitter.com/' },
-            ].map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center px-4 py-2 rounded-xl text-[11px] font-semibold transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  color: 'rgba(255,255,255,0.45)',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
         </div>
 
-        {/* Right side: contact card */}
-        <div
-          className="w-full max-w-[380px] rounded-3xl p-7 flex flex-col gap-5"
-          style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            boxShadow: '0 24px 48px rgba(0,0,0,0.30)',
-          }}
+        {/* Direct Channels Widget */}
+        <div 
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4 w-full"
+          style={{ backdropFilter: 'blur(20px)' }}
         >
           <div>
             <h3 className="text-[14px] font-black text-white tracking-tight">Direct Channels</h3>
-            <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Fastest way to reach me.</p>
+            <p className="text-[10px] mt-0.5 text-white/35">Fastest way to reach me.</p>
           </div>
 
           <div className="flex flex-col gap-2.5">
             <a
               href="mailto:nitheeshd.17@gmail.com"
-              className="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-2xl text-[13px] font-extrabold transition-all active:scale-[0.98] hover:brightness-110"
-              style={{
-                background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-                color: '#1a0e00',
-                boxShadow: '0 8px 24px rgba(245,158,11,0.25)',
-              }}
+              className="flex items-center justify-center gap-2.5 w-full py-3 rounded-xl text-[13px] font-extrabold transition-all active:scale-[0.98] bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_8px_24px_rgba(234,179,8,0.25)] hover:shadow-[0_8px_28px_rgba(234,179,8,0.4)]"
+              style={{ textDecoration: 'none' }}
             >
               <Mail className="w-4 h-4" />
               nitheeshd.17@gmail.com
             </a>
-            <a
-              href="https://linkedin.com/in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2.5 w-full py-3 rounded-2xl text-[13px] font-semibold transition-all active:scale-[0.98]"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(255,255,255,0.70)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'rgba(255,255,255,0.70)'; }}
-            >
-              Connect on LinkedIn ↗
-            </a>
+            <div className="flex gap-2">
+              <a
+                href="https://linkedin.com/in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-[12px] font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                style={{ textDecoration: 'none' }}
+              >
+                LinkedIn ↗
+              </a>
+              <a
+                href="https://github.com/Nitheesh0217"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-[12px] font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all"
+                style={{ textDecoration: 'none' }}
+              >
+                GitHub ↗
+              </a>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ background: 'rgba(167,139,250,0.06)', border: '1px solid rgba(167,139,250,0.15)' }}>
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(167,139,250,0.15)' }}>
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-indigo-500/15 shrink-0 select-none">
               <span className="text-[13px]">👋</span>
             </div>
             <div>
-              <p className="text-[11px] font-bold text-white/70">Available for freelance</p>
-              <p className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.30)' }}>STEM OPT · Miramar, FL · Remote-first</p>
+              <p className="text-[11px] font-bold text-white/80">Available for freelance</p>
+              <p className="text-[10px] mt-0.5 text-white/30">STEM OPT · Miramar, FL · Remote-first</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 4. Right Pane (60% width) - Spatial Rolodex Timeline */}
+      <div className="flex-1 min-w-0 h-full relative z-20">
+        <div 
+          className="flex flex-col gap-6 overflow-y-auto h-full pr-4 pb-12 pt-6 select-text scrollbar-none"
+          style={{
+            scrollbarWidth: 'none',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
+          }}
+        >
+          {/* Kore.ai */}
+          <div 
+            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+          >
+            <div className="flex justify-between items-start gap-4">
+              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Full Stack Engineer</h4>
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider shrink-0 mt-0.5">Jan 2024 — Present</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+              <span className="text-[11px] font-black uppercase tracking-wider text-yellow-500">Kore.ai</span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-white/70">
+              Led development of enterprise conversational AI models, NLP retraining pipeline, and Spring Boot webhook deduplication middleware. Implemented Redis-backed webhook idempotency mechanisms resolving concurrent event race conditions.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {['Next.js', 'Java', 'Spring Boot', 'Redis', 'Kore.ai', 'NLP', 'PostgreSQL'].map(t => (
+                <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Citrix */}
+          <div 
+            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+          >
+            <div className="flex justify-between items-start gap-4">
+              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Senior Full Stack Developer (RAG)</h4>
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider shrink-0 mt-0.5">Jun 2022 — Dec 2023</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="text-[11px] font-black uppercase tracking-wider text-cyan-400">Citrix</span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-white/70">
+              Engineered RAG pipelines for Citrix knowledge base search indexing 40k+ articles. Optimized vector retrieval with Pinecone and implemented Regex-based bracket citation validation to prevent LLM hallucinations.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {['Python', 'LangChain', 'Pinecone', 'OpenAI', 'React', 'AWS ECS'].map(t => (
+                <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Cognizant */}
+          <div 
+            className="transform-gpu will-change-transform bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/20 rounded-2xl p-8 hover:-translate-y-1 hover:shadow-2xl flex flex-col gap-3 text-left"
+            style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+          >
+            <div className="flex justify-between items-start gap-4">
+              <h4 className="text-[16px] font-extrabold text-white tracking-tight">Software Engineer & ML Specialist</h4>
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider shrink-0 mt-0.5">Aug 2020 — May 2022</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">Cognizant</span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-white/70">
+              Trained and deployed random forest machine learning models for patient readmission prediction. Built high-performance ETL data pipelines, processing 15k+ clinical records.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {['Scikit-Learn', 'Flask', 'PostgreSQL', 'Docker', 'AWS'].map(t => (
+                <span key={t} className="bg-black/30 border border-white/5 rounded-full px-3 py-1 text-[9px] font-mono text-white/55">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -207,6 +275,244 @@ const DEMO_CREDENTIALS: Record<string, { label: string; email: string; password:
   ],
 };
 
+const AI_ANSWERS_DB: Record<string, Record<string, string>> = {
+  'd-scent-house': {
+    'How does the custom pg_notify job queue work?': 'pg_notify triggers asynchronous database-level event broadcasts. Next.js API endpoints listen to these events to process background mailers and Stripe webhooks with zero polling overhead.',
+    'Why PostgreSQL over NoSQL?': 'PostgreSQL guarantees ACID transactions, crucial for financial/payment state sync, and allows powerful operations like pg_notify for event-driven logic and robust relational querying.',
+    'What was the biggest tech challenge?': 'Managing state synchronization across concurrent checkout sessions while ensuring the serverless pg_notify workers handled transactional emails with idempotency.',
+    'What makes D-scent-house production-ready?': 'Features margin floor security logic, full Stripe integration, pg_notify background processing, database schema migrations, and high test coverage on core transaction flows.'
+  },
+  'coach-jake': {
+    'Explain the NextAuth JWT claims optimization': 'We optimized token payload size by stripping unnecessary profile data and storing role-based access flags directly inside the encrypted JWT, reducing payload size by 65%.',
+    'How is the AI integrated here?': 'The platform utilizes analytical dashboards to model player conditioning logs and head coach KPIs, displaying progress patterns dynamically.',
+    'Explain the role-based conditional routing': 'Middleware decodes the optimized JWT claims to enforce server-side redirection. Head coaches, assistants, and players are strictly isolated into distinct dashboard route groups.',
+    'What was the biggest tech challenge?': 'Designing a robust dashboard scaling mechanism for complex player logs with quick query lookups under high concurrent access.'
+  },
+  'unick-auto-detailing': {
+    'How is OpenAI function calling utilized?': 'OpenAI analyzes customer booking requests in natural language, extracts target service goals, and maps them to JSON arguments for automated package selection and pricing.',
+    'Why PostgreSQL over NoSQL?': 'Unick utilizes PostgreSQL relational structures to map dynamic customer detail schemas and customer history queries reliably with transactions.',
+    'Explain the Twilio SMS rebooking automation': 'A cron worker checks completion logs weekly, triggering Twilio REST API calls to send personalized SMS reminders to clients based on their detailing history.',
+    'What was the biggest tech challenge?': 'Ensuring NLU parser resilience under variable user prompts while keeping OpenAI API costs minimal via prompt caching.'
+  },
+  'citrix-rag-knowledge-assistant': {
+    'How does the RAG pipeline work?': 'The RAG pipeline retrieves vector matches from Pinecone, formats them as context, and queries the LLM. Enforces post-generation citation validation to prevent hallucinations.',
+    'How does the RAG pipeline prevent hallucinations?': 'Strict regex-based post-generation citation validation parses context vectors. If the answer cannot be mapped to source chunk metadata, it is flagged and retried.',
+    'Explain the citation validation mechanism': 'Retrieval matches chunks from Pinecone, then passes them with source IDs to the LLM. The validator parses generated brackets [Source 12] against chunk metadata for matching.',
+    'What was the biggest tech challenge?': 'Indexing and updating 40k articles in vector space in real-time with efficient cosine-similarity queries.'
+  },
+  'koreai-customer-service-agent': {
+    'How is the AI integrated here?': 'Enterprise chatbot intent retraining pipeline matching Kore.ai NLU models, combined with webhook deduplication middleware.',
+    'Explain the Spring Boot webhook idempotency': 'A Redis-backed interceptor hashes incoming Kore.ai webhook payloads. Duplicate transaction IDs within 5 seconds are dropped, resolving race conditions.',
+    'How was NLU intent retraining handled?': 'Retraining pipeline parses confusion matrices of misclassified queries, clusters low-confidence intents via K-Means, and retrains the Kore.ai NLU model.',
+    'What was the shadow deployment period KPI?': '60 days of parallel run: chatbot generated draft replies without sending them, comparing agent actions to manual human replies to verify intent safety.'
+  },
+  'healthcare-readmission-prediction': {
+    'What features did the ML model utilize?': 'Demographics, diagnostic codes, admission types, medication changes, and historical readmission data, processed using StandardScaler and OneHotEncoder.',
+    'Why PostgreSQL over NoSQL?': 'PostgreSQL hosts transaction logs and readmission tracking schemas with foreign keys linking diagnostic code references.',
+    'Explain the model deployment architecture': 'A scikit-learn random forest classifier serialized to a pickle file, served via a lightweight Flask API inside a containerized AWS ECS task.',
+    'What was the biggest tech challenge?': 'Optimizing random forest model hyperparameters to minimize false negative readmission predictions while processing 15k patient holdouts.'
+  }
+};
+
+const MOCK_REPO_FILES: Record<string, { files: string[]; content: Record<string, string> }> = {
+  'd-scent-house': {
+    files: ['package.json', 'lib/jobQueue.ts', 'app/api/checkout/route.ts'],
+    content: {
+      'package.json': `{
+  "name": "d-scent-house",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "next": "14.2.3",
+    "react": "^18.3.1",
+    "pg": "^8.11.5",
+    "stripe": "^15.1.0"
+  }
+}`,
+      'lib/jobQueue.ts': `import { Client } from 'pg';
+
+export async function initJobQueue() {
+  const client = new Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
+  
+  // Listen for database broadcasts
+  await client.query('LISTEN new_checkout_job');
+  
+  client.on('notification', async (msg) => {
+    const payload = JSON.parse(msg.payload || '{}');
+    console.log('[Queue] Processing order:', payload.orderId);
+    await processOrderMail(payload.orderId);
+  });
+}`,
+      'app/api/checkout/route.ts': `import { NextResponse } from 'next/server';
+import { getDb } from '@/lib/db';
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  const sql = getDb();
+  
+  // Enforce Margin Floor Security
+  const minFloor = body.baseCost * 1.15; // 15% minimum margin
+  if (body.price < minFloor) {
+    return NextResponse.json({ error: 'Margin security breach' }, { status: 400 });
+  }
+
+  const order = await sql\`
+    INSERT INTO orders (user_id, total, status)
+    VALUES (\${body.userId}, \${body.price}, 'pending')
+    RETURNING id;
+  \`;
+  
+  return NextResponse.json(order);
+}`
+    }
+  },
+  'coach-jake': {
+    files: ['middleware.ts', 'app/api/auth/[...nextauth]/route.ts', 'app/dashboard/page.tsx'],
+    content: {
+      'middleware.ts': `import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+
+export default withAuth(
+  function middleware(req) {
+    const token = req.nextauth.token;
+    const role = token?.role;
+
+    // Enforce Head Coach / Assistant / Player dashboard partitioning
+    if (req.nexturl.pathname.startsWith("/dashboard/coach") && role !== "HEAD_COACH") {
+      return NextResponse.redirect(new URL("/dashboard/unauthorized", req.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+  }
+);`,
+      'app/api/auth/[...nextauth]/route.ts': `import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      async authorize(credentials) {
+        // Fetch user from DB and verify password hash
+        return { id: "1", name: "Jake", role: "HEAD_COACH" };
+      }
+    })
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.role = user.role; // Optimize JWT payload
+      return token;
+    }
+  }
+};`
+    }
+  },
+  'unick-auto-detailing': {
+    files: ['app/api/booking/route.ts', 'lib/openai.ts'],
+    content: {
+      'app/api/booking/route.ts': `import { Configuration, OpenAIApi } from 'openai';
+import { getDb } from '@/lib/db';
+
+export async function POST(req: Request) {
+  const { prompt } = await req.json();
+  
+  // Call OpenAI function calling to map goals to package
+  const response = await openai.createChatCompletion({
+    model: "gpt-4-0613",
+    messages: [{ role: "user", content: prompt }],
+    functions: [{
+      name: "selectPackage",
+      parameters: {
+        type: "object",
+        properties: {
+          packageId: { type: "string" },
+          frequencyWeeks: { type: "number" }
+        }
+      }
+    }]
+  });
+  
+  return Response.json(response.data);
+}`
+    }
+  },
+  'citrix-rag-knowledge-assistant': {
+    files: ['rag/pipeline.py', 'rag/validation.py'],
+    content: {
+      'rag/pipeline.py': `from langchain.vectorstores import Pinecone
+from langchain.embeddings import OpenAIEmbeddings
+import pinecone
+
+def query_rag_assistant(user_query: str):
+    embeddings = OpenAIEmbeddings()
+    vectorstore = Pinecone.from_existing_index("citrix-kb", embeddings)
+    
+    # Cosine similarity retrieval
+    docs = vectorstore.similarity_search(user_query, k=4)
+    return docs`,
+      'rag/validation.py': `import re
+
+def validate_citations(response: str, sources: list):
+    # Enforce strict citation brackets parsing to prevent LLM hallucination
+    citations = re.findall(r'\\[([0-9]+)\\]', response)
+    valid_sources = {s['id'] for s in sources}
+    
+    for c in citations:
+        if int(c) not in valid_sources:
+            return False # Hallucination detected
+    return True`
+    }
+  },
+  'koreai-customer-service-agent': {
+    files: ['IdempotencyInterceptor.java', 'NluRetraining.py'],
+    content: {
+      'IdempotencyInterceptor.java': `package com.kore.middleware;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import redis.clients.jedis.Jedis;
+
+public class IdempotencyInterceptor implements HandlerInterceptor {
+    private Jedis redis = new Jedis("localhost", 6379);
+
+    @Override
+    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
+        String key = req.getHeader("X-Request-Id");
+        if (redis.exists(key)) {
+            res.setStatus(409); // Conflict: Duplicate request
+            return false;
+        }
+        redis.setex(key, 5, "processed"); // 5s deduplication window
+        return true;
+    }
+}`
+    }
+  },
+  'healthcare-readmission-prediction': {
+    files: ['model/train.py', 'app/predict.py'],
+    content: {
+      'model/train.py': `import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+import pickle
+
+def train_model(data_path):
+    df = pd.read_csv(data_path)
+    X = df.drop('readmitted', axis=1)
+    y = df['readmitted']
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    clf = RandomForestClassifier(n_estimators=100, max_depth=12, random_state=42)
+    clf.fit(X_train, y_train)
+    
+    with open('model.pkl', 'wb') as f:
+        pickle.dump(clf, f)`
+    }
+  }
+};
+
 export default function DesktopCanvas() {
   const [windows, dispatch] = useReducer(windowReducer, INITIAL_WINDOW_STATE);
   const zCounter = useRef(Z_BASE + 2);
@@ -223,12 +529,61 @@ export default function DesktopCanvas() {
   const [activeCard, setActiveCard] = useState(0);
   const [cardTilt, setCardTilt] = useState({ x: 0, y: 0 });
 
+  const [activeLeftTab, setActiveLeftTab]         = useState<'challenge' | 'solution' | 'impact'>('challenge');
+  const [selectedAiQuestion, setSelectedAiQuestion] = useState<string | null>(null);
+  const [selectedAiAnswer, setSelectedAiAnswer]     = useState<string | null>(null);
+  const [aiAnswerVisible, setAiAnswerVisible]       = useState<boolean>(false);
+  const [activeRepoFile, setActiveRepoFile]         = useState<string>('');
+
+  const getAiQuestions = () => {
+    const slug = activeProject?.slug || '';
+    const qList: string[] = [];
+    if (slug === 'd-scent-house') {
+      qList.push('How does the custom pg_notify job queue work?', 'Why PostgreSQL over NoSQL?', 'What was the biggest tech challenge?', 'What makes D-scent-house production-ready?');
+    } else if (slug === 'coach-jake') {
+      qList.push('Explain the NextAuth JWT claims optimization', 'How is the AI integrated here?', 'Explain the role-based conditional routing', 'What was the biggest tech challenge?');
+    } else if (slug === 'unick-auto-detailing') {
+      qList.push('How is OpenAI function calling utilized?', 'Why PostgreSQL over NoSQL?', 'Explain the Twilio SMS rebooking automation', 'What was the biggest tech challenge?');
+    } else if (slug === 'citrix-rag-knowledge-assistant') {
+      qList.push('How does the RAG pipeline work?', 'How does the RAG pipeline prevent hallucinations?', 'Explain the citation validation mechanism', 'What was the biggest tech challenge?');
+    } else if (slug === 'koreai-customer-service-agent') {
+      qList.push('How is the AI integrated here?', 'Explain the Spring Boot webhook idempotency', 'How was NLU intent retraining handled?', 'What was the shadow deployment period KPI?');
+    } else if (slug === 'healthcare-readmission-prediction') {
+      qList.push('What features did the ML model utilize?', 'Why PostgreSQL over NoSQL?', 'Explain the model deployment architecture', 'What was the biggest tech challenge?');
+    } else {
+      qList.push('How is the AI integrated here?', 'Why PostgreSQL over NoSQL?', 'What was the biggest tech challenge?');
+    }
+    return qList.slice(0, 3); // Return max 3 questions
+  };
+
+  const handleAskQuestion = (question: string) => {
+    setAiAnswerVisible(false);
+    setTimeout(() => {
+      setSelectedAiQuestion(question);
+      const slug = activeProject?.slug || '';
+      const ans = AI_ANSWERS_DB[slug]?.[question] || 'I am looking into this now. Co-pilot matches current stacks to explain custom integrations.';
+      setSelectedAiAnswer(ans);
+      setAiAnswerVisible(true);
+    }, 200);
+  };
+
   useEffect(() => {
     if (activeProject) {
       const url = activeProject.live_url || '';
       setIframeUrl(url);
       setIframeLoading(true);
       setIframeBlocked(false);
+      
+      // Reset interactive states for the active project
+      setActiveLeftTab('challenge');
+      setSelectedAiQuestion(null);
+      setSelectedAiAnswer(null);
+      setAiAnswerVisible(false);
+      
+      const slug = activeProject.slug || '';
+      const defaultFile = MOCK_REPO_FILES[slug]?.files[0] || 'package.json';
+      setActiveRepoFile(defaultFile);
+
       if (iframeTimeoutRef.current) clearTimeout(iframeTimeoutRef.current);
       iframeTimeoutRef.current = setTimeout(() => {
         setIframeLoading(false);
@@ -456,37 +811,94 @@ export default function DesktopCanvas() {
               }}
             >
 
+
               {/* ══════════════════════════════════════════════
-                  LEFT — Z-Axis Holo-Deck
-                  3 absolute glass cards stacked in 3D space.
-                  Hover parent to fan out; click to reorder.
+                  LEFT — Unified Case Study Briefing (visionOS UI)
                   ══════════════════════════════════════════════ */}
               <div
-                className="spatial-glow-left transform-gpu backface-hidden will-change-[transform,opacity] w-[24vw] min-w-[280px] max-w-[380px] h-[75vh] flex-shrink-0 z-20 rounded-3xl relative flex items-center justify-center"
-                style={{ transform: 'translateZ(-60px) rotateY(10deg) scale(0.95)', transformOrigin: 'right center', perspective: '1200px' }}
-                onMouseEnter={() => setLeftFanned(true)}
-                onMouseLeave={() => setLeftFanned(false)}
+                className="spatial-glow-left transform-gpu backface-hidden will-change-[transform,opacity] w-[24vw] min-w-[280px] max-w-[380px] h-[75vh] flex-shrink-0 z-20 rounded-3xl"
+                style={{ transform: 'translateZ(-60px) rotateY(10deg) scale(0.95)', transformOrigin: 'right center' }}
               >
-                {(() => {
-                  const deckCards = [
-                    {
-                      id: 'impact',
-                      label: 'Impact',
-                      accent: '#4ade80',
-                      accentBg: 'rgba(74,222,128,0.08)',
-                      content: activeProject.roi_value ? (
-                        <div className="flex flex-col h-full">
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400">ROI Metric</span>
+                <div
+                  className="w-full h-full bg-black/65 backdrop-blur-3xl rounded-3xl flex flex-col p-5 overflow-hidden text-left"
+                  style={{
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderTop: '1px solid rgba(255,255,255,0.16)',
+                    boxShadow: '0 30px 70px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08)',
+                  }}
+                >
+                  {/* Category Badge */}
+                  <div className="shrink-0 mb-3 flex flex-wrap gap-1.5">
+                    <span className="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/5 border border-amber-400/20">
+                      {activeProject.category || 'CASE STUDY'}
+                    </span>
+                  </div>
+                  
+                  {/* Tab Selector */}
+                  <div className="shrink-0 flex rounded-full p-1 bg-black/40 border border-white/5 mb-4 select-none">
+                    {['challenge', 'solution', 'impact'].map(t => (
+                      <button key={t} onClick={() => setActiveLeftTab(t as any)}
+                        className={`flex-1 px-2 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all duration-300 ${
+                          activeLeftTab === t ? 'bg-white/10 text-white shadow-lg' : 'text-white/40 hover:text-white/70'
+                        }`}>
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Active Tab Scrollable Content Area */}
+                  <div className="flex-1 overflow-y-auto pr-1 select-text scrollbar-none" style={{ scrollbarWidth: 'none' }}>
+                    {activeLeftTab === 'challenge' && (
+                      <div className="flex flex-col gap-4">
+                        <div>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-violet-400 mb-1.5 block">The Problem</span>
+                          <p className="text-[12px] text-white/80 leading-relaxed">{activeProject.problem_statement || 'Details on the core challenge statement.'}</p>
+                        </div>
+                        {activeProject.testimonial_quote && (
+                          <div className="mt-2 p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] relative">
+                            <span className="text-3xl text-violet-400/20 font-serif absolute top-1 left-2 pointer-events-none">&ldquo;</span>
+                            <p className="text-[11px] italic text-white/60 leading-relaxed pl-4 pr-1 relative z-10">&ldquo;{activeProject.testimonial_quote}&rdquo;</p>
+                            <p className="text-[9px] font-bold mt-2 text-violet-400/70 text-right pr-2">— {activeProject.testimonial_author}</p>
                           </div>
-                          {/* KPI ring */}
-                          {(() => {
-                            const r = 38; const circ = 2 * Math.PI * r;
-                            const raw = parseInt(activeProject.roi_value!.replace(/[^0-9]/g, '')) || 75;
-                            const pct = Math.min(raw > 100 ? 80 : raw, 100);
-                            const off = circ * (1 - pct / 100);
-                            return (
-                              <div className="flex flex-col items-center gap-4 flex-1 justify-center">
+                        )}
+                      </div>
+                    )}
+
+                    {activeLeftTab === 'solution' && (
+                      <div className="flex flex-col gap-4">
+                        <div>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-blue-400 mb-1.5 block">The Approach</span>
+                          <p className="text-[12px] text-white/80 leading-relaxed">{activeProject.approach || 'Details on the technical execution path.'}</p>
+                        </div>
+                        {activeProject.process_notes && (
+                          <div>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 mb-1.5 block">Architecture</span>
+                            <p className="text-[11px] text-white/60 leading-relaxed bg-white/[0.01] border border-white/[0.03] p-2.5 rounded-xl">{activeProject.process_notes}</p>
+                          </div>
+                        )}
+                        {activeProject.stack && activeProject.stack.length > 0 && (
+                          <div>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-white/35 mb-2 block">Technology Stack</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {activeProject.stack.map(t => (
+                                <span key={t} className="px-2 py-0.5 rounded-full text-[8px] font-mono text-blue-300/80 bg-blue-300/5 border border-blue-300/15">{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {activeLeftTab === 'impact' && (
+                      <div className="flex flex-col items-center text-center gap-5">
+                        {activeProject.roi_value && (
+                          <div className="relative mt-2 shrink-0">
+                            {(() => {
+                              const r = 38; const circ = 2 * Math.PI * r;
+                              const raw = parseInt(activeProject.roi_value!.replace(/[^0-9]/g, '')) || 75;
+                              const pct = Math.min(raw > 100 ? 80 : raw, 100);
+                              const off = circ * (1 - pct / 100);
+                              return (
                                 <div className="relative">
                                   <svg width="100" height="100" viewBox="0 0 100 100" className="-rotate-90 transform-gpu" aria-hidden="true">
                                     <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="6"/>
@@ -499,145 +911,17 @@ export default function DesktopCanvas() {
                                     <span className="text-[22px] font-black text-white leading-none">{activeProject.roi_value}</span>
                                   </div>
                                 </div>
-                                <div className="text-center">
-                                  <p className="text-[13px] font-bold text-white/90">{activeProject.roi_label}</p>
-                                  {activeProject.roi_context && <p className="text-[10px] text-white/40 mt-1 leading-relaxed">{activeProject.roi_context}</p>}
-                                </div>
-                                {activeProject.stack && activeProject.stack.length > 0 && (
-                                  <div className="flex flex-wrap gap-1.5 justify-center mt-2">
-                                    {activeProject.stack.slice(0, 5).map(t => (
-                                      <span key={t} className="px-2.5 py-0.5 rounded-full text-[8px] font-mono text-emerald-300/80"
-                                        style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.22)' }}>{t}</span>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      ) : null,
-                    },
-                    {
-                      id: 'solution',
-                      label: 'Solution',
-                      accent: '#60a5fa',
-                      accentBg: 'rgba(96,165,250,0.08)',
-                      content: activeProject.approach ? (
-                        <div className="flex flex-col h-full">
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-blue-400">The Approach</span>
+                              );
+                            })()}
                           </div>
-                          <p className="text-[12px] text-white/80 leading-relaxed flex-1">{activeProject.approach}</p>
-                          {activeProject.process_notes && (
-                            <div className="mt-4 pt-4 border-t border-white/[0.06]">
-                              <p className="text-[9px] font-black uppercase tracking-widest text-blue-400/60 mb-1.5">Architecture</p>
-                              <p className="text-[10.5px] text-white/55 leading-relaxed">{activeProject.process_notes}</p>
-                            </div>
-                          )}
-                        </div>
-                      ) : null,
-                    },
-                    {
-                      id: 'challenge',
-                      label: 'Challenge',
-                      accent: '#a78bfa',
-                      accentBg: 'rgba(167,139,250,0.08)',
-                      content: activeProject.problem_statement ? (
-                        <div className="flex flex-col h-full">
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-violet-400">The Problem</span>
-                          </div>
-                          <p className="text-[12px] text-white/80 leading-relaxed flex-1">{activeProject.problem_statement}</p>
-                          {activeProject.testimonial_quote && (
-                            <div className="mt-4 pt-4 border-t border-white/[0.06]">
-                              <p className="text-[10.5px] italic text-white/55 leading-relaxed">&ldquo;{activeProject.testimonial_quote}&rdquo;</p>
-                              <p className="text-[8.5px] font-bold mt-1.5 text-violet-400/60">— {activeProject.testimonial_author}</p>
-                            </div>
-                          )}
-                        </div>
-                      ) : null,
-                    },
-                  ].filter(c => c.content !== null);
-
-                  // Z-stack order: activeCard is front, others recede
-                  return deckCards.map((card, i) => {
-                    const stackPos = (i - activeCard + deckCards.length) % deckCards.length;
-                    const isFront = stackPos === 0;
-
-                    // Default stacked 3D positions — deep z recession for maximum drama
-                    const defaultTransforms: Record<number, string> = {
-                      0: 'translateZ(0px) translateY(0px) scale(1)',
-                      1: 'translateZ(-110px) translateY(-44px) scale(0.91)',
-                      2: 'translateZ(-220px) translateY(-88px) scale(0.82)',
-                    };
-                    // Fanned positions — equal vertical spread so all cards are fully legible
-                    const fannedTransforms: Record<number, string> = {
-                      0: 'translateZ(0px) translateY(-74px) scale(1)',
-                      1: 'translateZ(0px) translateY(0px) scale(0.97)',
-                      2: 'translateZ(0px) translateY(74px) scale(0.94)',
-                    };
-
-                    const defaultOpacity = [1, 0.45, 0.15][stackPos] ?? 0.15;
-                    const defaultBlur = ['none', 'blur(1.5px)', 'blur(3px)'][stackPos] ?? 'blur(3px)';
-                    const zIndex = [30, 20, 10][stackPos] ?? 10;
-
-                    const transform = leftFanned ? (fannedTransforms[stackPos] ?? defaultTransforms[stackPos]) : (defaultTransforms[stackPos] ?? defaultTransforms[2]);
-                    const opacity = leftFanned ? 1 - stackPos * 0.12 : defaultOpacity;
-                    const blur = leftFanned ? 'none' : defaultBlur;
-
-                    return (
-                      <div
-                        key={card.id}
-                        onClick={() => !leftFanned && setActiveCard(i)}
-                        className="absolute transform-gpu will-change-[transform,opacity] w-full rounded-3xl p-6 cursor-pointer select-none"
-                        style={{
-                          height: '84%',
-                          background: isFront
-                            ? `linear-gradient(145deg, rgba(4,4,10,0.80) 0%, ${card.accentBg} 60%, rgba(0,0,0,0.70) 100%)`
-                            : `linear-gradient(145deg, rgba(2,2,6,0.75) 0%, ${card.accentBg} 100%)`,
-                          backdropFilter: 'blur(32px) saturate(160%)',
-                          WebkitBackdropFilter: 'blur(32px) saturate(160%)',
-                          border: isFront ? `1px solid ${card.accent}35` : '1px solid rgba(255,255,255,0.06)',
-                          borderTop: isFront ? `1px solid ${card.accent}70` : '1px solid rgba(255,255,255,0.10)',
-                          boxShadow: isFront
-                            ? `0 40px 80px rgba(0,0,0,0.90), 0 0 0 1px ${card.accent}18, inset 0 1px 0 rgba(255,255,255,0.10), 0 0 50px ${card.accent}10`
-                            : '0 20px 50px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.03)',
-                          transform,
-                          opacity,
-                          filter: blur === 'none' ? undefined : blur,
-                          zIndex,
-                          transition: 'transform 0.7s cubic-bezier(0.23,1,0.32,1), opacity 0.7s ease, filter 0.7s ease, box-shadow 0.4s ease',
-                        }}
-                        onMouseEnter={e => {
-                          if (leftFanned) e.currentTarget.style.borderColor = `${card.accent}50`;
-                        }}
-                        onMouseLeave={e => {
-                          if (leftFanned) e.currentTarget.style.borderColor = isFront ? `${card.accent}30` : 'rgba(255,255,255,0.07)';
-                        }}
-                      >
-                        {/* Card label tab — always visible */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: card.accent, boxShadow: `0 0 6px ${card.accent}` }} />
-                          <span className="text-[9px] font-black uppercase tracking-[0.20em]" style={{ color: card.accent }}>{card.label}</span>
-                          {isFront && <span className="ml-auto text-[7.5px] text-white/25 font-mono">ACTIVE</span>}
-                        </div>
-                        {/* Content */}
-                        <div className="flex-1 overflow-hidden" style={{ height: 'calc(100% - 28px)' }}>
-                          {card.content}
+                        )}
+                        <div className="text-center">
+                          <p className="text-[13px] font-bold text-white/90">{activeProject.roi_label}</p>
+                          {activeProject.roi_context && <p className="text-[11px] text-white/50 mt-1.5 leading-relaxed">{activeProject.roi_context}</p>}
                         </div>
                       </div>
-                    );
-                  });
-                })()}
-
-                {/* Deck navigation dots */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-40">
-                  {[0, 1, 2].map(i => (
-                    <button key={i} onClick={() => setActiveCard(i)}
-                      className="w-1.5 h-1.5 rounded-full transition-all duration-300 transform-gpu"
-                      style={{ background: i === activeCard ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.2)', transform: i === activeCard ? 'scale(1.4)' : 'scale(1)' }}
-                    />
-                  ))}
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -718,7 +1002,65 @@ export default function DesktopCanvas() {
                     borderLeft: '1px solid rgba(255,255,255,0.06)',
                   }}
                 >
-                  {iframeBlocked ? (
+                  {iframeUrl === activeProject.github_url ? (
+                    /* ── Premium Mock VS Code Editor ── */
+                    <div className="absolute inset-0 flex bg-[#0d0e15] font-sans">
+                      {/* 1. Sidebar File Tree */}
+                      <div className="w-[180px] shrink-0 border-r border-white/5 bg-[#090a0f] flex flex-col text-left py-3.5 select-none">
+                        <span className="px-4 text-[9px] font-black uppercase tracking-wider text-white/30 block mb-3">EXPLORER</span>
+                        <div className="px-3.5 text-[10px] font-semibold text-white/45 flex items-center gap-1.5 mb-2 truncate">
+                          📂 {activeProject.slug}
+                        </div>
+                        <div className="flex flex-col">
+                          {(MOCK_REPO_FILES[activeProject.slug]?.files || ['package.json', 'README.md']).map(f => (
+                            <button key={f} onClick={() => setActiveRepoFile(f)}
+                              className={`px-6 py-1.5 text-left text-[11px] font-mono flex items-center gap-2 border-l-2 transition-all ${
+                                activeRepoFile === f
+                                  ? 'bg-white/[0.04] text-cyan-400 border-cyan-400'
+                                  : 'text-white/40 hover:text-white/70 hover:bg-white/[0.01] border-transparent'
+                              }`}>
+                              📄 {f.split('/').pop()}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* 2. Main Editor Pane */}
+                      <div className="flex-1 flex flex-col min-w-0 bg-[#0d0e15] text-left">
+                        {/* Tab Bar */}
+                        <div className="h-9 border-b border-white/5 bg-[#090a0f] flex items-center pr-4 select-none">
+                          <div className="h-full px-4 border-r border-white/5 bg-[#0d0e15] text-cyan-400 text-[11px] font-mono flex items-center gap-2">
+                            📄 {activeRepoFile.split('/').pop()}
+                            <span className="text-[9px] text-white/20 hover:text-white/60 cursor-pointer">✕</span>
+                          </div>
+                          <span className="ml-auto text-[9px] text-white/20 font-mono tracking-widest uppercase">GIT PREVIEW</span>
+                        </div>
+                        
+                        {/* Code editor body with syntax styling */}
+                        <div className="flex-1 p-5 overflow-y-auto font-mono text-[11px] leading-relaxed text-white/80 select-text">
+                          <pre style={{ margin: 0 }}>
+                            <code>
+                              {(MOCK_REPO_FILES[activeProject.slug]?.content[activeRepoFile] || '// Code snippet not found.').split('\n').map((line, idx) => (
+                                <div key={idx} className="flex hover:bg-white/[0.02]">
+                                  <span className="w-8 shrink-0 text-white/20 text-right pr-3 select-none">{idx + 1}</span>
+                                  <span className="whitespace-pre">{line}</span>
+                                </div>
+                              ))}
+                            </code>
+                          </pre>
+                        </div>
+                        
+                        {/* Status bar */}
+                        <div className="h-5 shrink-0 bg-[#090a0f] border-t border-white/5 px-4 flex items-center justify-between text-[9px] font-mono text-white/25 select-none">
+                          <div className="flex items-center gap-3">
+                            <span className="text-violet-400">main*</span>
+                            <span>UTF-8</span>
+                          </div>
+                          <div>TypeScript</div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : iframeBlocked ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#050508]">
                       {/* Background grid pattern */}
                       <div className="absolute inset-0 opacity-[0.04]"
@@ -973,20 +1315,8 @@ export default function DesktopCanvas() {
 
                   {/* AI Pills — glowing query nodes */}
                   <div className="mx-3 mt-2 shrink-0 flex flex-col gap-1.5">
-                    {[
-                      activeProject.stack?.includes('LangChain') || activeProject.stack?.includes('Pinecone')
-                        ? 'How does the RAG pipeline work?'
-                        : activeProject.stack?.includes('NextAuth.js') || activeProject.stack?.includes('NextAuth')
-                          ? 'Explain the NextAuth JWT flow'
-                          : 'How is the AI integrated here?',
-                      activeProject.stack?.some(s => s.toLowerCase().includes('postgres'))
-                        ? 'Why PostgreSQL over NoSQL?'
-                        : activeProject.stack?.some(s => s.toLowerCase().includes('stripe'))
-                          ? 'How does Stripe handle payments?'
-                          : 'What was the biggest tech challenge?',
-                      `What makes ${activeProject.title.split(' ')[0]} production-ready?`,
-                    ].map(q => (
-                      <button key={q} onClick={() => navigator.clipboard.writeText(q)} title="Click to copy"
+                    {getAiQuestions().map(q => (
+                      <button key={q} onClick={() => handleAskQuestion(q)} title="Ask Co-Pilot"
                         className="w-full text-left px-3 py-2 rounded-xl text-[9.5px] text-white/65 transition-all duration-200 transform-gpu will-change-[transform,opacity] hover:text-white hover:bg-white/[0.07] active:scale-[0.98] group"
                         style={{ background: 'rgba(0,0,0,0.55)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.55)', borderTop: '1px solid rgba(255,255,255,0.06)', borderLeft: '2px solid rgba(255,255,255,0.04)' }}
                       >
@@ -995,110 +1325,128 @@ export default function DesktopCanvas() {
                     ))}
                   </div>
 
-                  {/* ── Module C: Neural Diamond Map ── */}
+                  {/* ── Module C: Neural Diamond Map OR Active Answer ── */}
                   <div className="flex-1 min-h-0 mx-3 mt-3 mb-3 rounded-2xl relative overflow-hidden"
                     style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderTop: '1px solid rgba(255,255,255,0.10)' }}>
-                    <div className="absolute top-2.5 left-3 z-10">
-                      <span className="text-[7.5px] font-black uppercase tracking-widest text-white/25">Live Data Flow</span>
-                    </div>
-                    {(() => {
-                      const stack = activeProject.stack || [];
-                      const hasLLM    = stack.some(s => ['LangChain','OpenAI','GPT','Claude','Pinecone','Gemini'].some(k => s.includes(k)));
-                      const hasDB     = stack.some(s => ['PostgreSQL','MongoDB','MySQL','Supabase','Firebase','Redis','Neon'].some(k => s.includes(k)));
-                      const hasFE     = stack.some(s => ['React','Next.js','Vue','Svelte'].some(k => s.includes(k)));
-                      const hasStripe = stack.some(s => s.includes('Stripe'));
-                      // Diamond topology: User(top) → FE(left) + AI(right) → DB(bottom)
-                      const nodes = [
-                        { id: 'user',  label: 'User',                                                                         color: '#a78bfa', glyph: '◎', cx: 140, cy: 52  },
-                        { id: 'fe',    label: hasFE ? 'Next.js' : 'Client',                                                   color: '#60a5fa', glyph: '▣', cx: 68,  cy: 148 },
-                        { id: 'core',  label: hasLLM ? 'AI Engine' : hasStripe ? 'Payments' : 'API',
-                                       color: hasLLM ? '#c084fc' : hasStripe ? '#4ade80' : '#34d399',  glyph: hasLLM ? '◉' : '⬡', cx: 212, cy: 148 },
-                        { id: 'db',    label: hasDB  ? 'Database' : 'Storage',                                                color: '#fb923c', glyph: '⬢', cx: 140, cy: 244 },
-                      ];
-                      const edges = [
-                        { from: 0, to: 1, delay: '0s'   },
-                        { from: 0, to: 2, delay: '0.5s' },
-                        { from: 1, to: 3, delay: '1.0s' },
-                        { from: 2, to: 3, delay: '1.5s' },
-                      ];
-                      const R = 22;
-                      return (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <svg viewBox="0 0 280 300" className="w-full h-full" aria-hidden="true" style={{ overflow: 'visible' }}>
-                            <defs>
-                              {nodes.map(n => (
-                                <radialGradient key={`rg-${n.id}`} id={`rg-${n.id}`} cx="50%" cy="50%" r="50%">
-                                  <stop offset="0%" stopColor={n.color} stopOpacity="0.30" />
-                                  <stop offset="100%" stopColor={n.color} stopOpacity="0" />
-                                </radialGradient>
-                              ))}
-                            </defs>
-                            {/* Ambient glow halos under each node */}
-                            {nodes.map(n => (
-                              <circle key={`halo-${n.id}`} cx={n.cx} cy={n.cy} r={R + 18}
-                                fill={`url(#rg-${n.id})`} />
-                            ))}
-                            {/* Bezier connection paths */}
-                            {edges.map((e, i) => {
-                              const n1 = nodes[e.from]; const n2 = nodes[e.to];
-                              const mx = (n1.cx + n2.cx) / 2; const my = (n1.cy + n2.cy) / 2;
-                              const d = `M ${n1.cx} ${n1.cy} C ${n1.cx} ${my} ${n2.cx} ${my} ${n2.cx} ${n2.cy}`;
-                              return (
-                                <g key={`edge-${i}`}>
-                                  {/* Static wire */}
-                                  <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-                                  {/* Glowing animated packet */}
-                                  <path d={d} fill="none"
-                                    stroke={nodes[e.to].color} strokeWidth="2.5" strokeLinecap="round"
-                                    strokeDasharray="10 110"
-                                    style={{
-                                      filter: `drop-shadow(0 0 5px ${nodes[e.to].color}) drop-shadow(0 0 10px ${nodes[e.to].color}80)`,
-                                      animation: 'dataPacketFlow 2.2s linear infinite',
-                                      animationDelay: e.delay,
-                                      strokeDashoffset: 120,
-                                    }}
-                                  />
-                                </g>
-                              );
-                            })}
-                            {/* Node circles with glyphs */}
-                            {nodes.map((n, i) => (
-                              <g key={n.id}>
-                                {/* Pulsing ring on user node only */}
-                                {i === 0 && (
-                                  <circle cx={n.cx} cy={n.cy} r={R + 8}
-                                    fill="none" stroke={n.color} strokeWidth="1"
-                                    style={{ animation: 'nodePulseRing 3s ease-out infinite', opacity: 0.5, transformOrigin: `${n.cx}px ${n.cy}px` }}
-                                  />
-                                )}
-                                {/* Node body */}
-                                <circle cx={n.cx} cy={n.cy} r={R}
-                                  fill="rgba(0,0,0,0.88)"
-                                  stroke={n.color} strokeWidth="1"
-                                  strokeOpacity="0.55"
-                                  style={{ filter: `drop-shadow(0 0 10px ${n.color}70)` }}
-                                />
-                                {/* Specular top edge */}
-                                <path
-                                  d={`M ${n.cx - R + 4} ${n.cy - R + 8} Q ${n.cx} ${n.cy - R - 4} ${n.cx + R - 4} ${n.cy - R + 8}`}
-                                  fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1"
-                                />
-                                {/* Glyph */}
-                                <text x={n.cx} y={n.cy - 3} textAnchor="middle" dominantBaseline="middle"
-                                  fontSize="14" fill={n.color} style={{ userSelect: 'none', fontFamily: 'system-ui' }}>
-                                  {n.glyph}
-                                </text>
-                                {/* Label */}
-                                <text x={n.cx} y={n.cy + 12} textAnchor="middle" dominantBaseline="middle"
-                                  fontSize="6.5" fill="rgba(255,255,255,0.45)" style={{ userSelect: 'none', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.04em' }}>
-                                  {n.label}
-                                </text>
-                              </g>
-                            ))}
-                          </svg>
+                    
+                    {selectedAiQuestion && aiAnswerVisible ? (
+                      /* ── Active Answer Panel (flashes & zooms in) ── */
+                      <div className="ai-answer-zoom absolute inset-0 p-4 flex flex-col bg-black/75 backdrop-blur-xl border border-white/5">
+                        <div className="flex items-center justify-between mb-2 select-none">
+                          <span className="text-[7.5px] font-black uppercase tracking-widest text-violet-400">Response</span>
+                          <button onClick={() => setAiAnswerVisible(false)} className="text-[9px] font-black text-white/30 hover:text-white/60 uppercase tracking-wider">✕ Clear</button>
                         </div>
-                      );
-                    })()}
+                        <div className="flex-1 overflow-y-auto pr-1 text-left select-text scrollbar-none" style={{ scrollbarWidth: 'none' }}>
+                          <span className="text-[9px] font-black text-white/40 block mb-1.5 uppercase leading-snug">Q: {selectedAiQuestion}</span>
+                          <p className="text-[11px] text-emerald-300/90 leading-relaxed font-sans">{selectedAiAnswer}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      /* ── Live Data Flow Map ── */
+                      <>
+                        <div className="absolute top-2.5 left-3 z-10 select-none">
+                          <span className="text-[7.5px] font-black uppercase tracking-widest text-white/25">Live Data Flow</span>
+                        </div>
+                        {(() => {
+                          const stack = activeProject.stack || [];
+                          const hasLLM    = stack.some(s => ['LangChain','OpenAI','GPT','Claude','Pinecone','Gemini'].some(k => s.includes(k)));
+                          const hasDB     = stack.some(s => ['PostgreSQL','MongoDB','MySQL','Supabase','Firebase','Redis','Neon'].some(k => s.includes(k)));
+                          const hasFE     = stack.some(s => ['React','Next.js','Vue','Svelte'].some(k => s.includes(k)));
+                          const hasStripe = stack.some(s => s.includes('Stripe'));
+                          // Diamond topology: User(top) → FE(left) + AI(right) → DB(bottom)
+                          const nodes = [
+                            { id: 'user',  label: 'User',                                                                         color: '#a78bfa', glyph: '◎', cx: 140, cy: 52  },
+                            { id: 'fe',    label: hasFE ? 'Next.js' : 'Client',                                                   color: '#60a5fa', glyph: '▣', cx: 68,  cy: 148 },
+                            { id: 'core',  label: hasLLM ? 'AI Engine' : hasStripe ? 'Payments' : 'API',
+                                           color: hasLLM ? '#c084fc' : hasStripe ? '#4ade80' : '#34d399',  glyph: hasLLM ? '◉' : '⬡', cx: 212, cy: 148 },
+                            { id: 'db',    label: hasDB  ? 'Database' : 'Storage',                                                color: '#fb923c', glyph: '⬢', cx: 140, cy: 244 },
+                          ];
+                          const edges = [
+                            { from: 0, to: 1, delay: '0s'   },
+                            { from: 0, to: 2, delay: '0.5s' },
+                            { from: 1, to: 3, delay: '1.0s' },
+                            { from: 2, to: 3, delay: '1.5s' },
+                          ];
+                          const R = 22;
+                          return (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <svg viewBox="0 0 280 300" className="w-full h-full" aria-hidden="true" style={{ overflow: 'visible' }}>
+                                <defs>
+                                  {nodes.map(n => (
+                                    <radialGradient key={`rg-${n.id}`} id={`rg-${n.id}`} cx="50%" cy="50%" r="50%">
+                                      <stop offset="0%" stopColor={n.color} stopOpacity="0.30" />
+                                      <stop offset="100%" stopColor={n.color} stopOpacity="0" />
+                                    </radialGradient>
+                                  ))}
+                                </defs>
+                                {/* Ambient glow halos under each node */}
+                                {nodes.map(n => (
+                                  <circle key={`halo-${n.id}`} cx={n.cx} cy={n.cy} r={R + 18}
+                                    fill={`url(#rg-${n.id})`} />
+                                ))}
+                                {/* Bezier connection paths */}
+                                {edges.map((e, i) => {
+                                  const n1 = nodes[e.from]; const n2 = nodes[e.to];
+                                  const mx = (n1.cx + n2.cx) / 2.0; const my = (n1.cy + n2.cy) / 2.0;
+                                  const d = `M ${n1.cx} ${n1.cy} C ${n1.cx} ${my} ${n2.cx} ${my} ${n2.cx} ${n2.cy}`;
+                                  return (
+                                    <g key={`edge-${i}`}>
+                                      {/* Static wire */}
+                                      <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
+                                      {/* Glowing animated packet */}
+                                      <path d={d} fill="none"
+                                        stroke={nodes[e.to].color} strokeWidth="2.5" strokeLinecap="round"
+                                        strokeDasharray="10 110"
+                                        style={{
+                                          filter: `drop-shadow(0 0 5px ${nodes[e.to].color}) drop-shadow(0 0 10px ${nodes[e.to].color}80)`,
+                                          animation: 'dataPacketFlow 2.2s linear infinite',
+                                          animationDelay: e.delay,
+                                          strokeDashoffset: 120,
+                                        }}
+                                      />
+                                    </g>
+                                  );
+                                })}
+                                {/* Node circles with glyphs */}
+                                {nodes.map((n, i) => (
+                                  <g key={n.id}>
+                                    {/* Pulsing ring on user node only */}
+                                    {i === 0 && (
+                                      <circle cx={n.cx} cy={n.cy} r={R + 8}
+                                        fill="none" stroke={n.color} strokeWidth="1"
+                                        style={{ animation: 'nodePulseRing 3s ease-out infinite', opacity: 0.5, transformOrigin: `${n.cx}px ${n.cy}px` }}
+                                      />
+                                    )}
+                                    {/* Node body */}
+                                    <circle cx={n.cx} cy={n.cy} r={R}
+                                      fill="rgba(0,0,0,0.88)"
+                                      stroke={n.color} strokeWidth="1"
+                                      strokeOpacity="0.55"
+                                      style={{ filter: `drop-shadow(0 0 10px ${n.color}70)` }}
+                                    />
+                                    {/* Specular top edge */}
+                                    <path
+                                      d={`M ${n.cx - R + 4} ${n.cy - R + 8} Q ${n.cx} ${n.cy - R - 4} ${n.cx + R - 4} ${n.cy - R + 8}`}
+                                      fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1"
+                                    />
+                                    {/* Glyph */}
+                                    <text x={n.cx} y={n.cy - 3} textAnchor="middle" dominantBaseline="middle"
+                                      fontSize="14" fill={n.color} style={{ userSelect: 'none', fontFamily: 'system-ui' }}>
+                                      {n.glyph}
+                                    </text>
+                                    {/* Label */}
+                                    <text x={n.cx} y={n.cy + 12} textAnchor="middle" dominantBaseline="middle"
+                                      fontSize="6.5" fill="rgba(255,255,255,0.45)" style={{ userSelect: 'none', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.04em' }}>
+                                      {n.label}
+                                    </text>
+                                  </g>
+                                ))}
+                              </svg>
+                            </div>
+                          );
+                        })()}
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1168,10 +1516,24 @@ export default function DesktopCanvas() {
           from { stroke-dashoffset: 0; }
           to   { stroke-dashoffset: -40; }
         }
-
         /* ── NEW: Anti-Gravity Animation Suite ── */
 
-        /* AI Orb — slow conic gradient spin */
+        @keyframes aiAnswerZoomIn {
+          from {
+            opacity: 0;
+            transform: scale(0.85) translateY(12px);
+            filter: blur(4px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+          }
+        }
+        .ai-answer-zoom {
+          animation: aiAnswerZoomIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
         @keyframes aiOrbSpin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
