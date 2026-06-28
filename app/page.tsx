@@ -448,8 +448,8 @@ export default function DesktopCanvas() {
               style={{
                 perspective: '3200px',
                 perspectiveOrigin: '50% 48%',
-                width: '99vw',
-                maxWidth: '2200px',
+                width: '97vw',
+                maxWidth: '1800px',
                 height: '86vh',
                 maxHeight: '940px',
                 minHeight: '660px',
@@ -646,7 +646,7 @@ export default function DesktopCanvas() {
                   Relative wrapper lets the visionOS pill
                   float above the window at absolute -top-14.
                   ══════════════════════════════════════════════ */}
-              <div className="relative flex-shrink-0 z-10 w-[68vw] min-w-[1280px] max-w-[1440px]">
+              <div className="relative flex-shrink-0 z-10 w-[55vw] min-w-[900px] max-w-5xl">
 
                 {/* ── visionOS Floating Top Pill — icon-only buttons, no URL ── */}
                 <div className="absolute -top-[60px] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-2 rounded-full transform-gpu will-change-[transform,opacity]"
@@ -679,21 +679,16 @@ export default function DesktopCanvas() {
                     <span className="w-px h-4 bg-white/15 shrink-0" />
                   )}
 
-                  {/* GitHub button — loads the repo directly in the iframe via the Server-Side Proxy */}
+                  {/* GitHub button — loads the repo directly in the iframe */}
                   {activeProject.github_url && (
                     <button
                       onClick={() => {
-                        const url = activeProject.github_url || '';
-                        const parts = url.split('/');
-                        const repoOwner = parts[parts.length - 2] || 'Nitheesh0217';
-                        const repoName = parts[parts.length - 1] || '';
-                        const proxyUrl = `/api/github-proxy?repo=${repoName}&owner=${repoOwner}`;
-                        setIframeUrl(proxyUrl);
+                        setIframeUrl(activeProject.github_url!);
                         setIframeLoading(true);
                         setIframeBlocked(false);
                       }}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all hover:bg-white/10"
-                      style={{ color: iframeUrl.includes('/api/github-proxy') ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
+                      style={{ color: iframeUrl === activeProject.github_url ? '#a78bfa' : 'rgba(255,255,255,0.70)' }}
                     >
                       {/* GitHub SVG logo */}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -789,10 +784,17 @@ export default function DesktopCanvas() {
                           key={iframeUrl}
                           src={iframeUrl}
                           onLoad={() => { if (iframeTimeoutRef.current) clearTimeout(iframeTimeoutRef.current); setIframeLoading(false); }}
-                          className={`w-full h-full border-none bg-[#050505] transition-opacity duration-700 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                          className={`border-none bg-[#050505] transition-opacity duration-700 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                           title={activeProject.title}
                           allow="clipboard-write"
-                          style={{ display: 'block', scrollbarWidth: 'none' }}
+                          style={{
+                            width: '140%',
+                            height: '140%',
+                            transform: 'scale(0.71428)',
+                            transformOrigin: 'top left',
+                            display: 'block',
+                            scrollbarWidth: 'none'
+                          }}
                         />
                       </div>
                     </>
