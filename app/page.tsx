@@ -230,24 +230,6 @@ const ContactWindow = memo(function ContactWindow() {
 
   return (
     <div className="flex-1 w-full h-full relative text-left bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden">
-      {/* 1. Detached Dock (Far Left Side, completely breakout relative to main window) */}
-      <div 
-        className="fixed left-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-3 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl select-none"
-      >
-        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
-          <User className="w-5 h-5" />
-        </button>
-        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all">
-          <Briefcase className="w-5 h-5" />
-        </button>
-        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
-          <Mail className="w-5 h-5" />
-        </button>
-        <button onMouseEnter={playTick} className="w-10 h-10 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all">
-          <Settings className="w-5 h-5" />
-        </button>
-      </div>
-
       {/* 2. Top Right Status */}
       <div className="absolute top-8 right-8 bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs flex items-center gap-2 select-none z-30">
         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
@@ -1198,10 +1180,10 @@ export default function DesktopCanvas() {
           className="relative pointer-events-auto flex items-center justify-center"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          {/* Module A: Left Dock Rail — positioned right beside the window without shifting it */}
+          {/* Module A: Left Dock Rail — positioned fixed on the left viewport edge */}
           {!activeProject && (
             <div
-              className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu absolute right-full mr-6 top-1/2 -translate-y-1/2 z-[9998]"
+              className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu fixed left-8 top-1/2 -translate-y-1/2 z-[9998]"
               style={{
                 opacity: booted ? 1 : 0,
                 transform: booted 
@@ -1216,6 +1198,7 @@ export default function DesktopCanvas() {
               <Dock
                 windows={dockWindows}
                 onToggle={toggleWindow}
+                className="relative"
               />
             </div>
           )}
