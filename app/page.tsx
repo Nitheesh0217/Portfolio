@@ -1180,10 +1180,10 @@ export default function DesktopCanvas() {
           className="relative pointer-events-auto flex items-center justify-center"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          {/* Module A: Left Dock Rail — positioned fixed on the left viewport edge */}
+          {/* Module A: Left Dock Rail — positioned absolute relative to the main window container */}
           {!activeProject && (
             <div
-              className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu fixed left-8 top-1/2 -translate-y-1/2 z-[9998]"
+              className="transition-all duration-[1000ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu absolute right-full mr-24 top-1/2 -translate-y-1/2 z-[9998]"
               style={{
                 opacity: booted ? 1 : 0,
                 transform: booted 
